@@ -239,3 +239,30 @@ test('便签：页面用浮窗渲染，行内不再有 detail', async () => {
   const client = read('lib/client.js')
   assert.ok(client.includes("className: 'ap-note-modal'"), 'Tab 也应浮窗')
 })
+
+test('地图读数：站点给名称，自定义点给经纬度，且不再引用已删除节点', async () => {
+  const { MAP_SRC } = await import('../lib/mapview.js')
+  const sandbox = {}
+  new Function('window', MAP_SRC)(sandbox)
+  const describe = sandbox.__apMap.describePick
+  const sites = [{ id: 'haituo', name: '海坨山', province: '北京', bortle: 4 }]
+  assert.equal(describe(null, sites), '未选择')
+  assert.equal(describe({ kind: 'site', siteId: 'haituo' }, sites), '海坨山 · 北京 · 波特尔 4')
+  assert.equal(describe({ kind: 'point', lat: 38.737, lon: 93.332 }, sites), '38.737000, 93.332000')
+  // 0.2.4 的崩溃点：读数节点被删了却还在写
+  assert.ok(MAP_SRC.includes('class="ap-map-pick"'), '读数 span 必须存在')
+  assert.ok(!MAP_SRC.includes('bortleWrap'), '不应再引用已删除的波特尔输入')
+  assert.ok(!MAP_SRC.includes('nameWrap'), '不应再引用已删除的名称输入')
+  assert.ok(MAP_SRC.includes('if (readPick)'), '写读数要做空值保护')
+})
+
+test('便签浮窗：面板与画面模拟列加大', async () => {
+  const { page: buildPage } = await import('../lib/webui.js')
+  const page = buildPage()
+  assert.ok(page.includes('min(1320px'), '浮窗应更宽')
+  assert.ok(page.includes('max-height:min(92vh,1000px)'), '浮窗应更高')
+  assert.ok(page.includes('minmax(440px,46%)'), '画面模拟列至少 440px')
+  const client = read('lib/client.js')
+  assert.ok(client.includes('min(1320px'), 'Tab 浮窗同样加宽')
+  assert.ok(client.includes('minmax(440px,46%)'), 'Tab 画面列同样加大')
+})

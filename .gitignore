@@ -14,3 +14,8 @@ node_modules/
 # 系统垃圾
 .DS_Store
 Thumbs.db
+
+# 自动发布的状态/锁/日志（不提交、不打进 npm 包）
+.release-state.json
+.release.lock
+.release-log.jsonl

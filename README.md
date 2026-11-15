@@ -35,7 +35,7 @@ https://raw.githubusercontent.com/SiriusYANG91/dsh-astro-plan/main/docs/market-i
 **2）npm**
 
 ```bash
-dsh plugin --profile desktop add dsh-astro-plan@0.2.6
+dsh plugin --profile desktop add dsh-astro-plan@0.2.7
 ```
 
 **3）本地目录（开发）**
@@ -132,6 +132,7 @@ node tools/push-repo.mjs                              # 把代码推到 GitHub�
 node tools/check-secrets.mjs                          # 令牌/私钥扫描 + gitignore 覆盖检查
 node tools/verify-repo-lock.mjs                       # 仓库写权限审计（只读，确认只有所有者可写）
 node tools/push-repo.mjs --allow-push --prune         # 连同删除远端已移除的文件
+node tools/daily-release.mjs --dry-run                # 自动发布体检（每晚 00:00 由计划任务跑 --allow-publish）
 ```
 
 仓库写权限与令牌轮换见 [docs/maintaining.md](docs/maintaining.md)。

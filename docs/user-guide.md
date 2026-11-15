@@ -46,7 +46,7 @@
 ```bash
 # 1) 插件市场：插件 → 发现 → 添加索引 → 粘贴索引地址 → 安装「星野计划」
 # 2) npm
-dsh plugin --profile desktop add dsh-astro-plan@0.2.6
+dsh plugin --profile desktop add dsh-astro-plan@0.2.7
 # 3) 本地目录（开发用）
 dsh plugin --profile desktop add "<本目录绝对路径>"
 ```
@@ -359,7 +359,7 @@ curl "http://127.0.0.1:<端口>/astro-plan/api/search?...&withSim=0"
 
 ---
 
-**版本**：0.2.6 · **许可**：MIT · **作者**：Sirius YANG
+**版本**：0.2.7 · **许可**：MIT · **作者**：Sirius YANG
 
 ## 15. 地图选点
 
@@ -374,3 +374,13 @@ curl "http://127.0.0.1:<端口>/astro-plan/api/search?...&withSim=0"
 - **三级联动**：选中站点后，主界面的目标地区、省份、地点会自动变成该站的地区/省份/名称；反过来，选省份会自动带出地区，选地点会自动带出地区+省份。
 - **自定义点的近似口径**：天际线与地景按最近站点推算；**波特尔用城市光晕模型**（GeoNames 中国城市人口 + Walker 衰减）估算——市中心 B8–9、城外 30 km 约 B7、50 km 约 B6、120 km 约 B4、戈壁深处 B1–2；距某个预设站点 3 km 以内时直接沿用该站点的策展值。便签与备注都会写明来源。
 - **结果范围**：无论选站点还是自定义点，查询结果只包含该拍摄地。
+
+## 16. 自动发布（每晚 00:00）
+
+维护者用：每天 00:00 自动检查有没有代码改动，有就发一个新补丁版本到 dshmarket。
+
+- **只在有改动时发版**：把 `lib/`、`package.json`（去掉版本号）、`cordis.patch.yml` 算一个内容哈希，与上次发布比对；文档、测试、工具、每周更新的彗星库（`comets.json` / `db-stamp.json`）都不算改动。
+- **流程**：测试全绿 → 密钥扫描干净 → 版本号 +0.0.1 → `npm publish` → 等 npm 文件真正可下载 → 刷新市场索引并推 GitHub → 记录状态。任一步失败即中止，**不会**把索引指向一个下载不了的版本。
+- **手动体检**：`node tools/daily-release.mjs --dry-run`；手动发一版：加 `--allow-publish`；强制发：再加 `--force`。
+- **日志**：`.release-log.jsonl`（每次一行）、状态 `.release-state.json`、锁 `.release.lock`，三者都不入库。
+- **关闭**：在 DSH 的计划任务里删掉「星野计划每日自动发布」那一条即可。

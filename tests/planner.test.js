@@ -931,3 +931,41 @@ test('目标类型菜单去掉「深空·」前缀，结果行仍带细分前缀
   assert.match(row.target.typeLabel, /^深空·(星系|星云|星团|行星状星云)$/, `行标签 ${row.target.typeLabel}`)
 })
 
+test('地景方位：流星雨/星轨不按方位评分，其它题材仍按方位', async () => {
+  const { foregroundMatch } = await import('../lib/planner.js')
+  const site = { foregrounds: [
+    { name: '窄窗东机位', azFrom: 88, azTo: 92 },
+    { name: '宽窗西机位', azFrom: 180, azTo: 330 },
+  ] }
+
+  const east = foregroundMatch(site, 90)
+  const west = foregroundMatch(site, 270)
+  assert.notEqual(east.score, west.score, '正常题材：方位不同，选中的地景与得分不同')
+  assert.notEqual(east.name, west.name)
+
+  const eastIgnored = foregroundMatch(site, 90, { ignoreAzimuth: true })
+  const westIgnored = foregroundMatch(site, 270, { ignoreAzimuth: true })
+  assert.equal(eastIgnored.score, westIgnored.score, '忽略方位时两个方位得分必须相同')
+  assert.equal(eastIgnored.name, westIgnored.name, '忽略方位时选同一个地景')
+  assert.equal(eastIgnored.azimuthIgnored, true)
+  assert.equal(eastIgnored.match, 1, '忽略方位时 match 记满')
+})
+
+test('流星雨 / 星轨：地景不看方位，理由写明；银河仍按方位', async () => {
+  const meteor = await search({ eventType: 'meteor', dateStart: '2026-12-14', dateEnd: '2026-12-14', siteLimit: 12, pageSize: 3 })
+  assert.equal(meteor.ok, true)
+  const m = meteor.ranked[0]
+  assert.equal(m.foreground.azimuthIgnored, true, '流星雨应忽略方位')
+  assert.equal(m.foreground.match, null, '忽略方位时 match 置空')
+  assert.ok(m.reasons.some((line) => line.includes('不按方位评分')), '理由应写明不按方位评分')
+
+  const trail = await search({ eventType: 'startrail', dateStart: '2027-07-10', dateEnd: '2027-07-10', siteLimit: 12, pageSize: 3 })
+  assert.equal(trail.ok, true)
+  assert.equal(trail.ranked[0].foreground.azimuthIgnored, true, '星轨应忽略方位')
+  assert.equal(trail.ranked[0].foreground.match, null)
+
+  const mw = await search({ eventType: 'milkyway', dateStart: '2027-07-10', dateEnd: '2027-07-10', siteLimit: 12, pageSize: 3 })
+  assert.equal(mw.ok, true)
+  assert.notEqual(mw.ranked[0].foreground.azimuthIgnored, true, '银河仍按方位评分')
+  assert.equal(typeof mw.ranked[0].foreground.match, 'number', '银河的 match 仍是百分比')
+})

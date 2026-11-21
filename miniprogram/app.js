@@ -6,7 +6,7 @@
  */
 App({
   globalData: {
-    cloudEnv: 'YOUR_CLOUD_ENV',
+    cloudEnv: 'astroplan-d5gg67qu6533ce03c',
     meta: null,
     /** 从地图页带回来的自定义点 */
     pickedPoint: null,

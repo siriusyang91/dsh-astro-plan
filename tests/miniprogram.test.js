@@ -87,9 +87,11 @@ test('小程序工程：页面与组件文件齐全', () => {
   for (const ext of ['js', 'wxml', 'wxss', 'json']) {
     assert.ok(existsSync(join(ROOT, 'miniprogram', 'components', 'note-sheet', `index.${ext}`)), `便签组件缺少 index.${ext}`)
   }
-  const project = JSON.parse(readFileSync(join(ROOT, 'miniprogram', 'project.config.json'), 'utf8'))
+  const project = JSON.parse(readFileSync(join(ROOT, 'project.config.json'), 'utf8'))
   assert.equal(project.compileType, 'miniprogram')
-  assert.equal(project.cloudfunctionRoot, '../cloud/')
+  assert.equal(project.miniprogramRoot, 'miniprogram/')
+  assert.equal(project.cloudfunctionRoot, 'cloud/')
+  assert.equal(project.appid, 'wx4b10ca10c39f00ab', 'AppID 应已填好')
 })
 
 test('小程序：npm 包不包含小程序与云函数源码（避免插件包膨胀）', () => {

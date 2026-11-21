@@ -109,5 +109,6 @@ test('daily-release --dry-run：不写状态、不改版本', () => {
 test('daily-release 不带 --allow-publish：只体检，不发布', () => {
   const res = runReleaseScript([])
   assert.equal(res.status, 0, res.out)
-  assert.match(res.out, /未带 --allow-publish/u)
+  // 没有待发布改动时会在更早的分支直接跳过，两种情况都算「没发布」
+  assert.match(res.out, /未带 --allow-publish|无需发版/u)
 })

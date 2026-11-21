@@ -6,6 +6,7 @@
 ## 目录
 
 ```
+project.config.json   微信开发者工具工程配置（miniprogramRoot=miniprogram/，cloudfunctionRoot=cloud/）
 cloud/astroPlan/
   index.js           云函数入口（CommonJS，动态 import 加载 ESM 运行时）
   package.json       云函数依赖声明（无第三方依赖）
@@ -23,15 +24,17 @@ miniprogram/
 
 1. **注册小程序**：<https://mp.weixin.qq.com> → 立即注册 → 小程序。类目选「工具 → 信息查询」。
 2. **开通云开发**：微信开发者工具 → 云开发 → 开通 → 记下**环境 ID**。
-3. **填两个占位符**：
-   - `miniprogram/app.js` 里 `cloudEnv: 'YOUR_CLOUD_ENV'` → 你的环境 ID
-   - `miniprogram/project.config.json` 里 `appid: 'touristappid'` → 你的 AppID
-4. **构建并上传云函数**：
+3. **两个占位符已填好**：
+   - `miniprogram/app.js` → `cloudEnv: 'astroplan-d5gg67qu6533ce03c'`
+   - `miniprogram/project.config.json` → `appid: 'wx4b10ca10c39f00ab'`
+4. **构建云函数运行时**（首次或改过 `lib/` 后）：
    ```bash
    node tools/build-miniprogram.mjs          # 生成 cloud/astroPlan/runtime
    ```
-   微信开发者工具 → 资源管理器找到 `cloud/astroPlan` → 右键「上传并部署：云端安装依赖（不上传 node_modules）」。
-5. 编译预览：查询页应能加载「173 个站点」；查询后进入结果页。
+5. **导入工程**：微信开发者工具 → 导入项目 → 目录选**仓库根**（含 `project.config.json` 的那一层），
+   工具会按 `miniprogramRoot: miniprogram/` 与 `cloudfunctionRoot: cloud/` 自动识别。
+6. **上传云函数**：资源管理器里展开 `cloud/astroPlan` → 右键「上传并部署：云端安装依赖（不上传 node_modules）」。
+7. **编译预览**：查询页应显示「173 个站点」；点查询进入结果页。真机预览点「预览」扫码。
 
 ## 架构说明
 

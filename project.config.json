@@ -3,36 +3,32 @@
   "packOptions": {
     "ignore": [
       {
-        "type": "folder",
-        "value": "lib"
+        "value": "lib",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "docs"
+        "value": "docs",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "tests"
+        "value": "tests",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "tools"
+        "value": "tools",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "scripts"
+        "value": "scripts",
+        "type": "folder"
       },
       {
-        "type": "folder",
-        "value": "cloud/astroPlan/runtime"
+        "value": ".npmrc",
+        "type": "file"
       },
       {
-        "type": "file",
-        "value": ".npmrc"
-      },
-      {
-        "type": "file",
-        "value": ".github-token"
+        "value": ".github-token",
+        "type": "file"
       }
     ],
     "include": []
@@ -48,13 +44,30 @@
     "autoAudits": false,
     "showShadowRootInWxmlPanel": true,
     "compileHotReLoad": true,
-    "lazyloadPlaceholderEnable": true
+    "lazyloadPlaceholderEnable": true,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
   },
   "compileType": "miniprogram",
-  "libVersion": "3.4.0",
   "appid": "wx4b10ca10c39f00ab",
   "projectname": "dsh-astro-plan",
   "miniprogramRoot": "miniprogram/",
   "cloudfunctionRoot": "cloud/",
-  "condition": {}
+  "condition": {},
+  "simulatorPluginLibVersion": {},
+  "editorSetting": {}
 }

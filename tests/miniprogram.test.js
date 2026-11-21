@@ -101,3 +101,96 @@ test('小程序：npm 包不包含小程序与云函数源码（避免插件包�
     assert.ok(!pattern.startsWith('cloud'), 'files 不应包含 cloud')
   }
 })
+
+/** 极简 WXML 校验：标签配对 + 自定义组件必须在 usingComponents 里声明。 */
+function checkWxml(source, file) {
+  const BUILTIN_HYPHEN = new Set(['scroll-view', 'picker-view', 'picker-view-column', 'swiper-item', 'cover-view',
+    'cover-image', 'movable-view', 'movable-area', 'rich-text', 'web-view', 'functional-page-navigator',
+    'official-account', 'open-data', 'live-player', 'live-pusher', 'live-pusher', 'video', 'camera', 'ad',
+    'page-meta', 'navigation-bar', 'match-media', 'root-portal', 'share-element', 'voip-room'])
+  const stack = []
+  const tagRe = /<(\/?)([a-zA-Z][-\w]*)([^>]*?)(\/?)>/gu
+  let match = tagRe.exec(source)
+  while (match) {
+    const [, closing, name, attrs, selfClose] = match
+    const tag = name.toLowerCase()
+    if (closing) {
+      const top = stack.pop()
+      assert.equal(top, tag, `${file}: </${tag}> 与 <${top ?? '?'}> 不配对`)
+    } else if (!selfClose && !attrs.endsWith('/')) {
+      stack.push(tag)
+    }
+    match = tagRe.exec(source)
+  }
+  assert.deepEqual(stack, [], `${file}: 有未闭合的标签 ${stack.join(', ')}`)
+  return BUILTIN_HYPHEN
+}
+
+test('小程序 WXML：标签配对 + 自定义组件已声明（开发者工具会报这类错）', () => {
+  const app = JSON.parse(readFileSync(join(ROOT, 'miniprogram', 'app.json'), 'utf8'))
+  const files = app.pages.map((page) => `${page}.wxml`)
+  files.push('components/note-sheet/index.wxml')
+  for (const rel of files) {
+    const file = join(ROOT, 'miniprogram', rel)
+    const source = readFileSync(file, 'utf8')
+    checkWxml(source, rel)
+
+    // 找出用到的自定义组件
+    const builtin = checkWxml(source, rel)
+    const used = new Set()
+    for (const m of source.matchAll(/<([a-z][a-z0-9]*-[a-z0-9-]+)[\s/>]/gu)) {
+      if (!builtin.has(m[1])) used.add(m[1])
+    }
+    if (!used.size) continue
+    const jsonPath = join(ROOT, 'miniprogram', rel.replace(/\.wxml$/u, '.json'))
+    const conf = JSON.parse(readFileSync(jsonPath, 'utf8'))
+    for (const tag of used) {
+      assert.ok(conf.usingComponents && conf.usingComponents[tag],
+        `${rel} 用了 <${tag}> 但 ${rel.replace(/\.wxml$/u, '.json')} 没声明 usingComponents`)
+    }
+  }
+})
+
+test('小程序页面脚本：能在 stub 环境里加载（无语法/顶层引用错误）', () => {
+  const vm = require('node:vm')
+  const path = require('node:path')
+
+  function resolveSpec(fromFile, spec) {
+    if (!spec.startsWith('.')) return spec
+    let target = path.join(path.dirname(fromFile), spec)
+    if (!target.endsWith('.js')) target += '.js'
+    return target
+  }
+
+  function loadCjs(file, globals) {
+    const module = { exports: {} }
+    const sandbox = {
+      module,
+      exports: module.exports,
+      console,
+      require: (spec) => loadCjs(resolveSpec(file, spec), globals),
+      ...globals,
+    }
+    vm.runInNewContext(readFileSync(file, 'utf8'), sandbox, { filename: file })
+    return module.exports
+  }
+
+  const app = JSON.parse(readFileSync(join(ROOT, 'miniprogram', 'app.json'), 'utf8'))
+  const pages = app.pages.concat(['components/note-sheet/index'])
+  for (const page of pages) {
+    const file = join(ROOT, 'miniprogram', `${page}.js`)
+    const captured = []
+    const globals = {
+      Page: (config) => captured.push(config),
+      Component: (config) => captured.push(config),
+      getApp: () => ({ globalData: { meta: null, query: null, pickedPoint: null, cloudEnv: 'x' } }),
+      wx: {
+        cloud: { init() {}, callFunction() {} },
+        getLocation() {}, showToast() {}, showLoading() {}, hideLoading() {},
+        navigateTo() {}, navigateBack() {}, stopPullDownRefresh() {},
+      },
+    }
+    loadCjs(file, globals)
+    assert.equal(captured.length, 1, `${page}.js 应调用一次 Page/Component`)
+  }
+})

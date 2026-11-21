@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "推荐结果",
-  "enablePullDownRefresh": true
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "note-sheet": "/components/note-sheet/index"
+  }
 }

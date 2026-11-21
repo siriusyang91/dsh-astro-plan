@@ -15,6 +15,7 @@ Page({
     sheetTitle: '',
     reasons: [],
     poolText: '',
+    elapsed: 0,
   },
 
   onLoad() {
@@ -27,12 +28,21 @@ Page({
     this.load(1)
   },
 
+  onUnload() {
+    if (this.timer) { clearInterval(this.timer); this.timer = null }
+  },
+
   onPullDownRefresh() {
     this.load(1).then(() => wx.stopPullDownRefresh())
   },
 
   load(page) {
-    this.setData({ loading: true, error: '' })
+    this.setData({ loading: true, error: '', elapsed: 0 })
+    if (this.timer) clearInterval(this.timer)
+    const startedAt = Date.now()
+    this.timer = setInterval(() => {
+      this.setData({ elapsed: Math.round((Date.now() - startedAt) / 1000) })
+    }, 1000)
     return api.search({ ...this.query, page, pageSize: this.data.pageSize })
       .then((result) => {
         if (!result.ok) {
@@ -68,6 +78,9 @@ Page({
         })
       })
       .catch((error) => this.setData({ loading: false, error: error.message }))
+      .then(() => {
+        if (this.timer) { clearInterval(this.timer); this.timer = null }
+      })
   },
 
   openNote(e) {

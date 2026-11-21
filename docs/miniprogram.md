@@ -34,7 +34,11 @@ miniprogram/
 5. **导入工程**：微信开发者工具 → 导入项目 → 目录选**仓库根**（含 `project.config.json` 的那一层），
    工具会按 `miniprogramRoot: miniprogram/` 与 `cloudfunctionRoot: cloud/` 自动识别。
 6. **上传云函数**：资源管理器里展开 `cloud/astroPlan` → 右键「上传并部署：云端安装依赖（不上传 node_modules）」。
-7. **编译预览**：查询页应显示「173 个站点」；点查询进入结果页。真机预览点「预览」扫码。
+7. **把云函数超时时间改到 60 秒（必须）**：云函数默认只有 **3 秒**，星野计划的一次全国 7 夜查询要 5–15 秒，不改会直接报
+   `-504003 FUNCTIONS_TIME_LIMIT_EXCEEDED（Invoking task timed out after 3 seconds）`。
+   云开发控制台 → 云函数 → `astroPlan` → 配置 → **超时时间 60 秒** → 保存。
+   （`cloud/astroPlan/config.json` 里也写了 `timeout: 60`，但以控制台为准。）
+8. **编译预览**：查询页应显示「173 个站点」；点查询进入结果页。真机预览点「预览」扫码。
 
 ## 架构说明
 
@@ -79,5 +83,7 @@ miniprogram/
 | 页面提示「云开发环境未配置」 | `app.js` 的 `cloudEnv` 还是占位符 |
 | 调用报 `-501000` / 找不到函数 | 云函数没上传，或函数名不是 `astroPlan` |
 | 查询很慢（1–3 秒） | 云函数冷启动；连续调用会热起来 |
+| `-504003` / `Invoking task timed out after 3 seconds` | 云函数超时时间还是默认 3 秒：控制台改为 60 秒 |
+| `-501000` | 云函数不存在或未上传 |
 | 天气一直是「不可用」 | 云函数出网被限或 Open-Meteo 抖动；稍后重试，不影响到天文结果 |
 | 地图上没有站点标注 | `meta` 没加载成功，检查云函数是否可用 |

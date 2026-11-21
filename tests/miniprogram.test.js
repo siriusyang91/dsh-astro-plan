@@ -194,3 +194,16 @@ test('小程序页面脚本：能在 stub 环境里加载（无语法/顶层引�
     assert.equal(captured.length, 1, `${page}.js 应调用一次 Page/Component`)
   }
 })
+
+test('云函数：超时与内存配置、天气预算已压到 2.5 秒', () => {
+  const conf = JSON.parse(readFileSync(join(ROOT, 'cloud', 'astroPlan', 'config.json'), 'utf8'))
+  assert.equal(conf.timeout, 60, 'config.json 应声明 60 秒超时（控制台仍以此为准）')
+  const app = readFileSync(join(ROOT, 'cloud', 'astroPlan', 'runtime', 'app.mjs'), 'utf8')
+  assert.ok(app.includes('setWeatherBudget(2500)'), '云函数里天气预算应为 2.5 秒')
+})
+
+test('小程序端：把 -504003 翻成可操作提示', () => {
+  const src = readFileSync(join(ROOT, 'miniprogram', 'utils', 'api.js'), 'utf8')
+  assert.ok(src.includes('-504003'), '应识别超时错误码')
+  assert.ok(src.includes('超时时间'), '提示应告诉用户去改超时时间')
+})

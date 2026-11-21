@@ -4,6 +4,10 @@
 import https from 'node:https'
 import { search, meta, timeline } from './planner.js'
 import { bortleAt } from './pollution.js'
+import { setWeatherBudget } from './weather.js'
+
+// 云函数默认超时只有 3 秒：天气这种可选数据最多给 2.5 秒，天文计算照常全量
+setWeatherBudget(2500)
 
 /** Node 16 没有全局 fetch：补一个够用的 JSON GET（天气、彗星库用）。 */
 if (typeof globalThis.fetch !== 'function') {

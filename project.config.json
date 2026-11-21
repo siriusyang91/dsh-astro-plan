@@ -1,0 +1,60 @@
+{
+  "description": "星野计划 · 微信小程序",
+  "packOptions": {
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "lib"
+      },
+      {
+        "type": "folder",
+        "value": "docs"
+      },
+      {
+        "type": "folder",
+        "value": "tests"
+      },
+      {
+        "type": "folder",
+        "value": "tools"
+      },
+      {
+        "type": "folder",
+        "value": "scripts"
+      },
+      {
+        "type": "folder",
+        "value": "cloud/astroPlan/runtime"
+      },
+      {
+        "type": "file",
+        "value": ".npmrc"
+      },
+      {
+        "type": "file",
+        "value": ".github-token"
+      }
+    ],
+    "include": []
+  },
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "coverView": true,
+    "nodeModules": false,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": true,
+    "compileHotReLoad": true,
+    "lazyloadPlaceholderEnable": true
+  },
+  "compileType": "miniprogram",
+  "libVersion": "3.4.0",
+  "appid": "wx4b10ca10c39f00ab",
+  "projectname": "dsh-astro-plan",
+  "miniprogramRoot": "miniprogram/",
+  "cloudfunctionRoot": "cloud/",
+  "condition": {}
+}

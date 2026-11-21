@@ -36,7 +36,7 @@ const READ_ONLY_HINT = '令牌是只读的（或没有写入权限）：请改�
 
 const SKIP_FILE = /^(?:\.npmrc|\.github-token|.*\.log|tmp-.*|.*\.tmp)$/u
 const SKIP_DIR = /^(?:node_modules|\.npm-cache|\.git|tmp)$/u
-const ROOT_FILES = ['package.json', 'cordis.patch.yml', 'README.md', 'LICENSE', '.gitignore', 'screenshots.json']
+const ROOT_FILES = ['package.json', 'cordis.patch.yml', 'README.md', 'LICENSE', '.gitignore', 'screenshots.json', 'project.config.json']
 const DIRS = ['lib', 'docs', 'tests', 'tools', 'scripts', 'miniprogram', 'cloud']
 
 function walk(abs, rel, out) {

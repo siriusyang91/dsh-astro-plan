@@ -1,0 +1,7 @@
+{
+  "name": "astroPlan",
+  "version": "1.0.0",
+  "description": "星野计划云函数：复用插件 lib 的检索/天气/光害逻辑",
+  "main": "index.js",
+  "dependencies": {}
+}

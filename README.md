@@ -22,6 +22,16 @@
 | 画面模拟 | 立体投影 3D 天球、真实银河等值线、真实日月大小与月相、实测天际线、5°–180° 缩放、地平/赤道双坐标 |
 | 运行时依赖 | **零**（星历用 vendored astronomy-engine，星表/银河为构建期快照） |
 
+## 微信小程序版
+
+`miniprogram/` + `cloud/astroPlan/` 是同一套逻辑的微信小程序移植：计算跑在云开发云函数里（复用 `lib/`），小程序端做条件表单、结果卡片、便签弹层与原生地图选点。
+
+```bash
+node tools/build-miniprogram.mjs   # 生成 cloud/astroPlan/runtime
+```
+
+详见 [docs/miniprogram.md](docs/miniprogram.md)（需要你自己的小程序 AppID 与云开发环境 ID）。
+
 ## 安装
 
 三种方式任选其一，装完**重启 DSH 桌面应用**。
@@ -35,7 +45,7 @@ https://raw.githubusercontent.com/SiriusYANG91/dsh-astro-plan/main/docs/market-i
 **2）npm**
 
 ```bash
-dsh plugin --profile desktop add dsh-astro-plan@0.2.9
+dsh plugin --profile desktop add dsh-astro-plan@0.3.0
 ```
 
 **3）本地目录（开发）**

@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/search/index",
+    "pages/results/index",
+    "pages/map/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "星野计划",
+    "navigationBarBackgroundColor": "#0b0f17",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#0b0f17",
+    "backgroundTextStyle": "dark"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

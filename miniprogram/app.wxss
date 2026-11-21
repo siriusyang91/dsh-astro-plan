@@ -1,0 +1,130 @@
+page {
+  --bg: #0b0f17;
+  --panel: #111826;
+  --panel-2: #0e1524;
+  --line: #1f2a3d;
+  --text: #dfe7f5;
+  --dim: #8fa3c0;
+  --accent: #2f66c9;
+  --gold: #ffd479;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 28rpx;
+  line-height: 1.5;
+}
+
+.wrap {
+  padding: 24rpx 24rpx 60rpx;
+}
+
+.card {
+  background: var(--panel);
+  border: 1rpx solid var(--line);
+  border-radius: 18rpx;
+  padding: 22rpx 24rpx;
+  margin-bottom: 18rpx;
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 12rpx;
+}
+
+.label {
+  color: var(--dim);
+  font-size: 24rpx;
+  margin-bottom: 8rpx;
+}
+
+.value {
+  font-size: 28rpx;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12rpx 0;
+  border-bottom: 1rpx dashed var(--line);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.row-key {
+  color: var(--dim);
+  font-size: 24rpx;
+  flex: 0 0 190rpx;
+}
+
+.row-val {
+  flex: 1;
+  text-align: right;
+  font-size: 26rpx;
+  word-break: break-all;
+}
+
+.btn {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 14rpx;
+  font-size: 30rpx;
+  padding: 20rpx 0;
+  border: 0;
+}
+
+.btn[disabled] {
+  opacity: 0.6;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1rpx solid var(--line);
+}
+
+.chip {
+  display: inline-block;
+  padding: 6rpx 16rpx;
+  border-radius: 999rpx;
+  border: 1rpx solid var(--line);
+  color: var(--dim);
+  font-size: 22rpx;
+  margin: 0 10rpx 10rpx 0;
+}
+
+.hint {
+  color: var(--dim);
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+
+.warn {
+  color: #e0a06a;
+}
+
+.picker-value {
+  background: var(--panel-2);
+  border: 1rpx solid var(--line);
+  border-radius: 12rpx;
+  padding: 16rpx 18rpx;
+  min-height: 40rpx;
+}
+
+.input {
+  background: var(--panel-2);
+  border: 1rpx solid var(--line);
+  border-radius: 12rpx;
+  padding: 16rpx 18rpx;
+  color: var(--text);
+  font-size: 28rpx;
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10rpx 0;
+}

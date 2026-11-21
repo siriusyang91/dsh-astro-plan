@@ -1,0 +1,44 @@
+<view class="wrap">
+  <view wx:if="{{loading}}" class="hint">正在计算…（首次调用云函数需 1–3 秒冷启动）</view>
+
+  <view wx:elif="{{error}}" class="card">
+    <view class="card-title warn">查询失败</view>
+    <view class="hint">{{error}}</view>
+    <button class="btn btn-ghost" style="margin-top:16rpx" bindtap="backToSearch">返回修改条件</button>
+  </view>
+
+  <block wx:else>
+    <view class="hint" style="margin-bottom:14rpx">
+      共 {{total}} 条 · 第 {{page}}/{{pages}} 页<block wx:if="{{poolText}}"> · {{poolText}}</block>
+    </view>
+
+    <view wx:for="{{items}}" wx:key="key" class="card item" data-index="{{index}}" bindtap="openNote">
+      <view class="item-head">
+        <view class="item-title">
+          <text class="rank">#{{item.rank}}</text>
+          <text class="name">{{item.targetName}}</text>
+        </view>
+        <view class="score">{{item.score}}</view>
+      </view>
+      <view class="item-sub">{{item.typeLabel}} · {{item.siteName}} · {{item.siteMeta}}</view>
+      <view class="item-sub">{{item.date}} · {{item.window}} · 最高 {{item.altMax}}°（{{item.direction}}）</view>
+      <view class="item-sub" wx:if="{{item.distance !== '—'}}">距出发地 {{item.distance}}</view>
+      <view class="item-weather">{{item.weather}}</view>
+      <view class="hint" style="margin-top:8rpx">点击查看便签 →</view>
+    </view>
+
+    <view class="pager">
+      <button class="btn btn-ghost pager-btn" disabled="{{page <= 1}}" bindtap="prevPage">上一页</button>
+      <view class="hint">{{page}} / {{pages}}</view>
+      <button class="btn btn-ghost pager-btn" disabled="{{page >= pages}}" bindtap="nextPage">下一页</button>
+    </view>
+  </block>
+
+  <note-sheet
+    visible="{{sheetVisible}}"
+    title="{{sheetTitle}}"
+    sections="{{sections}}"
+    reasons="{{reasons}}"
+    bind:close="closeNote"
+  />
+</view>

@@ -1,0 +1,23 @@
+<!-- 便签：底部半屏弹层（对应网页版的便签浮窗） -->
+<view wx:if="{{visible}}" class="mask" bindtap="onClose">
+  <view class="sheet" catchtap="noop">
+    <view class="sheet-head">
+      <view class="sheet-title">{{title}}</view>
+      <view class="sheet-close" bindtap="onClose">关闭</view>
+    </view>
+    <scroll-view scroll-y class="sheet-body">
+      <view wx:for="{{sections}}" wx:key="title" class="sec">
+        <view class="sec-title">{{item.title}}</view>
+        <view wx:for="{{item.rows}}" wx:for-item="row" wx:key="*this" class="row">
+          <view class="row-key">{{row[0]}}</view>
+          <view class="row-val">{{row[1]}}</view>
+        </view>
+      </view>
+
+      <view wx:if="{{reasons.length}}" class="sec">
+        <view class="sec-title">推荐理由</view>
+        <view wx:for="{{reasons}}" wx:key="*this" class="reason">· {{item}}</view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

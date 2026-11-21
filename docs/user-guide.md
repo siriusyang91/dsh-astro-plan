@@ -46,7 +46,7 @@
 ```bash
 # 1) 插件市场：插件 → 发现 → 添加索引 → 粘贴索引地址 → 安装「星野计划」
 # 2) npm
-dsh plugin --profile desktop add dsh-astro-plan@0.2.9
+dsh plugin --profile desktop add dsh-astro-plan@0.3.0
 # 3) 本地目录（开发用）
 dsh plugin --profile desktop add "<本目录绝对路径>"
 ```
@@ -361,7 +361,7 @@ curl "http://127.0.0.1:<端口>/astro-plan/api/search?...&withSim=0"
 
 ---
 
-**版本**：0.2.9 · **许可**：MIT · **作者**：Sirius YANG
+**版本**：0.3.0 · **许可**：MIT · **作者**：Sirius YANG
 
 ## 15. 地图选点
 
@@ -386,3 +386,12 @@ curl "http://127.0.0.1:<端口>/astro-plan/api/search?...&withSim=0"
 - **手动体检**：`node tools/daily-release.mjs --dry-run`；手动发一版：加 `--allow-publish`；强制发：再加 `--force`。
 - **日志**：`.release-log.jsonl`（每次一行）、状态 `.release-state.json`、锁 `.release.lock`，三者都不入库。
 - **关闭**：在 DSH 的计划任务里删掉「星野计划每日自动发布」那一条即可。
+
+## 17. 微信小程序版
+
+除了电脑上的网页版，星野计划也移植到了微信小程序：计算逻辑原样跑在**微信云开发云函数**里，小程序端负责条件表单、结果卡片、便签弹层和原生地图选点。
+
+- 入口工程：`miniprogram/`；云函数：`cloud/astroPlan/`（运行时由 `node tools/build-miniprogram.mjs` 生成）
+- 需要你自己的**小程序 AppID** 与**云开发环境 ID**，填到 `miniprogram/app.js` 与 `project.config.json`
+- 与网页版的差别：结果是卡片列表（不是表格）；便签是半屏弹层，**暂无 3D 天球**；地图用微信原生 `<map>`，没有离线省界
+- 完整步骤见 [miniprogram.md](miniprogram.md)

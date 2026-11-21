@@ -1,0 +1,11 @@
+/* 结果卡片：手机竖屏优先，不做横向滚动 */
+.item { position: relative; }
+.item-head { display: flex; align-items: baseline; justify-content: space-between; }
+.item-title { display: flex; align-items: baseline; gap: 12rpx; }
+.rank { color: var(--dim); font-size: 24rpx; }
+.name { font-size: 32rpx; font-weight: 600; }
+.score { font-size: 34rpx; color: var(--gold); font-weight: 600; }
+.item-sub { color: var(--dim); font-size: 24rpx; margin-top: 6rpx; }
+.item-weather { color: #8fd0a8; font-size: 24rpx; margin-top: 8rpx; }
+.pager { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin: 24rpx 0 10rpx; }
+.pager-btn { flex: 1; font-size: 26rpx; padding: 16rpx 0; }

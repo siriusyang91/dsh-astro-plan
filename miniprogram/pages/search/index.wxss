@@ -1,0 +1,2 @@
+/* 查询页：字段上下排列，触摸区域 ≥ 88rpx */
+picker { display: block; }

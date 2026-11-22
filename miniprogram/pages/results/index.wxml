@@ -1,5 +1,5 @@
 <view class="wrap">
-  <view wx:if="{{loading}}" class="hint">正在计算… 已用 {{elapsed}} 秒（首次调用含冷启动，最长约 60 秒）</view>
+  <view wx:if="{{loading}}" class="hint">正在计算… 已用 {{elapsed}} 秒</view>
 
   <view wx:elif="{{error}}" class="card">
     <view class="card-title warn">查询失败</view>

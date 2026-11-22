@@ -718,20 +718,24 @@ test('分页：默认 20 条/页，翻页后序号连续', async () => {
   assert.ok(!p1.ranked.some((x) => key(x) === key(p2.ranked[0])), '第 2 页不应重复第 1 页内容')
 })
 
-test('日期校验：开始晚于结束、跨度超过一年都返回可读错误', async () => {
+test('日期校验：开始晚于结束、超过 5 年都返回可读错误', async () => {
   const reversed = await search({ eventType: 'deepsky', dateStart: '2027-03-10', dateEnd: '2027-03-01' })
   assert.equal(reversed.ok, false)
   assert.equal(reversed.error, 'bad_range')
   assert.match(reversed.message, /晚于/)
 
-  const tooLong = await search({ eventType: 'deepsky', dateStart: '2027-01-01', dateEnd: '2028-01-05' })
+  const tooLong = await search({ eventType: 'deepsky', dateStart: '2027-01-01', dateEnd: '2032-06-30' })
   assert.equal(tooLong.ok, false)
   assert.equal(tooLong.error, 'bad_range')
   assert.match(tooLong.message, /超过上限/)
 
-  // 恰好一年（366 天，含首尾）允许
-  const edge = await search({ eventType: 'deepsky', dateStart: '2027-01-01', dateEnd: '2028-01-01', siteLimit: 2, pageSize: 3 })
+  // 恰好 5 年（1826 天，含首尾）允许
+  const edge = await search({ eventType: 'milkyway', dateStart: '2027-01-01', dateEnd: '2031-12-31', siteLimit: 2, pageSize: 3, maxContexts: 1200 })
   assert.ok(edge.ok, edge.message)
+  // 第 1827 天开始超限
+  const over = await search({ eventType: 'deepsky', dateStart: '2027-01-01', dateEnd: '2032-01-02' })
+  assert.equal(over.ok, false)
+  assert.match(over.message, /最长 5 年/)
 })
 
 test('长跨度搜索不再截断 60 夜：全部日期都参与评估', async () => {
@@ -968,4 +972,16 @@ test('流星雨 / 星轨：地景不看方位，理由写明；银河仍按方�
   assert.equal(mw.ok, true)
   assert.notEqual(mw.ranked[0].foreground.azimuthIgnored, true, '银河仍按方位评分')
   assert.equal(typeof mw.ranked[0].foreground.match, 'number', '银河的 match 仍是百分比')
+})
+
+test('分页：最多 100 页（page 夹到 100，超出部分不再翻）', async () => {
+  const r = await search({ eventType: 'deepsky', dateStart: '2027-03-10', dateEnd: '2027-03-10', pageSize: 1, siteLimit: 3, maxBortle: 9, maxContexts: 500 })
+  assert.ok(r.ok, r.message)
+  assert.ok(r.pagination.totalPages <= 100, `totalPages 应 ≤100，实际 ${r.pagination.totalPages}`)
+  if (r.pagination.total > 100) {
+    assert.equal(r.pagination.totalPages, 100)
+    assert.ok(r.notes.some((n) => n.includes('仅显示前')), '被截断时应有备注')
+  }
+  const far = await search({ eventType: 'deepsky', dateStart: '2027-03-10', dateEnd: '2027-03-10', pageSize: 1, page: 999, siteLimit: 3, maxBortle: 9 })
+  assert.ok(far.pagination.page <= 100)
 })

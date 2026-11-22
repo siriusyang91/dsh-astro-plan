@@ -282,3 +282,50 @@ test('3D 天球：渲染模块可加载，云端 sim 接口可用', async () => 
   assert.ok(simResult.sim.frames.length > 0, '云端 sim 应返回帧')
   assert.ok(JSON.stringify(simResult.sim).length < 300 * 1024, 'sim 体积应小于 300 KB')
 })
+
+test('小程序：合规与交互修复都在位', () => {
+  const app = JSON.parse(readFileSync(join(ROOT, 'miniprogram', 'app.json'), 'utf8'))
+  assert.deepEqual(app.requiredPrivateInfos, ['getLocation'], '需要声明定位用途，否则提审被驳回')
+
+  const results = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.js'), 'utf8')
+  assert.ok(results.includes('pagination.totalPages'), '翻页要读 totalPages')
+  assert.ok(results.includes('setEnablePullDownRefresh(false)'), '便签打开时应禁用下拉刷新')
+  assert.ok(results.includes('pageScrollTo'), '翻页后回到顶部')
+
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
+  assert.ok(!wxml.includes('冷启动'), '加载文案不应再提冷启动')
+
+  const noteCss = readFileSync(join(ROOT, 'miniprogram', 'components', 'note-sheet', 'index.wxss'), 'utf8')
+  assert.match(noteCss, /\.sheet \{[^}]*height: 86vh/u, '便签弹层需要固定高度才能滚动')
+
+  const sky = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.js'), 'utf8')
+  assert.ok(sky.includes('Math.abs(dx) <= Math.abs(dy)'), '单指竖向滑动应交给页面滚动')
+})
+
+test('小程序：筛选页三组齐全且顺序为 目标/日期/地点', () => {
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
+  const iTarget = wxml.indexOf('拍摄目标')
+  const iDate = wxml.indexOf('拍摄日期')
+  const iWhere = wxml.indexOf('目的地及出发地')
+  assert.ok(iTarget >= 0 && iDate > iTarget && iWhere > iDate, '顺序应为 拍摄目标 → 拍摄日期 → 目的地及出发地')
+})
+
+test('文案：仓库里不再出现「18 类」，统一为「16 类拍摄目标」', () => {
+  const files = ['README.md', 'docs/user-guide.md', 'package.json', 'market.config.json', 'miniprogram/pages/search/index.wxml']
+  for (const rel of files) {
+    const text = readFileSync(join(ROOT, rel), 'utf8')
+    assert.ok(!/18\s*类/u.test(text), `${rel} 仍有「18 类」`)
+  }
+  const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'))
+  const market = JSON.parse(readFileSync(join(ROOT, 'market.config.json'), 'utf8'))
+  assert.ok(pkg.description.includes('16 类拍摄目标'))
+  assert.equal(pkg.description, market.description.zh)
+  assert.ok(market.description.zh.includes('最长 5 年'))
+})
+
+test('网页版：拍摄目标分组在最前', () => {
+  const src = readFileSync(join(ROOT, 'lib', 'webui.js'), 'utf8')
+  const iTarget = src.indexOf('拍摄目标</div>')
+  const iDate = src.indexOf('拍摄日期</div>')
+  assert.ok(iTarget > 0 && iDate > iTarget, '拍摄目标应在拍摄日期之前')
+})

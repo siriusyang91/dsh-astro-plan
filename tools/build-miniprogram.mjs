@@ -81,6 +81,8 @@ if (typeof globalThis.fetch !== 'function') {
   }
 }
 
+const simCache = new Map()
+
 function toJson(value) {
   return JSON.parse(JSON.stringify(value))
 }
@@ -100,6 +102,7 @@ export async function handle(event = {}) {
   if (action === 'search') {
     const opts = { ...(event.opts || {}) }
     if (opts.withSim === undefined) opts.withSim = false
+    if (opts.maxContexts === undefined) opts.maxContexts = 4000
     const result = await search(opts)
     return toJson(result)
   }
@@ -111,6 +114,18 @@ export async function handle(event = {}) {
     return toJson(result)
   }
   if (action === 'sim') {
+    const cacheKey = [
+      event.siteId || (event.siteLat + ',' + event.siteLon),
+      event.date,
+      event.targetId,
+      (event.opts && event.opts.eventType) || 'any',
+    ].join('|')
+    const hit = simCache.get(cacheKey)
+    if (hit) {
+      simCache.delete(cacheKey)
+      simCache.set(cacheKey, hit)
+      return { ok: true, cached: true, sim: hit }
+    }
     // 单结果画面模拟：用同一套查询条件，但锁定「站点 + 那一夜」，只回这一个结果的 sim
     const opts = { ...(event.opts || {}) }
     opts.dateStart = event.date
@@ -124,12 +139,21 @@ export async function handle(event = {}) {
       opts.siteLat = event.siteLat
       opts.siteLon = event.siteLon
     }
-    const result = await search(opts)
+    // 画面模拟不需要天气：把预算压到 0.6 秒，避免拖慢
+    setWeatherBudget(600)
+    let result
+    try {
+      result = await search(opts)
+    } finally {
+      setWeatherBudget(2500)
+    }
     if (!result.ok) return toJson({ ok: false, error: result.error || 'search_failed', message: result.message })
     const picked = (result.ranked || []).find((item) => item.target && item.target.id === event.targetId)
     if (!picked) return { ok: false, error: 'sim_unavailable', message: '该目标当晚不可见，无法生成画面模拟' }
     if (!picked.sim) return { ok: false, error: 'sim_empty', message: '画面模拟数据为空' }
-    return toJson({ ok: true, sim: picked.sim })
+    simCache.set(cacheKey, picked.sim)
+    while (simCache.size > 30) simCache.delete(simCache.keys().next().value)
+    return toJson({ ok: true, cached: false, sim: picked.sim })
   }
   if (action === 'bortle') {
     const lat = Number(event.lat)

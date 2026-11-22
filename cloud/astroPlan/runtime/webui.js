@@ -1068,6 +1068,18 @@ export function page() {
 <div class="wrap">
   <div class="panel">
     <div class="prow">
+      <div class="plabel">拍摄目标</div>
+      <div class="pfields" ${P}>
+        <div class="field tmenu-field"><label>目标类型</label>
+          <button id="typeBtn" class="tbtn" type="button" onclick="toggleTypeMenu()" onkeydown="onTypeKey(event)">不限</button>
+          <div id="typeMenu" class="tmenu" style="display:none"></div>
+          <input id="type" type="hidden" value="any">
+        </div>
+        <div class="field"><label>高度角≥</label><input id="alt" class="w-alt" type="number" value="0" min="0" max="80"></div>
+        <div class="field"><label>波特尔指数（光污染）≤</label><input id="bortle" class="w-bortle" type="number" value="6" min="1" max="9"></div>
+      </div>
+    </div>
+    <div class="prow">
       <div class="plabel">拍摄日期</div>
       <div class="pfields" ${P}>
         <div class="field"><label>开始日期</label><input id="d1" class="w-date" type="date"></div>
@@ -1082,18 +1094,6 @@ export function page() {
         <div class="field"><label>目标地点</label><select id="site" class="w-site" onchange="onSiteChange()"></select></div>
         <div class="field"><label>&nbsp;</label><button id="mapBtn" type="button" class="ghost" onclick="openMap()">地图选点</button></div>
         <div class="field"><label>出发地点</label><select id="originSel" class="w-origin" onchange="onOriginChange()"></select></div>
-      </div>
-    </div>
-    <div class="prow">
-      <div class="plabel">拍摄目标</div>
-      <div class="pfields" ${P}>
-        <div class="field tmenu-field"><label>目标类型</label>
-          <button id="typeBtn" class="tbtn" type="button" onclick="toggleTypeMenu()" onkeydown="onTypeKey(event)">不限</button>
-          <div id="typeMenu" class="tmenu" style="display:none"></div>
-          <input id="type" type="hidden" value="any">
-        </div>
-        <div class="field"><label>高度角≥</label><input id="alt" class="w-alt" type="number" value="0" min="0" max="80"></div>
-        <div class="field"><label>波特尔指数（光污染）≤</label><input id="bortle" class="w-bortle" type="number" value="6" min="1" max="9"></div>
       </div>
     </div>
     <div class="pactions">

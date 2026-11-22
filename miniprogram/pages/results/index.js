@@ -39,6 +39,7 @@ Page({
 
   onUnload() {
     if (this.timer) { clearInterval(this.timer); this.timer = null }
+    wx.setEnablePullDownRefresh(true)
   },
 
   onPullDownRefresh() {
@@ -59,6 +60,7 @@ Page({
           return
         }
         const pagination = result.pagination || {}
+        const pages = pagination.totalPages || pagination.pages || 1
         const items = (result.ranked || []).map((item, index) => ({
           key: `${page}-${index}`,
           rank: item.rank,
@@ -80,7 +82,7 @@ Page({
           items,
           page: pagination.page || page,
           total: pagination.total || items.length,
-          pages: pagination.pages || 1,
+          pages: pages,
           poolText: result.poolSize
             ? `候选 ${result.poolSize.candidates} 条 · 评估站点 ${result.poolSize.sites} 个`
             : '',
@@ -105,6 +107,7 @@ Page({
     }
     if (site.custom) { context.siteLat = site.lat; context.siteLon = site.lon }
     else context.siteId = site.id
+    wx.setEnablePullDownRefresh(false)
     this.setData({
       sheetVisible: true,
       sheetTitle: `${item.targetName} · ${item.siteName}`,
@@ -132,17 +135,20 @@ Page({
   },
 
   closeNote() {
+    wx.setEnablePullDownRefresh(true)
     this.setData({ sheetVisible: false })
   },
 
   prevPage() {
     if (this.data.page <= 1) return
     this.load(this.data.page - 1)
+    wx.pageScrollTo({ scrollTop: 0, duration: 200 })
   },
 
   nextPage() {
     if (this.data.page >= this.data.pages) return
     this.load(this.data.page + 1)
+    wx.pageScrollTo({ scrollTop: 0, duration: 200 })
   },
 
   backToSearch() {

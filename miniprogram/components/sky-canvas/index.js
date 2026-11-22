@@ -121,16 +121,18 @@ Component({
       const touches = e.touches || []
       if (touches.length > 1 && this.gesture.dist) {
         const dist = Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY)
-        const fov = this.gesture.fov * (this.gesture.dist / Math.max(1, dist))
-        this.camera.fov = Math.max(20, Math.min(180, fov))
-      } else if (touches.length === 1) {
-        const dx = touches[0].clientX - this.gesture.x
-        const dy = touches[0].clientY - this.gesture.y
-        this.camera.yaw = ((this.camera.yaw - dx * 0.35) % 360 + 360) % 360
-        this.camera.pitch = Math.max(-10, Math.min(90, this.camera.pitch + dy * 0.25))
-        this.gesture.x = touches[0].clientX
-        this.gesture.y = touches[0].clientY
+        this.camera.fov = Math.max(20, Math.min(180, this.gesture.fov * (this.gesture.dist / Math.max(1, dist))))
+        this.draw()
+        return
       }
+      if (touches.length !== 1) return
+      const dx = touches[0].clientX - this.gesture.x
+      const dy = touches[0].clientY - this.gesture.y
+      // 只接管「横向为主」的拖动：竖向留给 scroll-view，避免抢走便签的上下滑动
+      if (Math.abs(dx) <= Math.abs(dy)) return
+      this.camera.yaw = ((this.camera.yaw - dx * 0.35) % 360 + 360) % 360
+      this.gesture.x = touches[0].clientX
+      this.gesture.y = touches[0].clientY
       this.draw()
     },
 

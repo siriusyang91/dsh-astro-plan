@@ -1,4 +1,9 @@
-<view class="wrap">
+<view class="wrap compact">
+  <view class="topbar">
+    <text class="topbar-title">星野计划</text>
+    <text class="topbar-sub">by Sirius YANG</text>
+  </view>
+
   <view wx:if="{{loading}}" class="hint">正在加载站点库…</view>
   <view wx:elif="{{error}}" class="card">
     <view class="card-title warn">加载失败</view>
@@ -7,82 +12,63 @@
   </view>
 
   <block wx:else>
-    <view class="hero">
-      <view class="hero-title">星野计划</view>
-      <view class="hero-sub">by Sirius YANG</view>
-      <view class="hint">全国 173 站 · 18 类天象 · 7 天天气 · 3D 天球画面模拟</view>
+    <!-- 1. 拍摄目标（置顶） -->
+    <view class="card">
+      <view class="card-title">拍摄目标</view>
+      <view class="frow">
+        <text class="flabel">类型</text>
+        <picker mode="selector" range="{{types}}" range-key="label" value="{{typeIndex}}" bindchange="onType">
+          <view class="fv">{{types[typeIndex].label}}</view>
+        </picker>
+      </view>
+      <view class="frow">
+        <text class="flabel">高度角≥{{minAlt}}°</text>
+        <slider style="flex:1" min="0" max="60" step="5" value="{{minAlt}}" show-value="{{false}}" bindchange="onAlt" activeColor="#2f66c9" />
+      </view>
+      <view class="frow">
+        <text class="flabel">波特尔≤B{{bortle}}</text>
+        <slider style="flex:1" min="1" max="9" step="1" value="{{bortle}}" show-value="{{false}}" bindchange="onBortle" activeColor="#2f66c9" />
+      </view>
     </view>
 
-    <!-- 1. 拍摄日期 -->
+    <!-- 2. 拍摄日期 -->
     <view class="card">
       <view class="card-title">拍摄日期</view>
       <view class="grid2">
-        <view>
-          <view class="label">开始日期</view>
-          <picker mode="date" value="{{d1}}" bindchange="onDate1">
-            <view class="picker-value">{{d1}}</view>
-          </picker>
-        </view>
-        <view>
-          <view class="label">结束日期</view>
-          <picker mode="date" value="{{d2}}" bindchange="onDate2">
-            <view class="picker-value">{{d2}}</view>
-          </picker>
-        </view>
+        <picker mode="date" value="{{d1}}" bindchange="onDate1">
+          <view class="fv">{{d1}}</view>
+        </picker>
+        <picker mode="date" value="{{d2}}" bindchange="onDate2">
+          <view class="fv">{{d2}}</view>
+        </picker>
       </view>
+      <view class="hint tiny">跨度上限 5 年，超过 180 夜按间隔抽样</view>
     </view>
 
-    <!-- 2. 目的地及出发地 -->
+    <!-- 3. 目的地及出发地 -->
     <view class="card">
       <view class="card-title">目的地及出发地</view>
-
-      <view class="label">目标地区</view>
-      <picker mode="selector" range="{{regions}}" value="{{regionIndex}}" bindchange="onRegion">
-        <view class="picker-value">{{regions[regionIndex]}}</view>
-      </picker>
-
-      <view class="label" style="margin-top:16rpx">目标省份</view>
-      <picker mode="selector" range="{{provinces}}" range-key="label" value="{{provinceIndex}}" bindchange="onProvince">
-        <view class="picker-value">{{provinces[provinceIndex].label}}</view>
-      </picker>
-
-      <view class="label" style="margin-top:16rpx">目标地点</view>
-      <picker mode="selector" range="{{sites}}" range-key="label" value="{{siteIndex}}" bindchange="onSite" disabled="{{custom}}">
-        <view class="picker-value">{{custom ? customLabel : sites[siteIndex].label}}</view>
-      </picker>
-
-      <view class="grid2" style="margin-top:16rpx">
-        <button class="btn btn-ghost" bindtap="openMap">地图选点</button>
-        <button wx:if="{{custom}}" class="btn btn-ghost" bindtap="clearCustom">清除自定义点</button>
-        <view wx:else></view>
+      <view class="grid2">
+        <picker mode="selector" range="{{regions}}" value="{{regionIndex}}" bindchange="onRegion">
+          <view class="fv">{{regions[regionIndex]}}</view>
+        </picker>
+        <picker mode="selector" range="{{provinces}}" range-key="label" value="{{provinceIndex}}" bindchange="onProvince">
+          <view class="fv">{{provinces[provinceIndex].label}}</view>
+        </picker>
       </view>
-      <view wx:if="{{custom}}" class="hint" style="margin-top:10rpx">结果只包含这个自定义点</view>
-
-      <view class="label" style="margin-top:16rpx">出发地点</view>
-      <picker mode="selector" range="{{origins}}" range-key="label" value="{{originIndex}}" bindchange="onOrigin">
-        <view class="picker-value">{{origins[originIndex].label}}</view>
-      </picker>
-      <view class="hint" style="margin-top:10rpx">未授权定位时按北京计算</view>
-    </view>
-
-    <!-- 3. 拍摄目标 -->
-    <view class="card">
-      <view class="card-title">拍摄目标</view>
-
-      <view class="label">目标类型</view>
-      <picker mode="selector" range="{{types}}" range-key="label" value="{{typeIndex}}" bindchange="onType">
-        <view class="picker-value">{{types[typeIndex].label}}</view>
-      </picker>
-
-      <view class="row" style="margin-top:16rpx">
-        <view class="row-key">最低高度角 {{minAlt}}°</view>
-        <slider style="flex:1" min="0" max="60" step="5" value="{{minAlt}}" show-value="{{false}}" bindchange="onAlt" activeColor="#2f66c9" />
+      <view class="grid2" style="margin-top:10rpx">
+        <picker mode="selector" range="{{sites}}" range-key="label" value="{{siteIndex}}" bindchange="onSite" disabled="{{custom}}">
+          <view class="fv">{{custom ? customLabel : sites[siteIndex].label}}</view>
+        </picker>
+        <picker mode="selector" range="{{origins}}" range-key="label" value="{{originIndex}}" bindchange="onOrigin">
+          <view class="fv">{{origins[originIndex].label}}</view>
+        </picker>
       </view>
-      <view class="row">
-        <view class="row-key">波特尔上限 B{{bortle}}</view>
-        <slider style="flex:1" min="1" max="9" step="1" value="{{bortle}}" show-value="{{false}}" bindchange="onBortle" activeColor="#2f66c9" />
+      <view class="grid2" style="margin-top:10rpx">
+        <button class="mini-btn" bindtap="openMap">地图选点</button>
+        <button wx:if="{{custom}}" class="mini-btn" bindtap="clearCustom">清除自定义点</button>
+        <view wx:else class="hint tiny" style="align-self:center">未授权定位时按北京计算</view>
       </view>
-      <view class="hint">波特尔越低越好（B1 最暗），城市中心通常 B8–9。</view>
     </view>
 
     <view class="actions">

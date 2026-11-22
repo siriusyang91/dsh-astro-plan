@@ -9,3 +9,6 @@
 .item-weather { color: #8fd0a8; font-size: 24rpx; margin-top: 8rpx; }
 .pager { display: flex; align-items: center; justify-content: space-between; gap: 16rpx; margin: 24rpx 0 10rpx; }
 .pager-btn { flex: 1; font-size: 26rpx; padding: 16rpx 0; }
+
+.item-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 8rpx; }
+.open-btn { color: var(--gold); font-size: 24rpx; padding: 6rpx 0 6rpx 16rpx; }

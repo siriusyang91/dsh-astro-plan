@@ -18,5 +18,10 @@
   "cloud": true,
   "requiredPrivateInfos": [
     "getLocation"
-  ]
+  ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于计算出发地到拍摄地的直线距离"
+    }
+  }
 }

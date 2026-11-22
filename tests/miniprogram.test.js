@@ -329,3 +329,52 @@ test('网页版：拍摄目标分组在最前', () => {
   const iDate = src.indexOf('拍摄日期</div>')
   assert.ok(iTarget > 0 && iDate > iTarget, '拍摄目标应在拍摄日期之前')
 })
+
+test('翻页：云端 collectAll + 缓存切片，第 2 页不重算', async () => {
+  const { search } = await import('../lib/planner.js')
+  const base = { eventType: 'deepsky', dateStart: '2027-03-10', dateEnd: '2027-03-10', pageSize: 20, siteLimit: 3, maxBortle: 9, collectAll: true }
+  const all = await search(base)
+  assert.equal(all.all.length, all.pagination.total, 'collectAll 应返回完整列表')
+  assert.equal(all.all[0].rank, 1)
+  assert.equal(all.all[all.all.length - 1].rank, all.all.length, 'rank 应连续')
+
+  const fn = require(join(ROOT, 'cloud', 'astroPlan', 'index.js'))
+  const opts = { eventType: 'deepsky', dateStart: '2027-03-10', dateEnd: '2027-03-10', pageSize: 20, siteLimit: 3, maxBortle: 9 }
+  const p1 = await fn.main({ action: 'search', opts: { ...opts, page: 1 } })
+  const p2 = await fn.main({ action: 'search', opts: { ...opts, page: 2 } })
+  assert.equal(p2.cached, true, '第 2 页应命中云端缓存')
+  assert.equal(p2.ranked[0].rank, 21, '第 2 页首条 rank 应为 21')
+  assert.equal(p1.ranked[0].rank, 1, '第 1 页首条 rank 应为 1')
+  assert.equal(p2.ranked.length <= 20, true)
+})
+
+test('便签与查询页：弹层可点开、首页内容完整', () => {
+  const noteCss = readFileSync(join(ROOT, 'miniprogram', 'components', 'note-sheet', 'index.wxss'), 'utf8')
+  assert.ok(!/inset:/u.test(noteCss), '不要用 inset（部分安卓 WebView 不支持）')
+  assert.ok(noteCss.includes('z-index: 999'), '弹层需要更高的层级')
+  const splashCss = readFileSync(join(ROOT, 'miniprogram', 'pages', 'splash', 'index.wxss'), 'utf8')
+  assert.ok(!/inset:/u.test(splashCss))
+
+  const results = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
+  assert.ok(/<\/view>\s*<note-sheet/u.test(results), 'note-sheet 应挂在页面根节点')
+  assert.ok(results.includes('catchtap="openNote"'), '卡片上要有明确可点的「查看便签」')
+
+  const search = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
+  for (const label of ['开始日期', '结束日期', '目标地区', '目标省份', '目标地点', '出发地点', '目标类型', '最低高度角', '波特尔上限']) {
+    assert.ok(search.includes(label), `查询页缺字段「${label}」`)
+  }
+  assert.ok(search.includes('16 类拍摄目标'))
+})
+
+test('结果页：翻页优先用本地缓存', () => {
+  const js = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.js'), 'utf8')
+  assert.ok(js.includes('pageCache'), '应有页面级翻页缓存')
+  assert.ok(js.includes('options.force'), '下拉刷新应强制重查')
+})
+
+test('app.json：定位权限声明齐全', () => {
+  const app = JSON.parse(readFileSync(join(ROOT, 'miniprogram', 'app.json'), 'utf8'))
+  assert.deepEqual(app.requiredPrivateInfos, ['getLocation'])
+  assert.ok(app.permission && app.permission['scope.userLocation'] && app.permission['scope.userLocation'].desc)
+  assert.ok(app.permission['scope.userLocation'].desc.length <= 30, 'desc 不能超过 30 字')
+})

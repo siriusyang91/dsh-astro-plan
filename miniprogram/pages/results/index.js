@@ -30,6 +30,8 @@ Page({
       return
     }
     this.query = { ...query }
+    // 翻页缓存：命中后不再调云函数（云端也有整份结果缓存）
+    this.pageCache = new Map()
     const app = getApp()
     if (!app.globalData.meta) {
       api.meta().then((meta) => { app.globalData.meta = meta }).catch(() => {})
@@ -43,55 +45,69 @@ Page({
   },
 
   onPullDownRefresh() {
-    this.load(1).then(() => wx.stopPullDownRefresh())
+    if (this.pageCache) this.pageCache.clear()
+    this.load(1, { force: true }).then(() => wx.stopPullDownRefresh())
   },
 
-  load(page) {
+  /** 把云端返回的一页渲染出来 */
+  applyResult(result, page) {
+    const pagination = result.pagination || {}
+    const pages = pagination.totalPages || pagination.pages || 1
+    const items = (result.ranked || []).map((item, index) => ({
+      key: `${page}-${index}`,
+      rank: item.rank,
+      score: item.score,
+      targetName: item.target.name,
+      typeLabel: item.target.typeLabel || item.target.type,
+      siteName: item.site.name,
+      siteMeta: `${item.site.province || ''} · B${item.site.bortle}`,
+      date: item.date,
+      window: `${item.window.startShort} → ${item.window.endShort}`,
+      altMax: item.geometry.altMax,
+      direction: item.geometry.directionAtMax || item.geometry.direction,
+      distance: km(item.distanceKm),
+      weather: weatherText(item.weather),
+      raw: item,
+    }))
+    this.setData({
+      loading: false,
+      error: '',
+      items,
+      page: pagination.page || page,
+      total: pagination.total || items.length,
+      pages,
+      poolText: result.poolSize
+        ? `候选 ${result.poolSize.candidates} 条 · 评估站点 ${result.poolSize.sites} 个`
+        : '',
+    })
+  },
+
+  load(page, options = {}) {
+    const cached = !options.force && this.pageCache && this.pageCache.get(page)
+    if (cached) {
+      this.applyResult(cached, page)
+      return Promise.resolve()
+    }
     this.setData({ loading: true, error: '', elapsed: 0 })
     if (this.timer) clearInterval(this.timer)
     const startedAt = Date.now()
     this.timer = setInterval(() => {
       this.setData({ elapsed: Math.round((Date.now() - startedAt) / 1000) })
     }, 1000)
+    const done = () => {
+      if (this.timer) { clearInterval(this.timer); this.timer = null }
+    }
     return api.search({ ...this.query, page, pageSize: this.data.pageSize })
       .then((result) => {
         if (!result.ok) {
           this.setData({ loading: false, error: result.message || result.error || '查询失败' })
           return
         }
-        const pagination = result.pagination || {}
-        const pages = pagination.totalPages || pagination.pages || 1
-        const items = (result.ranked || []).map((item, index) => ({
-          key: `${page}-${index}`,
-          rank: item.rank,
-          score: item.score,
-          targetName: item.target.name,
-          typeLabel: item.target.typeLabel || item.target.type,
-          siteName: item.site.name,
-          siteMeta: `${item.site.province || ''} · B${item.site.bortle}`,
-          date: item.date,
-          window: `${item.window.startShort} → ${item.window.endShort}`,
-          altMax: item.geometry.altMax,
-          direction: item.geometry.directionAtMax || item.geometry.direction,
-          distance: km(item.distanceKm),
-          weather: weatherText(item.weather),
-          raw: item,
-        }))
-        this.setData({
-          loading: false,
-          items,
-          page: pagination.page || page,
-          total: pagination.total || items.length,
-          pages: pages,
-          poolText: result.poolSize
-            ? `候选 ${result.poolSize.candidates} 条 · 评估站点 ${result.poolSize.sites} 个`
-            : '',
-        })
+        if (this.pageCache) this.pageCache.set(page, result)
+        this.applyResult(result, page)
       })
       .catch((error) => this.setData({ loading: false, error: error.message }))
-      .then(() => {
-        if (this.timer) { clearInterval(this.timer); this.timer = null }
-      })
+      .then(done, done)
   },
 
   openNote(e) {

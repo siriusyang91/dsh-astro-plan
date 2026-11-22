@@ -39,6 +39,17 @@ if (typeof globalThis.fetch !== 'function') {
 }
 
 const simCache = new Map()
+/** 完整结果缓存：翻页只切片不重算（键=查询签名，LRU 5，10 分钟过期） */
+const searchCache = new Map()
+const SEARCH_TTL = 10 * 60 * 1000
+
+function signature(opts) {
+  const copy = { ...opts }
+  delete copy.page
+  delete copy.pageSize
+  delete copy.collectAll
+  return JSON.stringify(copy)
+}
 
 function toJson(value) {
   return JSON.parse(JSON.stringify(value))
@@ -60,8 +71,35 @@ export async function handle(event = {}) {
     const opts = { ...(event.opts || {}) }
     if (opts.withSim === undefined) opts.withSim = false
     if (opts.maxContexts === undefined) opts.maxContexts = 4000
-    const result = await search(opts)
-    return toJson(result)
+    const pageSize = Math.max(1, Math.min(100, Number(opts.pageSize) || 20))
+    const wantPage = Math.max(1, Number(opts.page) || 1)
+    const key = signature(opts)
+    let entry = searchCache.get(key)
+    const hit = Boolean(entry && Date.now() - entry.at < SEARCH_TTL)
+    if (hit) {
+      searchCache.delete(key)
+      searchCache.set(key, entry)
+    } else {
+      const full = await search({ ...opts, collectAll: true, pageSize: 100, page: 1 })
+      if (!full.ok) return toJson(full)
+      entry = { at: Date.now(), data: full }
+      searchCache.set(key, entry)
+      while (searchCache.size > 5) searchCache.delete(searchCache.keys().next().value)
+    }
+    const { all, ranked, ...rest } = entry.data
+    const total = (all || []).length
+    const totalPages = Math.min(100, Math.max(1, Math.ceil(total / pageSize)))
+    const page = Math.min(wantPage, totalPages)
+    const start = (page - 1) * pageSize
+    const slice = (all || []).slice(start, start + pageSize)
+      .map((item, i) => ({ ...item, rank: start + i + 1 }))
+    return toJson({
+      ...rest,
+      query: { ...rest.query, page, pageSize },
+      ranked: slice,
+      pagination: { total, page, pageSize, totalPages },
+      cached: hit,
+    })
   }
   if (action === 'night') {
     const result = timeline(event.site || '', event.date, {

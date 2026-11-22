@@ -1,5 +1,5 @@
 <!-- 便签：底部半屏弹层（对应网页版便签浮窗） -->
-<view wx:if="{{visible}}" class="mask" bindtap="onClose">
+<view wx:if="{{visible}}" class="mask" bindtap="onClose" catchtouchmove="noop">
   <view class="sheet" catchtap="noop">
     <view class="sheet-head">
       <view class="sheet-title">{{title}}</view>

@@ -24,7 +24,10 @@
       <view class="item-sub">{{item.date}} · {{item.window}} · 最高 {{item.altMax}}°（{{item.direction}}）</view>
       <view class="item-sub" wx:if="{{item.distance !== '—'}}">距出发地 {{item.distance}}</view>
       <view class="item-weather">{{item.weather}}</view>
-      <view class="hint" style="margin-top:8rpx">点击查看便签 →</view>
+      <view class="item-actions">
+        <text class="hint">点击查看便签</text>
+        <text class="open-btn" data-index="{{index}}" catchtap="openNote">查看便签 →</text>
+      </view>
     </view>
 
     <view class="pager">
@@ -34,7 +37,10 @@
     </view>
   </block>
 
-  <note-sheet
+
+</view>
+
+<note-sheet
     visible="{{sheetVisible}}"
     title="{{sheetTitle}}"
     sections="{{sections}}"
@@ -47,4 +53,3 @@
     bind:close="closeNote"
     bind:needsim="onNeedSim"
   />
-</view>

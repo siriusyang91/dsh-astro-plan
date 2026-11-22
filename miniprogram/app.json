@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/splash/index",
+    "pages/note/index",
     "pages/search/index",
     "pages/results/index",
     "pages/map/index"

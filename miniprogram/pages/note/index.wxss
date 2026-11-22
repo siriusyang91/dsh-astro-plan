@@ -1,0 +1,20 @@
+.wrap { padding: 18rpx 20rpx 60rpx; }
+.head { padding: 4rpx 4rpx 12rpx; }
+.head-title { font-size: 34rpx; font-weight: 700; }
+.head-sub { margin-top: 4rpx; font-size: 24rpx; color: var(--dim); }
+.head-score { margin-top: 6rpx; font-size: 26rpx; color: var(--gold); }
+.row {
+  display: grid;
+  grid-template-columns: 170rpx minmax(0, 1fr);
+  gap: 12rpx;
+  padding: 10rpx 0;
+  border-bottom: 1rpx dashed var(--line);
+}
+.row:last-child { border-bottom: 0; }
+.row-key { color: var(--dim); font-size: 24rpx; }
+.row-val {
+  min-width: 0; font-size: 26rpx; text-align: right;
+  overflow-wrap: anywhere; word-break: break-word; white-space: normal;
+}
+.reason { color: var(--dim); font-size: 24rpx; line-height: 1.7; overflow-wrap: anywhere; }
+.retry { color: var(--gold); margin-left: 12rpx; }

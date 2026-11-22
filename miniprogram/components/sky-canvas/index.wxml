@@ -3,15 +3,23 @@
     id="sky"
     type="2d"
     class="cv"
-    disable-scroll="{{false}}"
     bindtouchstart="onTouchStart"
-    bindtouchmove="onTouchMove"
+    catchtouchmove="onTouchMove"
     bindtouchend="stop"
   ></canvas>
-  <view class="tip">拖动转视角 · 双指缩放 · 点击重置<text bindtap="reset" class="link">重置</text></view>
+  <view class="tip">拖动转视角（左右转向 / 上下俯仰）· 双指缩放 · 双击复位</view>
   <view class="ctrl">
     <view class="play" bindtap="togglePlay">{{playing ? '暂停' : '播放'}}</view>
     <slider style="flex:1" min="0" max="{{maxK}}" value="{{k}}" block-size="14" bindchange="onSlide" activeColor="#2f66c9" />
     <view class="frame">{{k}}/{{maxK}}</view>
+  </view>
+  <view class="ctrl">
+    <view class="key" bindtap="pitchUp">上仰</view>
+    <view class="key" bindtap="pitchDown">下俯</view>
+    <view class="key" bindtap="zoomIn">放大</view>
+    <view class="key" bindtap="zoomOut">缩小</view>
+    <view class="key" bindtap="toggleMode">{{mode === 'eq' ? '赤道坐标' : '地平坐标'}}</view>
+    <view class="key" bindtap="reset">复位</view>
+    <view class="fov">视野 {{fovText}}</view>
   </view>
 </view>

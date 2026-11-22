@@ -1,0 +1,39 @@
+<view wx:if="{{error}}" class="wrap">
+  <view class="card">
+    <view class="card-title warn">无法打开便签</view>
+    <view class="hint">{{error}}</view>
+    <button class="btn btn-ghost" style="margin-top:16rpx" bindtap="back">返回</button>
+  </view>
+</view>
+
+<view wx:elif="{{ready}}" class="wrap">
+  <view class="head">
+    <view class="head-title">{{title}}</view>
+    <view class="head-sub">{{subtitle}}</view>
+    <view class="head-score" wx:if="{{score}}">推荐度 {{score}}</view>
+  </view>
+
+  <!-- 画面模拟：随整页滚动 -->
+  <view class="card">
+    <view class="card-title">画面模拟（最佳时段）</view>
+    <sky-canvas wx:if="{{sim && sim.frames}}" sim="{{sim}}" sky="{{sky}}" />
+    <view wx:elif="{{simLoading}}" class="hint">正在生成画面模拟…（约 1–3 秒）</view>
+    <view wx:elif="{{simSkip}}" class="hint">该题材暂不支持 3D 画面模拟</view>
+    <view wx:elif="{{simError}}" class="hint warn">{{simError}}
+      <text class="retry" bindtap="retrySim">重试</text>
+    </view>
+  </view>
+
+  <view wx:for="{{sections}}" wx:key="title" class="card">
+    <view class="card-title">{{item.title}}</view>
+    <view wx:for="{{item.rows}}" wx:for-item="row" wx:key="*this" class="row">
+      <view class="row-key">{{row[0]}}</view>
+      <view class="row-val">{{row[1]}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{reasons.length}}" class="card">
+    <view class="card-title">推荐理由</view>
+    <view wx:for="{{reasons}}" wx:key="*this" class="reason">· {{item}}</view>
+  </view>
+</view>

@@ -1,32 +1,46 @@
 /** 3D 天球画面模拟（复用 lib/skyview.js 的 skyRender）。 */
 const { skyRender } = require('../../utils/skyrender')
 
+const FOV_MIN = 5
+const FOV_MAX = 180
+const PITCH_MIN = -10
+const PITCH_MAX = 90
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value))
+}
+
 Component({
   properties: {
     sim: { type: Object, value: null },
     sky: { type: Object, value: null },
-    mode: { type: String, value: 'altaz' },
   },
 
   data: {
     k: 0,
     maxK: 1,
     playing: false,
+    mode: 'altaz',
     w: 0,
     h: 0,
     ready: false,
-    label: '',
+    fovText: '100°',
   },
 
   observers: {
     sim(value) {
       if (!value || !value.frames || !value.frames.length) return
       const k = Math.max(0, Math.min(value.startIndex || 0, value.frames.length - 1))
-      this.camera = { yaw: (value.camera && value.camera.yaw) || 180, pitch: (value.camera && value.camera.pitch) || 30, fov: (value.camera && value.camera.fov) || 100 }
+      const camera = value.camera || {}
+      this.camera = {
+        yaw: camera.yaw === undefined ? 180 : camera.yaw,
+        pitch: camera.pitch === undefined ? 30 : camera.pitch,
+        fov: camera.fov === undefined ? 100 : camera.fov,
+      }
       this.setData({ k, maxK: value.frames.length - 1 })
+      this.syncFovText()
       this.draw()
     },
-    mode() { this.draw() },
   },
 
   lifetimes: {
@@ -47,32 +61,34 @@ Component({
         } catch (error) {
           dpr = 2
         }
-        const w = info.width
-        const h = info.height
         const canvas = info.node
-        canvas.width = Math.round(w * dpr)
-        canvas.height = Math.round(h * dpr)
+        canvas.width = Math.round(info.width * dpr)
+        canvas.height = Math.round(info.height * dpr)
         const ctx = canvas.getContext('2d')
         ctx.scale(dpr, dpr)
         this.canvas = canvas
         this.ctx = ctx
         this.dpr = dpr
-        this.setData({ w, h, ready: true })
+        this.setData({ w: info.width, h: info.height, ready: true })
         this.draw()
       })
     },
 
+    syncFovText() {
+      const fov = this.camera ? this.camera.fov : 100
+      this.setData({ fovText: `${Math.round(fov)}°` })
+    },
+
     draw() {
-      if (!this.ctx || !this.data.ready) return
-      const sim = this.data.sim || (this.properties && this.properties.sim)
+      if (!this.ctx || !this.data.ready || !this.camera) return
+      const sim = this.properties.sim
       if (!sim || !sim.frames || !sim.frames.length) return
-      const sky = this.properties.sky || {}
       const ctx = this.ctx
       ctx.clearRect(0, 0, this.data.w, this.data.h)
       try {
         skyRender(ctx, {
           sim,
-          sky,
+          sky: this.properties.sky || {},
           camera: this.camera,
           mode: this.data.mode,
           w: this.data.w,
@@ -80,10 +96,6 @@ Component({
         }, this.data.k)
       } catch (error) {
         console.error('skyRender 失败', error)
-      }
-      const frame = sim.frames[this.data.k]
-      if (frame && frame.t !== undefined) {
-        this.setData({ label: String(frame.t) })
       }
     },
 
@@ -108,48 +120,91 @@ Component({
       if (this.data.playing) this.setData({ playing: false })
     },
 
+    /** 缩放：手势与按钮共用，范围对齐渲染器支持 5°–180° */
+    setFov(next) {
+      if (!this.camera) return
+      this.camera.fov = clamp(next, FOV_MIN, FOV_MAX)
+      this.syncFovText()
+      this.draw()
+    },
+
+    zoomIn() { this.setFov((this.camera ? this.camera.fov : 100) / 1.25) },
+    zoomOut() { this.setFov((this.camera ? this.camera.fov : 100) * 1.25) },
+
+    /** 俯仰：按钮入口（手势之外） */
+    pitchBy(deg) {
+      if (!this.camera) return
+      this.camera.pitch = clamp(this.camera.pitch + deg, PITCH_MIN, PITCH_MAX)
+      this.draw()
+    },
+    pitchUp() { this.pitchBy(8) },
+    pitchDown() { this.pitchBy(-8) },
+
     toggleMode() {
-      this.triggerEvent('modechange')
-    },
-
-    onTouchStart(e) {
-      const touches = e.touches || []
-      this.gesture = {
-        x: touches[0] ? touches[0].clientX : 0,
-        y: touches[0] ? touches[0].clientY : 0,
-        dist: touches.length > 1 ? Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY) : 0,
-        fov: this.camera ? this.camera.fov : 100,
-      }
-    },
-
-    onTouchMove(e) {
-      if (!this.camera || !this.gesture) return
-      const touches = e.touches || []
-      if (touches.length > 1 && this.gesture.dist) {
-        const dist = Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY)
-        this.camera.fov = Math.max(20, Math.min(180, this.gesture.fov * (this.gesture.dist / Math.max(1, dist))))
-        this.draw()
-        return
-      }
-      if (touches.length !== 1) return
-      const dx = touches[0].clientX - this.gesture.x
-      const dy = touches[0].clientY - this.gesture.y
-      // 只接管「横向为主」的拖动：竖向留给 scroll-view，避免抢走便签的上下滑动
-      if (Math.abs(dx) <= Math.abs(dy)) return
-      this.camera.yaw = ((this.camera.yaw - dx * 0.35) % 360 + 360) % 360
-      this.gesture.x = touches[0].clientX
-      this.gesture.y = touches[0].clientY
+      this.setData({ mode: this.data.mode === 'eq' ? 'altaz' : 'eq' })
       this.draw()
     },
 
     reset() {
       const sim = this.properties.sim
+      const camera = (sim && sim.camera) || {}
       this.camera = {
-        yaw: (sim && sim.camera && sim.camera.yaw) || 180,
-        pitch: (sim && sim.camera && sim.camera.pitch) || 30,
-        fov: (sim && sim.camera && sim.camera.fov) || 100,
+        yaw: camera.yaw === undefined ? 180 : camera.yaw,
+        pitch: camera.pitch === undefined ? 30 : camera.pitch,
+        fov: camera.fov === undefined ? 100 : camera.fov,
       }
+      this.syncFovText()
       this.draw()
+    },
+
+    onTouchStart(e) {
+      const touches = e.touches || []
+      if (!touches.length) return
+      this.gesture = {
+        x: touches[0].clientX,
+        y: touches[0].clientY,
+        baseDist: touches.length > 1 ? this.pinchDist(touches) : 0,
+        baseFov: this.camera ? this.camera.fov : 100,
+      }
+    },
+
+    pinchDist(touches) {
+      return Math.hypot(touches[0].clientX - touches[1].clientX, touches[0].clientY - touches[1].clientY)
+    },
+
+    onTouchMove(e) {
+      if (!this.camera || !this.gesture) return
+      const touches = e.touches || []
+
+      // 双指：捏合缩放（第二根手指后到时也能立刻接管）
+      if (touches.length > 1) {
+        const dist = this.pinchDist(touches)
+        if (!this.gesture.baseDist) {
+          this.gesture.baseDist = dist
+          this.gesture.baseFov = this.camera.fov
+          return
+        }
+        if (dist > 1) this.setFov(this.gesture.baseFov * (this.gesture.baseDist / dist))
+        return
+      }
+
+      if (touches.length !== 1) return
+      if (this.gesture.baseDist) {
+        // 从双指退回单指：重置基准，避免视角跳变
+        this.gesture = { x: touches[0].clientX, y: touches[0].clientY, baseDist: 0, baseFov: this.camera.fov }
+        return
+      }
+      const dx = touches[0].clientX - this.gesture.x
+      const dy = touches[0].clientY - this.gesture.y
+      this.camera.yaw = ((this.camera.yaw - dx * 0.35) % 360 + 360) % 360
+      this.camera.pitch = clamp(this.camera.pitch + dy * 0.25, PITCH_MIN, PITCH_MAX)
+      this.gesture.x = touches[0].clientX
+      this.gesture.y = touches[0].clientY
+      this.draw()
+    },
+
+    onDoubleTap() {
+      this.reset()
     },
   },
 })

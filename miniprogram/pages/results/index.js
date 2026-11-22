@@ -1,5 +1,5 @@
 const api = require('../../utils/api')
-const { buildSections, weatherText, km } = require('../../utils/format')
+const { weatherText, km } = require('../../utils/format')
 
 Page({
   data: {
@@ -10,17 +10,8 @@ Page({
     pageSize: 20,
     total: 0,
     pages: 1,
-    sections: null,
-    sheetVisible: false,
-    sheetTitle: '',
-    reasons: [],
     poolText: '',
     elapsed: 0,
-    simContext: null,
-    sim: null,
-    simLoading: false,
-    simError: '',
-    sky: null,
   },
 
   onLoad() {
@@ -44,11 +35,6 @@ Page({
   },
 
   onPullDownRefresh() {
-    // 便签打开时不刷新结果页（动态开关下拉刷新的 API 不存在，这里改为回调内拦截）
-    if (this.data.sheetVisible) {
-      wx.stopPullDownRefresh()
-      return
-    }
     if (this.pageCache) this.pageCache.clear()
     this.load(1, { force: true }).then(() => wx.stopPullDownRefresh())
   },
@@ -118,43 +104,9 @@ Page({
     const index = Number(e.currentTarget.dataset.index)
     const item = this.data.items[index]
     if (!item) return
-    const raw = item.raw
-    const site = raw.site || {}
-    const context = {
-      date: raw.date,
-      targetId: raw.target && raw.target.id,
-      opts: this.query,
-    }
-    if (site.custom) { context.siteLat = site.lat; context.siteLon = site.lon }
-    else context.siteId = site.id
-    this.setData({
-      sheetVisible: true,
-      sheetTitle: `${item.targetName} · ${item.siteName}`,
-      sections: buildSections(raw),
-      reasons: raw.reasons || [],
-      simContext: context,
-      sim: null,
-      simError: '',
-      simLoading: false,
-      sky: (getApp().globalData.meta && getApp().globalData.meta.sky) || null,
-    })
-  },
-
-  /** 便签打开后按需拉该结果的画面模拟（云函数 action:'sim'） */
-  onNeedSim(e) {
-    const context = e.detail || this.data.simContext
-    if (!context || this.data.simLoading) return
-    this.setData({ simLoading: true, simError: '', sim: null })
-    api.sim(context)
-      .then((result) => {
-        if (result && result.ok && result.sim) this.setData({ simLoading: false, sim: result.sim })
-        else this.setData({ simLoading: false, simError: (result && result.message) || '画面模拟不可用' })
-      })
-      .catch((error) => this.setData({ simLoading: false, simError: error.message }))
-  },
-
-  closeNote() {
-    this.setData({ sheetVisible: false })
+    // 便签改为独立页面：canvas 在普通页面里才会正常跟随滚动
+    getApp().globalData.notePayload = { item: item.raw, query: this.query }
+    wx.navigateTo({ url: '/pages/note/index' })
   },
 
   prevPage() {

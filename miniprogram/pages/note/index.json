@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "目标便签",
+  "usingComponents": {
+    "sky-canvas": "/components/sky-canvas/index"
+  }
+}

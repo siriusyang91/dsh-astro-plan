@@ -78,15 +78,16 @@ test('云函数运行时：产物存在、未过期、体积受控', () => {
 
 test('小程序工程：页面与组件文件齐全', () => {
   const app = JSON.parse(readFileSync(join(ROOT, 'miniprogram', 'app.json'), 'utf8'))
-  assert.deepEqual(app.pages, ['pages/splash/index', 'pages/search/index', 'pages/results/index', 'pages/map/index'])
+  assert.deepEqual(app.pages, ['pages/splash/index', 'pages/note/index', 'pages/search/index', 'pages/results/index', 'pages/map/index'])
   for (const page of app.pages) {
     for (const ext of ['js', 'wxml', 'json']) {
       assert.ok(existsSync(join(ROOT, 'miniprogram', `${page}.${ext}`)), `缺少 ${page}.${ext}`)
     }
   }
   for (const ext of ['js', 'wxml', 'wxss', 'json']) {
-    assert.ok(existsSync(join(ROOT, 'miniprogram', 'components', 'note-sheet', `index.${ext}`)), `便签组件缺少 index.${ext}`)
+    assert.ok(existsSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', `index.${ext}`)), `天球组件缺少 index.${ext}`)
   }
+  assert.ok(!existsSync(join(ROOT, 'miniprogram', 'components', 'note-sheet')), '便签弹层组件应已删除（改为独立页面）')
   const project = JSON.parse(readFileSync(join(ROOT, 'project.config.json'), 'utf8'))
   assert.equal(project.compileType, 'miniprogram')
   assert.equal(project.miniprogramRoot, 'miniprogram/')
@@ -129,7 +130,7 @@ function checkWxml(source, file) {
 test('小程序 WXML：标签配对 + 自定义组件已声明（开发者工具会报这类错）', () => {
   const app = JSON.parse(readFileSync(join(ROOT, 'miniprogram', 'app.json'), 'utf8'))
   const files = app.pages.map((page) => `${page}.wxml`)
-  files.push('components/note-sheet/index.wxml')
+  files.push('components/sky-canvas/index.wxml')
   for (const rel of files) {
     const file = join(ROOT, 'miniprogram', rel)
     const source = readFileSync(file, 'utf8')
@@ -176,7 +177,7 @@ test('小程序页面脚本：能在 stub 环境里加载（无语法/顶层引�
   }
 
   const app = JSON.parse(readFileSync(join(ROOT, 'miniprogram', 'app.json'), 'utf8'))
-  const pages = app.pages.concat(['components/note-sheet/index', 'components/sky-canvas/index'])
+  const pages = app.pages.concat(['components/sky-canvas/index'])
   for (const page of pages) {
     const file = join(ROOT, 'miniprogram', `${page}.js`)
     const captured = []
@@ -239,11 +240,10 @@ test('筛选条件：按网页版分为三组', () => {
 })
 
 test('便签：右侧列不越界（可收缩 + 可换行）', () => {
-  const css = readFileSync(join(ROOT, 'miniprogram', 'components', 'note-sheet', 'index.wxss'), 'utf8')
-  assert.match(css, /grid-template-columns:\s*180rpx minmax\(0, 1fr\)/u, '两列布局应允许右列收缩')
+  const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'note', 'index.wxss'), 'utf8')
+  assert.match(css, /grid-template-columns:\s*170rpx minmax\(0, 1fr\)/u, '两列布局应允许右列收缩')
   assert.ok(css.includes('min-width: 0'), '右列需要 min-width:0')
   assert.ok(css.includes('overflow-wrap: anywhere'), '长文本需要断行')
-  assert.ok(css.includes('box-sizing: border-box'), '弹层需要 border-box，避免 padding 撑破')
 })
 
 test('3D 天球：渲染模块可加载，云端 sim 接口可用', async () => {
@@ -290,17 +290,22 @@ test('小程序：合规与交互修复都在位', () => {
   const results = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.js'), 'utf8')
   assert.ok(results.includes('pagination.totalPages'), '翻页要读 totalPages')
   assert.ok(!/wx\.setEnablePullDownRefresh\s*\(/u.test(results), '不存在该 API，不能再调用')
-  assert.ok(results.includes('sheetVisible) {'), '下拉刷新应在回调里判断便签是否打开')
+  assert.ok(!results.includes('sheetVisible'), '结果页不再有弹层状态')
   assert.ok(results.includes('pageScrollTo'), '翻页后回到顶部')
 
   const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
   assert.ok(!wxml.includes('冷启动'), '加载文案不应再提冷启动')
 
-  const noteCss = readFileSync(join(ROOT, 'miniprogram', 'components', 'note-sheet', 'index.wxss'), 'utf8')
-  assert.match(noteCss, /\.sheet \{[^}]*height: 86vh/u, '便签弹层需要固定高度才能滚动')
+  const notePage = readFileSync(join(ROOT, 'miniprogram', 'pages', 'note', 'index.js'), 'utf8')
+  assert.ok(notePage.includes('notePayload'), '便签页从 globalData 取数据')
+  assert.ok(notePage.includes('api.sim('), '便签页懒加载画面模拟')
 
   const sky = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.js'), 'utf8')
-  assert.ok(sky.includes('Math.abs(dx) <= Math.abs(dy)'), '单指竖向滑动应交给页面滚动')
+  assert.ok(sky.includes('this.camera.pitch + dy'), '单指纵向应能改俯仰')
+  assert.ok(sky.includes('baseDist'), '双指缩放要有动态基准')
+  assert.ok(/FOV_MIN = 5/u.test(sky) && /FOV_MAX = 180/u.test(sky), '缩放范围应对齐渲染器 5–180°')
+  const skyWxml = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.wxml'), 'utf8')
+  assert.ok(skyWxml.includes('catchtouchmove'), 'canvas 区域需要拦截页面滚动')
 })
 
 test('小程序：筛选页三组齐全且顺序为 目标/日期/地点', () => {
@@ -350,14 +355,11 @@ test('翻页：云端 collectAll + 缓存切片，第 2 页不重算', async () 
 })
 
 test('便签与查询页：弹层可点开、首页内容完整', () => {
-  const noteCss = readFileSync(join(ROOT, 'miniprogram', 'components', 'note-sheet', 'index.wxss'), 'utf8')
-  assert.ok(!/inset:/u.test(noteCss), '不要用 inset（部分安卓 WebView 不支持）')
-  assert.ok(noteCss.includes('z-index: 999'), '弹层需要更高的层级')
   const splashCss = readFileSync(join(ROOT, 'miniprogram', 'pages', 'splash', 'index.wxss'), 'utf8')
-  assert.ok(!/inset:/u.test(splashCss))
+  assert.ok(!/inset:/u.test(splashCss), '不要用 inset（部分安卓 WebView 不支持）')
 
   const results = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
-  assert.ok(/<\/view>\s*<note-sheet/u.test(results), 'note-sheet 应挂在页面根节点')
+  assert.ok(!results.includes('note-sheet'), '结果页不再内嵌弹层')
   assert.ok(results.includes('catchtap="openNote"'), '卡片上要有明确可点的「查看便签」')
 
   const search = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
@@ -395,4 +397,53 @@ test('小程序：不得调用不存在的 wx.setEnablePullDownRefresh', () => {
     const text = readFileSync(file, 'utf8')
     assert.ok(!/wx\.setEnablePullDownRefresh\s*\(/u.test(text), `${file} 调用了不存在的 API`)
   }
+})
+
+test('手势：单指同时改 yaw/pitch，双指捏合改 fov（第二根手指后到也生效）', () => {
+  const vm = require('node:vm')
+  const caught = []
+  const sandbox = {
+    module: { exports: {} },
+    exports: {},
+    console,
+    require: () => ({ skyRender: () => {} }),
+    Component: (config) => caught.push(config),
+    wx: {},
+  }
+  const source = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.js'), 'utf8')
+  vm.runInNewContext(source, sandbox, { filename: 'sky-canvas.js' })
+  const def = caught[0]
+  assert.ok(def, '应能加载 sky-canvas 组件')
+
+  const inst = {
+    data: { mode: 'altaz', ready: false, k: 0 },
+    properties: { sim: null, sky: null },
+    camera: { yaw: 180, pitch: 30, fov: 100 },
+    setData(patch) { Object.assign(this.data, patch) },
+    draw() {},
+  }
+  // 组件 methods 都挂到实例上（pinchDist 之类会被内部调用）
+  for (const [name, fn] of Object.entries(def.methods)) inst[name] = fn.bind(inst)
+  const call = (name, event) => inst[name](event)
+
+  // 单指斜向拖动：yaw 与 pitch 都要变化
+  call('onTouchStart', { touches: [{ clientX: 0, clientY: 0 }] })
+  call('onTouchMove', { touches: [{ clientX: 12, clientY: 40 }] })
+  assert.notEqual(inst.camera.yaw, 180, '横向拖动应改 yaw')
+  assert.ok(inst.camera.pitch > 30, '纵向拖动应改 pitch')
+
+  // 双指：先单指触摸，再两指进入（模拟第二根手指后到）
+  inst.camera.fov = 100
+  call('onTouchStart', { touches: [{ clientX: 0, clientY: 0 }] })
+  call('onTouchMove', { touches: [{ clientX: 0, clientY: 0 }, { clientX: 100, clientY: 0 }] })
+  call('onTouchMove', { touches: [{ clientX: 0, clientY: 0 }, { clientX: 200, clientY: 0 }] })
+  assert.ok(Math.abs(inst.camera.fov - 50) < 1, `双指距离翻倍应让 fov 减半，实际 ${inst.camera.fov}`)
+
+  // 按钮缩放与俯仰
+  inst.camera.fov = 6
+  call('zoomIn')
+  assert.ok(inst.camera.fov >= 5, 'fov 不应低于 5°')
+  call('pitchUp')
+  call('pitchDown')
+  assert.ok(inst.camera.pitch <= 90 && inst.camera.pitch >= -10)
 })

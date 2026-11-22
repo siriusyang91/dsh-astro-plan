@@ -40,7 +40,13 @@ Component({
       query.select('#sky').fields({ node: true, size: true }).exec((res) => {
         const info = res && res[0]
         if (!info || !info.node) return
-        const dpr = wx.getWindowInfo ? (wx.getWindowInfo().pixelRatio || 2) : 2
+        let dpr = 2
+        try {
+          if (typeof wx.getWindowInfo === 'function') dpr = wx.getWindowInfo().pixelRatio || 2
+          else if (typeof wx.getSystemInfoSync === 'function') dpr = wx.getSystemInfoSync().pixelRatio || 2
+        } catch (error) {
+          dpr = 2
+        }
         const w = info.width
         const h = info.height
         const canvas = info.node

@@ -41,10 +41,14 @@ Page({
 
   onUnload() {
     if (this.timer) { clearInterval(this.timer); this.timer = null }
-    wx.setEnablePullDownRefresh(true)
   },
 
   onPullDownRefresh() {
+    // 便签打开时不刷新结果页（动态开关下拉刷新的 API 不存在，这里改为回调内拦截）
+    if (this.data.sheetVisible) {
+      wx.stopPullDownRefresh()
+      return
+    }
     if (this.pageCache) this.pageCache.clear()
     this.load(1, { force: true }).then(() => wx.stopPullDownRefresh())
   },
@@ -123,7 +127,6 @@ Page({
     }
     if (site.custom) { context.siteLat = site.lat; context.siteLon = site.lon }
     else context.siteId = site.id
-    wx.setEnablePullDownRefresh(false)
     this.setData({
       sheetVisible: true,
       sheetTitle: `${item.targetName} · ${item.siteName}`,
@@ -151,7 +154,6 @@ Page({
   },
 
   closeNote() {
-    wx.setEnablePullDownRefresh(true)
     this.setData({ sheetVisible: false })
   },
 

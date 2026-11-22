@@ -289,7 +289,8 @@ test('小程序：合规与交互修复都在位', () => {
 
   const results = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.js'), 'utf8')
   assert.ok(results.includes('pagination.totalPages'), '翻页要读 totalPages')
-  assert.ok(results.includes('setEnablePullDownRefresh(false)'), '便签打开时应禁用下拉刷新')
+  assert.ok(!/wx\.setEnablePullDownRefresh\s*\(/u.test(results), '不存在该 API，不能再调用')
+  assert.ok(results.includes('sheetVisible) {'), '下拉刷新应在回调里判断便签是否打开')
   assert.ok(results.includes('pageScrollTo'), '翻页后回到顶部')
 
   const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
@@ -377,4 +378,21 @@ test('app.json：定位权限声明齐全', () => {
   assert.deepEqual(app.requiredPrivateInfos, ['getLocation'])
   assert.ok(app.permission && app.permission['scope.userLocation'] && app.permission['scope.userLocation'].desc)
   assert.ok(app.permission['scope.userLocation'].desc.length <= 30, 'desc 不能超过 30 字')
+})
+
+test('小程序：不得调用不存在的 wx.setEnablePullDownRefresh', () => {
+  const files = []
+  const walk = (dir) => {
+    for (const name of require('node:fs').readdirSync(dir)) {
+      const abs = join(dir, name)
+      const stat = require('node:fs').statSync(abs)
+      if (stat.isDirectory()) walk(abs)
+      else if (name.endsWith('.js')) files.push(abs)
+    }
+  }
+  walk(join(ROOT, 'miniprogram'))
+  for (const file of files) {
+    const text = readFileSync(file, 'utf8')
+    assert.ok(!/wx\.setEnablePullDownRefresh\s*\(/u.test(text), `${file} 调用了不存在的 API`)
+  }
 })

@@ -16,6 +16,11 @@ Page({
     reasons: [],
     poolText: '',
     elapsed: 0,
+    simContext: null,
+    sim: null,
+    simLoading: false,
+    simError: '',
+    sky: null,
   },
 
   onLoad() {
@@ -25,6 +30,10 @@ Page({
       return
     }
     this.query = { ...query }
+    const app = getApp()
+    if (!app.globalData.meta) {
+      api.meta().then((meta) => { app.globalData.meta = meta }).catch(() => {})
+    }
     this.load(1)
   },
 
@@ -87,12 +96,39 @@ Page({
     const index = Number(e.currentTarget.dataset.index)
     const item = this.data.items[index]
     if (!item) return
+    const raw = item.raw
+    const site = raw.site || {}
+    const context = {
+      date: raw.date,
+      targetId: raw.target && raw.target.id,
+      opts: this.query,
+    }
+    if (site.custom) { context.siteLat = site.lat; context.siteLon = site.lon }
+    else context.siteId = site.id
     this.setData({
       sheetVisible: true,
       sheetTitle: `${item.targetName} · ${item.siteName}`,
-      sections: buildSections(item.raw),
-      reasons: item.raw.reasons || [],
+      sections: buildSections(raw),
+      reasons: raw.reasons || [],
+      simContext: context,
+      sim: null,
+      simError: '',
+      simLoading: false,
+      sky: (getApp().globalData.meta && getApp().globalData.meta.sky) || null,
     })
+  },
+
+  /** 便签打开后按需拉该结果的画面模拟（云函数 action:'sim'） */
+  onNeedSim(e) {
+    const context = e.detail || this.data.simContext
+    if (!context || this.data.simLoading) return
+    this.setData({ simLoading: true, simError: '', sim: null })
+    api.sim(context)
+      .then((result) => {
+        if (result && result.ok && result.sim) this.setData({ simLoading: false, sim: result.sim })
+        else this.setData({ simLoading: false, simError: (result && result.message) || '画面模拟不可用' })
+      })
+      .catch((error) => this.setData({ simLoading: false, simError: error.message }))
   },
 
   closeNote() {

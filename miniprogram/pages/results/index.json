@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "推荐结果",
+  "navigationBarTitleText": "推荐结果 · 星野计划",
   "enablePullDownRefresh": true,
   "usingComponents": {
     "note-sheet": "/components/note-sheet/index"

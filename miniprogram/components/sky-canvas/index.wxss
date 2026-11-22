@@ -1,0 +1,10 @@
+.sky { width: 100%; }
+.cv { width: 100%; height: 380rpx; display: block; border-radius: 12rpx; background: #03050a; }
+.tip { margin-top: 8rpx; color: var(--dim); font-size: 22rpx; }
+.link { color: var(--gold); margin-left: 10rpx; }
+.ctrl { display: flex; align-items: center; gap: 16rpx; margin-top: 8rpx; }
+.play {
+  padding: 10rpx 24rpx; border-radius: 999rpx; border: 1rpx solid var(--line);
+  background: var(--panel-2); font-size: 24rpx; color: var(--text);
+}
+.frame { color: var(--dim); font-size: 22rpx; width: 90rpx; text-align: right; }

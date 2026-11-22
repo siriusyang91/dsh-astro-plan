@@ -35,4 +35,5 @@ module.exports = {
   search: (opts) => call('search', { opts }),
   night: (payload) => call('night', payload),
   bortle: (lat, lon) => call('bortle', { lat, lon }),
+  sim: (payload) => call('sim', payload, { timeout: 60000 }),
 }

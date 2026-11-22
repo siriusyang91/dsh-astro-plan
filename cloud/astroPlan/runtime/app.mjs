@@ -67,6 +67,27 @@ export async function handle(event = {}) {
     })
     return toJson(result)
   }
+  if (action === 'sim') {
+    // 单结果画面模拟：用同一套查询条件，但锁定「站点 + 那一夜」，只回这一个结果的 sim
+    const opts = { ...(event.opts || {}) }
+    opts.dateStart = event.date
+    opts.dateEnd = event.date
+    opts.siteLimit = 1
+    opts.pageSize = 60
+    opts.page = 1
+    opts.withSim = true
+    if (event.siteId) opts.location = event.siteId
+    else if (event.siteLat !== undefined && event.siteLon !== undefined) {
+      opts.siteLat = event.siteLat
+      opts.siteLon = event.siteLon
+    }
+    const result = await search(opts)
+    if (!result.ok) return toJson({ ok: false, error: result.error || 'search_failed', message: result.message })
+    const picked = (result.ranked || []).find((item) => item.target && item.target.id === event.targetId)
+    if (!picked) return { ok: false, error: 'sim_unavailable', message: '该目标当晚不可见，无法生成画面模拟' }
+    if (!picked.sim) return { ok: false, error: 'sim_empty', message: '画面模拟数据为空' }
+    return toJson({ ok: true, sim: picked.sim })
+  }
   if (action === 'bortle') {
     const lat = Number(event.lat)
     const lon = Number(event.lon)

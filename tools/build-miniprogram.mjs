@@ -14,6 +14,8 @@
 
 import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, readdirSync, statSync, cpSync } from 'node:fs'
 import { createHash } from 'node:crypto'
+
+import * as skyview from '../lib/skyview.js'
 import { dirname, join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -108,6 +110,27 @@ export async function handle(event = {}) {
     })
     return toJson(result)
   }
+  if (action === 'sim') {
+    // 单结果画面模拟：用同一套查询条件，但锁定「站点 + 那一夜」，只回这一个结果的 sim
+    const opts = { ...(event.opts || {}) }
+    opts.dateStart = event.date
+    opts.dateEnd = event.date
+    opts.siteLimit = 1
+    opts.pageSize = 60
+    opts.page = 1
+    opts.withSim = true
+    if (event.siteId) opts.location = event.siteId
+    else if (event.siteLat !== undefined && event.siteLon !== undefined) {
+      opts.siteLat = event.siteLat
+      opts.siteLon = event.siteLon
+    }
+    const result = await search(opts)
+    if (!result.ok) return toJson({ ok: false, error: result.error || 'search_failed', message: result.message })
+    const picked = (result.ranked || []).find((item) => item.target && item.target.id === event.targetId)
+    if (!picked) return { ok: false, error: 'sim_unavailable', message: '该目标当晚不可见，无法生成画面模拟' }
+    if (!picked.sim) return { ok: false, error: 'sim_empty', message: '画面模拟数据为空' }
+    return toJson({ ok: true, sim: picked.sim })
+  }
   if (action === 'bortle') {
     const lat = Number(event.lat)
     const lon = Number(event.lon)
@@ -119,6 +142,19 @@ export async function handle(event = {}) {
   return { ok: false, error: 'bad_action', message: \`未知 action：\${action}\` }
 }
 `
+
+/** lib/skyview.js 的 RENDER_SRC → 小程序可 require 的绘制模块。 */
+function buildSkyRenderer() {
+  const { RENDER_SRC } = skyview
+  const out = `/**
+ * 3D 天球渲染（由 lib/skyview.js 的 RENDER_SRC 生成，请勿手改）。
+ * 用法：require('./skyrender').skyRender(ctx, { sim, sky, camera, mode, w, h }, frameIndex)
+ */
+${RENDER_SRC}
+module.exports = { skyRender }
+`
+  writeFileSync(join(MP_UTILS, 'skyrender.js'), out)
+}
 
 /** lib/coord.js（ESM）→ 小程序可 require 的 CommonJS。 */
 function buildCoordModule() {
@@ -169,6 +205,7 @@ function build() {
   writeFileSync(join(RUNTIME, 'app.mjs'), APP_MJS)
   writeFileSync(join(RUNTIME, 'VERSION.json'), `${JSON.stringify({ libHash: libHash(), builtAt: new Date().toISOString() }, null, 2)}\n`)
   buildCoordModule()
+  buildSkyRenderer()
   check()
 }
 
@@ -189,6 +226,8 @@ function check() {
   if (size > LIMIT_BYTES) throw new Error(`运行时 ${(size / 1024 / 1024).toFixed(1)} MB 超过 8 MB 上限`)
   const mp = join(ROOT, 'miniprogram')
   if (!existsSync(join(mp, 'app.json'))) throw new Error('缺少 miniprogram/app.json')
+  if (!existsSync(join(MP_UTILS, 'skyrender.js'))) throw new Error('缺少 miniprogram/utils/skyrender.js，先跑构建')
+  if (!existsSync(join(mp, 'assets', 'splash.jpg'))) throw new Error('缺少 miniprogram/assets/splash.jpg（开屏图）')
   console.log(`✓ 云函数运行时 ${(size / 1024).toFixed(0)} KB（上限 ${(LIMIT_BYTES / 1024 / 1024).toFixed(0)} MB）`)
   console.log(`  ${relative(ROOT, RUNTIME)} → 复制到微信云函数 astroPlan/runtime 即可`)
 }

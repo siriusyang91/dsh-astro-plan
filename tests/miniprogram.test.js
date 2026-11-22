@@ -78,7 +78,7 @@ test('云函数运行时：产物存在、未过期、体积受控', () => {
 
 test('小程序工程：页面与组件文件齐全', () => {
   const app = JSON.parse(readFileSync(join(ROOT, 'miniprogram', 'app.json'), 'utf8'))
-  assert.deepEqual(app.pages, ['pages/search/index', 'pages/results/index', 'pages/map/index'])
+  assert.deepEqual(app.pages, ['pages/splash/index', 'pages/search/index', 'pages/results/index', 'pages/map/index'])
   for (const page of app.pages) {
     for (const ext of ['js', 'wxml', 'json']) {
       assert.ok(existsSync(join(ROOT, 'miniprogram', `${page}.${ext}`)), `缺少 ${page}.${ext}`)
@@ -176,7 +176,7 @@ test('小程序页面脚本：能在 stub 环境里加载（无语法/顶层引�
   }
 
   const app = JSON.parse(readFileSync(join(ROOT, 'miniprogram', 'app.json'), 'utf8'))
-  const pages = app.pages.concat(['components/note-sheet/index'])
+  const pages = app.pages.concat(['components/note-sheet/index', 'components/sky-canvas/index'])
   for (const page of pages) {
     const file = join(ROOT, 'miniprogram', `${page}.js`)
     const captured = []
@@ -188,6 +188,8 @@ test('小程序页面脚本：能在 stub 环境里加载（无语法/顶层引�
         cloud: { init() {}, callFunction() {} },
         getLocation() {}, showToast() {}, showLoading() {}, hideLoading() {},
         navigateTo() {}, navigateBack() {}, stopPullDownRefresh() {},
+        createSelectorQuery() { return { in() { return this }, select() { return this }, fields() { return this }, exec() {} } },
+        getWindowInfo() { return { pixelRatio: 2 } },
       },
     }
     loadCjs(file, globals)
@@ -206,4 +208,77 @@ test('小程序端：把 -504003 翻成可操作提示', () => {
   const src = readFileSync(join(ROOT, 'miniprogram', 'utils', 'api.js'), 'utf8')
   assert.ok(src.includes('-504003'), '应识别超时错误码')
   assert.ok(src.includes('超时时间'), '提示应告诉用户去改超时时间')
+})
+
+test('开屏页：首页是 splash，1 秒后跳查询页', () => {
+  const app = JSON.parse(readFileSync(join(ROOT, 'miniprogram', 'app.json'), 'utf8'))
+  assert.equal(app.pages[0], 'pages/splash/index', 'splash 必须是首个页面')
+  assert.match(app.window.navigationBarTitleText, /by Sirius YANG/u, '全局标题应带作者')
+  const js = readFileSync(join(ROOT, 'miniprogram', 'pages', 'splash', 'index.js'), 'utf8')
+  assert.match(js, /setTimeout\([\s\S]*?, 1000\)/u, '开屏应 1 秒后跳转')
+  assert.ok(js.includes("wx.redirectTo({ url: '/pages/search/index' })"), '应跳转到查询页')
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'splash', 'index.wxml'), 'utf8')
+  assert.ok(wxml.includes('/assets/splash.jpg'), '开屏应使用附件图')
+  assert.ok(wxml.includes('欢迎使用星野计划'), '开屏应显示欢迎语')
+})
+
+test('标题：各页都带「星野计划」', () => {
+  for (const page of ['pages/search/index.json', 'pages/results/index.json', 'pages/map/index.json', 'pages/splash/index.json']) {
+    const conf = JSON.parse(readFileSync(join(ROOT, 'miniprogram', page), 'utf8'))
+    assert.match(conf.navigationBarTitleText, /星野计划/u, page + ' 标题应含星野计划')
+  }
+})
+
+test('筛选条件：按网页版分为三组', () => {
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
+  for (const title of ['拍摄日期', '目的地及出发地', '拍摄目标']) {
+    assert.ok(wxml.includes(title), `缺少分组「${title}」`)
+  }
+  const js = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.js'), 'utf8')
+  assert.ok(js.includes('onReset'), '应有重置按钮逻辑')
+})
+
+test('便签：右侧列不越界（可收缩 + 可换行）', () => {
+  const css = readFileSync(join(ROOT, 'miniprogram', 'components', 'note-sheet', 'index.wxss'), 'utf8')
+  assert.match(css, /grid-template-columns:\s*180rpx minmax\(0, 1fr\)/u, '两列布局应允许右列收缩')
+  assert.ok(css.includes('min-width: 0'), '右列需要 min-width:0')
+  assert.ok(css.includes('overflow-wrap: anywhere'), '长文本需要断行')
+  assert.ok(css.includes('box-sizing: border-box'), '弹层需要 border-box，避免 padding 撑破')
+})
+
+test('3D 天球：渲染模块可加载，云端 sim 接口可用', async () => {
+  const source = readFileSync(join(ROOT, 'miniprogram', 'utils', 'skyrender.js'), 'utf8')
+  const sandbox = { exports: {} }
+  new Function('module', 'exports', source)(sandbox, sandbox.exports)
+  assert.equal(typeof sandbox.exports.skyRender, 'function', 'skyrender 应导出 skyRender')
+
+  // 用真 sim 数据喂给渲染函数：假 ctx 全 noop，不应抛错
+  const { search } = await import('../lib/planner.js')
+  const result = await search({ eventType: 'milkyway', dateStart: '2026-12-14', dateEnd: '2026-12-14', pageSize: 1, withSim: true })
+  const sim = result.ranked[0].sim
+  const { meta } = await import('../lib/planner.js')
+  const noop = () => {}
+  const ctx = {
+    createLinearGradient: () => ({ addColorStop: noop }),
+    createRadialGradient: () => ({ addColorStop: noop }),
+    fillRect: noop, strokeRect: noop, fillText: noop, beginPath: noop, closePath: noop,
+    moveTo: noop, lineTo: noop, arc: noop, fill: noop, stroke: noop, save: noop, restore: noop,
+    clip: noop, setLineDash: noop, rect: noop, measureText: () => ({ width: 10 }),
+    translate: noop, scale: noop, rotate: noop,
+  }
+  assert.doesNotThrow(() => {
+    sandbox.exports.skyRender(ctx, { sim, sky: meta().sky, camera: sim.camera, mode: 'altaz', w: 480, h: 270 }, 0)
+  }, 'skyRender 在假 ctx 上不应抛错')
+
+  const fn = require(join(ROOT, 'cloud', 'astroPlan', 'index.js'))
+  const simResult = await fn.main({
+    action: 'sim',
+    opts: { eventType: 'milkyway', minAltitude: 0, maxBortle: 6 },
+    siteId: 'lenghu',
+    date: '2026-12-14',
+    targetId: result.ranked[0].target.id,
+  })
+  assert.equal(simResult.ok, true, simResult.message || '')
+  assert.ok(simResult.sim.frames.length > 0, '云端 sim 应返回帧')
+  assert.ok(JSON.stringify(simResult.sim).length < 300 * 1024, 'sim 体积应小于 300 KB')
 })

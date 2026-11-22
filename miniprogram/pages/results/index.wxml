@@ -39,6 +39,12 @@
     title="{{sheetTitle}}"
     sections="{{sections}}"
     reasons="{{reasons}}"
+    sim-context="{{simContext}}"
+    sim="{{sim}}"
+    sim-loading="{{simLoading}}"
+    sim-error="{{simError}}"
+    sky="{{sky}}"
     bind:close="closeNote"
+    bind:needsim="onNeedSim"
   />
 </view>

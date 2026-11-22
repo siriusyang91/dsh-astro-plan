@@ -3,17 +3,42 @@
   display: flex; align-items: flex-end; z-index: 100;
 }
 .sheet {
-  width: 100%; max-height: 84vh; background: var(--panel);
+  box-sizing: border-box;
+  width: 100%; max-height: 86vh; background: var(--panel);
   border-radius: 24rpx 24rpx 0 0; border-top: 1rpx solid var(--line);
   display: flex; flex-direction: column;
 }
 .sheet-head {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 22rpx 24rpx; border-bottom: 1rpx solid var(--line);
+  gap: 16rpx; padding: 22rpx 24rpx; border-bottom: 1rpx solid var(--line);
 }
-.sheet-title { font-size: 30rpx; font-weight: 600; flex: 1; }
-.sheet-close { color: var(--dim); font-size: 26rpx; padding: 8rpx 16rpx; }
-.sheet-body { flex: 1; padding: 10rpx 24rpx 40rpx; }
+.sheet-title {
+  flex: 1; min-width: 0; font-size: 30rpx; font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.sheet-close { flex: 0 0 auto; color: var(--dim); font-size: 26rpx; padding: 8rpx 16rpx; }
+
+/* 关键：右侧列必须能收缩，长文本要能换行，否则会顶出屏幕 */
+.sheet-body { flex: 1; min-height: 0; padding: 6rpx 24rpx 40rpx; box-sizing: border-box; }
 .sec { margin-top: 20rpx; }
 .sec-title { font-size: 26rpx; color: var(--gold); margin-bottom: 6rpx; }
-.reason { color: var(--dim); font-size: 24rpx; line-height: 1.7; }
+.row {
+  display: grid;
+  grid-template-columns: 180rpx minmax(0, 1fr);
+  gap: 12rpx;
+  padding: 10rpx 0;
+  border-bottom: 1rpx dashed var(--line);
+}
+.row:last-child { border-bottom: 0; }
+.row-key { color: var(--dim); font-size: 24rpx; }
+.row-val {
+  min-width: 0;
+  font-size: 26rpx;
+  text-align: right;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+}
+.reason { color: var(--dim); font-size: 24rpx; line-height: 1.7; overflow-wrap: anywhere; }
+.mode-row { display: flex; gap: 12rpx; margin-top: 10rpx; }
+.mode-row .chip.on { color: var(--gold); border-color: var(--gold); }

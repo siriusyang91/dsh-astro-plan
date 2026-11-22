@@ -192,6 +192,25 @@ Page({
     })
   },
 
+  onReset() {
+    const app = getApp()
+    app.globalData.pickedPoint = null
+    app.globalData.query = null
+    this.setData({
+      typeIndex: 0,
+      d1: today(0),
+      d2: today(6),
+      minAlt: 0,
+      bortle: 6,
+      custom: null,
+      customLabel: '',
+      originIndex: 1,
+      originLabel: '目前所在地',
+    })
+    this.applyRegion(0)
+    wx.showToast({ title: '已恢复默认条件', icon: 'none' })
+  },
+
   async onSearch() {
     if (this.data.d1 > this.data.d2) {
       wx.showToast({ title: '开始日期不能晚于结束日期', icon: 'none' })

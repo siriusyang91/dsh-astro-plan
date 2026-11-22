@@ -1,0 +1,9 @@
+<view class="splash" bindtap="skip">
+  <image class="bg" src="/assets/splash.jpg" mode="aspectFill" />
+  <view class="veil"></view>
+  <view class="stage">
+    <view class="title">星野计划</view>
+    <view class="sub">by Sirius YANG</view>
+    <view class="welcome">欢迎使用星野计划</view>
+  </view>
+</view>

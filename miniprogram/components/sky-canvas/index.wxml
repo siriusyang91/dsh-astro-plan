@@ -1,0 +1,17 @@
+<view class="sky">
+  <canvas
+    id="sky"
+    type="2d"
+    class="cv"
+    disable-scroll="{{false}}"
+    bindtouchstart="onTouchStart"
+    bindtouchmove="onTouchMove"
+    bindtouchend="stop"
+  ></canvas>
+  <view class="tip">拖动转视角 · 双指缩放 · 点击重置<text bindtap="reset" class="link">重置</text></view>
+  <view class="ctrl">
+    <view class="play" bindtap="togglePlay">{{playing ? '暂停' : '播放'}}</view>
+    <slider style="flex:1" min="0" max="{{maxK}}" value="{{k}}" block-size="14" bindchange="onSlide" activeColor="#2f66c9" />
+    <view class="frame">{{k}}/{{maxK}}</view>
+  </view>
+</view>

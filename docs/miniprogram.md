@@ -40,6 +40,14 @@ miniprogram/
    （`cloud/astroPlan/config.json` 里也写了 `timeout: 60`，但以控制台为准。）
 8. **编译预览**：查询页应显示「173 个站点」；点查询进入结果页。真机预览点「预览」扫码。
 
+## 界面与交互
+
+- **开屏**：`pages/splash/index` 是首个页面，全屏星空图 + 「欢迎使用星野计划」，1 秒后 `redirectTo` 查询页（点一下可跳过）。换图只需替换 `miniprogram/assets/splash.jpg`（建议 ≤200 KB）。
+- **标题**：全局与各页导航栏标题为「星野计划 by Sirius YANG」（结果页/地图页带后缀）。
+- **筛选条件**：按网页版分三组卡片——**拍摄日期**（开始/结束）、**目的地及出发地**（地区/省份/地点/地图选点/出发地）、**拍摄目标**（类型/高度角/波特尔上限），底部查询 + 重置。
+- **便签弹层**：右列允许收缩与换行（`grid-template-columns: 180rpx minmax(0,1fr)` + `overflow-wrap:anywhere`），长文本不会顶出屏幕。
+- **3D 天球**：便签打开时按需调用云函数 `action:'sim'`（单结果，26–60 KB），用 `miniprogram/utils/skyrender.js`（由 `lib/skyview.js` 的 RENDER_SRC 生成）绘制；支持拖动转视角、双指缩放、播放/暂停、地平/赤道坐标切换。星表取 `meta.sky`（首次进入结果页时缓存）。
+
 ## 架构说明
 
 - **不连你的电脑**：小程序的网络请求必须走已备案域名或云开发，因此把计算整体搬到云函数。
@@ -68,6 +76,7 @@ miniprogram/
 | `search` | `opts`（与网页版一致，默认 `withSim:false`） | 与网页版 `search()` 相同结构 |
 | `night` | `site` 或 `siteLat/siteLon` + `date` | 单夜时间轴 |
 | `bortle` | `lat`、`lon` | 城市光晕模型估算的波特尔 |
+| `sim` | `opts` + `siteId` 或 `siteLat/siteLon` + `date` + `targetId` | 单结果 3D 画面模拟数据（懒加载） |
 
 ## 合规与审核
 

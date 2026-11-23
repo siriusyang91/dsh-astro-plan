@@ -1752,6 +1752,8 @@ window.__ModuleLoader__.load({
 
       ctx.restore(); // 结束天空裁剪
 
+      // 全屏时由小程序端自绘 HUD，渲染器可跳过这段
+      if (!view.hideHud) {
       // HUD：加半透明底衬，白天/暮光/夜间都可读
       var hudDark = sunAlt < -3;
       var hud = hudDark ? '#e8f0ff' : '#0d2747';
@@ -1806,6 +1808,7 @@ window.__ModuleLoader__.load({
         ctx.font = font(10);
         ctx.fillStyle = hudDim;
         ctx.fillText('最佳时段 ' + sim.window.start + ' – ' + sim.window.end, W - 9 * S, H - 6 * S);
+      }
       }
     }
 

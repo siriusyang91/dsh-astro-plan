@@ -535,7 +535,7 @@ test('查询页：去掉清除按钮、文案与按钮尺寸调整、自定义�
   const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
   assert.ok(!wxml.includes('clearCustom'), '不应再有清除按钮')
   assert.ok(wxml.includes('拍摄目标高度角'), '高度角文案应改')
-  assert.ok(wxml.includes('光污染（波特尔指数）'), '波特尔文案应改')
+  assert.ok(wxml.includes('光污染波特尔指数'), '波特尔文案应改')
   assert.ok(!wxml.includes('disabled="{{custom}}"'), '目标地点不应被禁用')
   assert.ok(wxml.indexOf('reset-btn') < wxml.indexOf('search-btn'), '重置应在左、查询在右')
 
@@ -559,4 +559,54 @@ test('出发地：查询页解析后传给地图页，地图优先用它', () =>
   assert.ok(iOrigin > 0 && iOrigin < iQuery, '应先读 globalData.origin')
   assert.ok(map.includes('已连线：出发地'), '有出发地时应提示已连线')
   assert.ok(map.includes('未设置出发地，不显示连线'), '无出发地时保留提示')
+})
+
+test('渲染器：hideHud 打开时不画内置 HUD', async () => {
+  const { search, meta } = await import('../lib/planner.js')
+  const r = await search({ eventType: 'milkyway', dateStart: '2026-12-14', dateEnd: '2026-12-14', pageSize: 1, withSim: true })
+  const sim = r.ranked[0].sim
+  const src = readFileSync(join(ROOT, 'miniprogram', 'utils', 'skyrender.js'), 'utf8')
+  const sandbox = { exports: {} }
+  new Function('module', 'exports', src)(sandbox, sandbox.exports)
+  const calls = []
+  const noop = () => {}
+  const ctx = {
+    createLinearGradient: () => ({ addColorStop: noop }),
+    createRadialGradient: () => ({ addColorStop: noop }),
+    fillRect: noop, strokeRect: noop, beginPath: noop, closePath: noop, moveTo: noop, lineTo: noop,
+    arc: noop, fill: noop, stroke: noop, save: noop, restore: noop, clip: noop, setLineDash: noop,
+    rect: noop, translate: noop, scale: noop, rotate: noop, measureText: () => ({ width: 10 }),
+    fillText: (text) => calls.push(String(text)),
+  }
+  const view = { sim, sky: meta().sky, camera: sim.camera, mode: 'altaz', w: 480, h: 270 }
+  sandbox.exports.skyRender(ctx, view, 0)
+  const withHud = calls.filter((x) => x.includes('最佳时段')).length
+  assert.ok(withHud > 0, '默认应画 HUD')
+  calls.length = 0
+  sandbox.exports.skyRender(ctx, { ...view, hideHud: true }, 0)
+  assert.equal(calls.filter((x) => x.includes('最佳时段')).length, 0, 'hideHud 时不应画 HUD')
+})
+
+test('全屏布局：顶/底操作栏、信息区、长按与动画', () => {
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.wxml'), 'utf8')
+  const js = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.js'), 'utf8')
+  const css = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.wxss'), 'utf8')
+
+  assert.ok(wxml.includes('bindlongpress="onLongPress"'), '长按切换全屏')
+  assert.ok(wxml.includes('切换坐标系'), '坐标按钮文案')
+  assert.ok(!wxml.includes('地平坐标</view>'), '按钮不再显示坐标名')
+  assert.ok(wxml.includes('fs-top') && wxml.includes('fs-bottom'), '顶部/底部操作栏')
+  assert.ok(wxml.includes('fs-info-top') && wxml.includes('fs-info-bottom'), '顶部/底部信息区')
+  for (const word of ['高度角', '赤经', '最佳时段', '视野']) {
+    assert.ok(wxml.includes(word), `信息区应含「${word}」`)
+  }
+  assert.ok(js.includes('北纬') && js.includes('东经'), '地点经纬度文案在 HUD 数据里')
+  assert.ok(wxml.includes('bindchanging="onSlide"'), '进度条拖动实时')
+  assert.ok(js.includes('hideHud: this.data.fullscreen'), '全屏时隐藏 canvas HUD')
+  assert.ok(js.includes('syncHud()') && js.includes('raText'), 'HUD 由组件同步')
+  assert.ok(css.includes('zoomIn') && css.includes('zoomOut'), '应有缩放动画')
+  const search = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
+  assert.ok(search.includes('光污染波特尔指数'), '光污染文案已调整')
+  const searchCss = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxss'), 'utf8')
+  assert.ok(searchCss.includes('white-space: nowrap'), '标签不换行')
 })

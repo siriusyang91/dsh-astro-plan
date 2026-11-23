@@ -1,17 +1,59 @@
+/* 普通视图 */
 .sky { width: 100%; }
+.cv { width: 100%; height: 360rpx; display: block; border-radius: 12rpx; background: #03050a; }
+
+/* 全屏视图 */
 .sky.full {
   position: fixed; top: 0; right: 0; bottom: 0; left: 0;
   z-index: 900; background: #03050a;
-  display: flex; align-items: center; justify-content: center;
+  transform-origin: center center;
 }
-.cv { width: 100%; height: 360rpx; display: block; border-radius: 12rpx; background: #03050a; }
 .cv-full { width: 100%; height: 100%; border-radius: 0; }
-.float-exit {
-  position: absolute; top: 24rpx; right: 24rpx;
-  padding: 10rpx 22rpx; border-radius: 999rpx;
-  background: rgba(20, 28, 44, .85); color: #dfe7f5; font-size: 24rpx;
-  border: 1rpx solid #26364f;
+
+/* 顶部操作栏 */
+.fs-top {
+  position: absolute; top: 0; left: 0; right: 0;
+  display: flex; align-items: center; gap: 12rpx;
+  padding: 20rpx 24rpx; z-index: 901;
 }
+/* 顶部信息栏 */
+.fs-info-top {
+  position: absolute; top: 108rpx; left: 24rpx; right: 24rpx;
+  display: flex; align-items: center; justify-content: space-between;
+  z-index: 901;
+}
+.fs-time { color: #e8f0ff; font-size: 24rpx; }
+.fs-meta { color: #9fb4d4; font-size: 22rpx; }
+/* 底部信息区 */
+.fs-info-bottom {
+  position: absolute; left: 24rpx; right: 24rpx; bottom: 190rpx;
+  display: flex; flex-direction: column; gap: 4rpx;
+  z-index: 901;
+}
+.fs-line { color: #cfe0f7; font-size: 22rpx; line-height: 1.35; }
+/* 底部操作栏 */
+.fs-bottom {
+  position: absolute; left: 24rpx; right: 24rpx; bottom: 24rpx;
+  display: flex; align-items: center; gap: 12rpx;
+  padding: 12rpx 16rpx; border-radius: 999rpx;
+  background: rgba(10, 16, 26, .78);
+  border: 1rpx solid #26364f;
+  z-index: 901;
+}
+
+/* 切换动画 */
+.zoom-in { animation: zoomIn 260ms ease-out both; }
+.zoom-out { animation: zoomOut 220ms ease-in both; }
+@keyframes zoomIn {
+  from { transform: scale(.88); opacity: .2; }
+  to { transform: scale(1); opacity: 1; }
+}
+@keyframes zoomOut {
+  from { transform: scale(1); opacity: 1; }
+  to { transform: scale(.9); opacity: .4; }
+}
+
+/* 普通视图控件 */
 .tip { margin-top: 8rpx; color: var(--dim); font-size: 22rpx; }
 .ctrl { display: flex; align-items: center; gap: 10rpx; margin-top: 8rpx; flex-wrap: wrap; }
 .play, .key {
@@ -20,19 +62,3 @@
 }
 .frame { color: var(--dim); font-size: 22rpx; width: 80rpx; text-align: right; }
 .fov { color: var(--dim); font-size: 22rpx; margin-left: auto; }
-
-.fs-ctrl {
-  position: absolute; left: 24rpx; right: 24rpx; bottom: 96rpx;
-  display: flex; align-items: center; gap: 12rpx;
-  padding: 12rpx 16rpx; border-radius: 999rpx;
-  background: rgba(10, 16, 26, .72);
-  border: 1rpx solid #26364f;
-  z-index: 901;
-}
-.fs-slider {
-  position: absolute; left: 24rpx; right: 24rpx; bottom: 28rpx;
-  padding: 6rpx 16rpx; border-radius: 999rpx;
-  background: rgba(10, 16, 26, .72);
-  border: 1rpx solid #26364f;
-  z-index: 901;
-}

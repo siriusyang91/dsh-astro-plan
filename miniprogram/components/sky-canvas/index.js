@@ -25,7 +25,9 @@ Component({
     h: 0,
     ready: false,
     fullscreen: false,
+    justExited: false,
     fovText: '100°',
+    hud: { time: '', modeLabel: '地平坐标', fov: '100°', altaz: '', radec: '', geo: '', window: '' },
   },
 
   observers: {
@@ -88,6 +90,32 @@ Component({
       })
     },
 
+    /** 全屏时由页面层显示 HUD 文案（渲染器 HUD 已隐藏） */
+    syncHud() {
+      const sim = this.properties.sim
+      if (!sim || !sim.frames || !sim.frames.length || !this.camera) return
+      const f = sim.frames[Math.min(this.data.k, sim.frames.length - 1)] || {}
+      const tp = (f.tp && f.tp[0]) || null
+      const raText = (() => {
+        if (!tp) return '—'
+        const hours = ((Number(tp[0]) % 24) + 24) % 24
+        const h = Math.floor(hours)
+        const m = Math.round((hours - h) * 60)
+        return `${String(h).padStart(2, '0')}h${String(m).padStart(2, '0')}m`
+      })()
+      const dec = tp ? Number(tp[1]) : null
+      const hud = {
+        time: `${f.d ? f.d + ' ' : ''}${f.t || ''}`,
+        modeLabel: this.data.mode === 'eq' ? '赤道坐标' : '地平坐标',
+        fov: `${Math.round(this.camera.fov)}°`,
+        altaz: tp ? `高度角 ${Number(tp[2]).toFixed(0)}° · 方位角 ${Number(tp[3]).toFixed(0)}°` : '高度角 —',
+        radec: tp ? `赤经 ${raText} · 赤纬 ${dec >= 0 ? '+' : ''}${dec.toFixed(1)}°` : '赤经 —',
+        geo: `北纬 ${Math.abs(sim.lat).toFixed(2)}° · 东经 ${Math.abs(sim.lon).toFixed(2)}°`,
+        window: sim.window ? `最佳时段 ${sim.window.start} – ${sim.window.end}` : '',
+      }
+      this.setData({ hud, fovText: hud.fov })
+    },
+
     syncFovText() {
       const fov = this.camera ? this.camera.fov : 100
       this.setData({ fovText: `${Math.round(fov)}°` })
@@ -107,7 +135,9 @@ Component({
           mode: this.data.mode,
           w: this.data.w,
           h: this.data.h,
+          hideHud: this.data.fullscreen,
         }, this.data.k)
+        if (this.data.fullscreen) this.syncHud()
       } catch (error) {
         console.error('skyRender 失败', error)
       }
@@ -142,13 +172,24 @@ Component({
       this.draw()
     },
 
-    /** 放大横屏：铺满屏幕并重新初始化 canvas（配合页面 pageOrientation: auto） */
+    /** 全屏/还原：铺满屏幕并重新初始化 canvas（配合页面 pageOrientation: auto） */
     toggleFullscreen() {
       const fullscreen = !this.data.fullscreen
-      this.setData({ fullscreen }, () => {
+      if (this.animTimer) clearTimeout(this.animTimer)
+      this.setData({ fullscreen, justExited: !fullscreen }, () => {
         clearTimeout(this.resizeTimer)
         this.resizeTimer = setTimeout(() => this.initCanvas(), 120)
+        if (!fullscreen) {
+          // 退出动画结束后移除 class，避免影响后续操作
+          this.animTimer = setTimeout(() => this.setData({ justExited: false }), 260)
+        } else {
+          this.animTimer = setTimeout(() => this.setData({ justExited: false }), 300)
+        }
       })
+    },
+
+    onLongPress() {
+      this.toggleFullscreen()
     },
 
     toggleMode() {

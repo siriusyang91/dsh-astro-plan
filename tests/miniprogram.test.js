@@ -530,3 +530,33 @@ test('地图页：预设点单选、按钮文案与半球经纬度', () => {
   assert.ok(js.includes("'自定义地点'"), '自选点显示「自定义地点」')
   assert.ok(js.includes('hemiText') && js.includes("'N' : 'S'") && js.includes("'E' : 'W'"), '经纬度要带 N/S/E/W')
 })
+
+test('查询页：去掉清除按钮、文案与按钮尺寸调整、自定义点可切回', () => {
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
+  assert.ok(!wxml.includes('clearCustom'), '不应再有清除按钮')
+  assert.ok(wxml.includes('拍摄目标高度角'), '高度角文案应改')
+  assert.ok(wxml.includes('光污染（波特尔指数）'), '波特尔文案应改')
+  assert.ok(!wxml.includes('disabled="{{custom}}"'), '目标地点不应被禁用')
+  assert.ok(wxml.indexOf('reset-btn') < wxml.indexOf('search-btn'), '重置应在左、查询在右')
+
+  const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxss'), 'utf8')
+  assert.match(css, /\.reset-btn \{[^}]*flex: 0 0 150rpx/u, '重置按钮应更窄')
+  assert.match(css, /\.search-btn \{[^}]*flex: 1/u, '查询按钮应更宽')
+
+  const js = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.js'), 'utf8')
+  assert.ok(!js.includes('clearCustom'), '处理函数也应移除')
+})
+
+test('出发地：查询页解析后传给地图页，地图优先用它', () => {
+  const search = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.js'), 'utf8')
+  assert.ok(search.includes('async openMap'), 'openMap 应先解析')
+  assert.ok(search.includes('globalData.origin = origin'), '解析结果要缓存')
+  assert.ok(search.includes('getApp().globalData.origin = origin || null'), '查询后也要缓存')
+
+  const map = readFileSync(join(ROOT, 'miniprogram', 'pages', 'map', 'index.js'), 'utf8')
+  const iOrigin = map.indexOf('g.origin &&')
+  const iQuery = map.indexOf('query.originLat')
+  assert.ok(iOrigin > 0 && iOrigin < iQuery, '应先读 globalData.origin')
+  assert.ok(map.includes('已连线：出发地'), '有出发地时应提示已连线')
+  assert.ok(map.includes('未设置出发地，不显示连线'), '无出发地时保留提示')
+})

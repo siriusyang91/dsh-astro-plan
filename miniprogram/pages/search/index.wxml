@@ -26,11 +26,11 @@
       </view>
 
       <view class="frow">
-        <text class="flabel">高度角≥{{minAlt}}°</text>
+        <text class="flabel">拍摄目标高度角≥{{minAlt}}°</text>
         <slider class="sl" min="0" max="60" step="5" value="{{minAlt}}" block-size="14" show-value="{{false}}" bindchanging="onAltChanging" bindchange="onAlt" activeColor="#2f66c9" />
       </view>
       <view class="frow">
-        <text class="flabel">波特尔≤B{{bortle}}</text>
+        <text class="flabel">光污染（波特尔指数）≤B{{bortle}}</text>
         <slider class="sl" min="1" max="9" step="1" value="{{bortle}}" block-size="14" show-value="{{false}}" bindchanging="onBortleChanging" bindchange="onBortle" activeColor="#2f66c9" />
       </view>
     </view>
@@ -75,7 +75,7 @@
 
       <view class="frow">
         <text class="flabel">目标地点</text>
-        <picker mode="selector" range="{{sites}}" range-key="label" value="{{siteIndex}}" bindchange="onSite" disabled="{{custom}}">
+        <picker mode="selector" range="{{sites}}" range-key="label" value="{{siteIndex}}" bindchange="onSite">
           <view class="fv">{{custom ? customLabel : sites[siteIndex].label}}</view>
         </picker>
       </view>
@@ -89,13 +89,12 @@
 
       <view class="map-row">
         <button class="btn map-btn" bindtap="openMap">🗺 地图选点</button>
-        <button wx:if="{{custom}}" class="btn btn-ghost clear-btn" bindtap="clearCustom">清除</button>
       </view>
     </view>
 
     <view class="actions">
-      <button class="btn" style="flex:1.4" bindtap="onSearch">查询</button>
-      <button class="btn btn-ghost" style="flex:1" bindtap="onReset">重置</button>
+      <button class="btn btn-ghost reset-btn" bindtap="onReset">重置</button>
+      <button class="btn search-btn" bindtap="onSearch">查询</button>
     </view>
   </block>
 </view>

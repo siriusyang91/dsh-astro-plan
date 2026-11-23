@@ -210,12 +210,12 @@ Page({
     this.setData({ originIndex: index, originLabel: this.data.origins[index].label })
   },
 
-  openMap() {
+  async openMap() {
+    wx.showLoading({ title: '定位中', mask: true })
+    const origin = await this.resolveOrigin()
+    getApp().globalData.origin = origin
+    wx.hideLoading()
     wx.navigateTo({ url: '/pages/map/index' })
-  },
-
-  clearCustom() {
-    this.setData({ custom: null, customLabel: '' })
   },
 
   /** 出发地坐标：目前所在地 → 定位；未授权/失败则不计算距离（与网页版一致） */
@@ -279,6 +279,7 @@ Page({
       pageSize: 20,
       page: 1,
     }
+    getApp().globalData.origin = origin || null
     if (origin) { opts.originLat = origin.lat; opts.originLon = origin.lon }
     if (this.data.custom) {
       opts.siteLat = this.data.custom.lat

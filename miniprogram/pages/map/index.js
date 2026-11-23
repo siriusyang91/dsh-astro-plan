@@ -147,7 +147,7 @@ Page({
       presetLabel: extra.siteId ? name : '自定义地点',
       selectedText: label,
       hint: origin
-        ? (nearest ? `最近预设站：${nearest.name}（约 ${Math.round(best)} km）` : '')
+        ? `已连线：出发地 → 所选点${nearest ? `（最近预设站 ${nearest.name}，约 ${Math.round(best)} km）` : ''}`
         : '未设置出发地，不显示连线',
       pickedMarker: [{
         id: PICKED_ID,
@@ -183,7 +183,12 @@ Page({
 
   /** 出发地坐标（查询条件里的 origin） */
   origin() {
-    const query = (getApp().globalData.query) || {}
+    const g = getApp().globalData || {}
+    // 查询页在跳转前解析好的出发地（已授权定位 / 选了城市）
+    if (g.origin && typeof g.origin.lat === 'number' && typeof g.origin.lon === 'number') {
+      return { lat: g.origin.lat, lon: g.origin.lon }
+    }
+    const query = g.query || {}
     if (typeof query.originLat === 'number' && typeof query.originLon === 'number') {
       return { lat: query.originLat, lon: query.originLon }
     }

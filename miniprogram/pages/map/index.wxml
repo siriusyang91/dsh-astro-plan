@@ -31,7 +31,7 @@
 
     <view class="preset-row">
       <picker mode="selector" range="{{presets}}" range-key="label" value="{{presetIndex}}" bindchange="onPresetChange">
-        <view class="preset-btn">选择预设地点 · {{presetLabel}}</view>
+        <view class="preset-btn">{{presetLabel}}</view>
       </picker>
     </view>
 

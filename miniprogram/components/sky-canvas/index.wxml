@@ -10,6 +10,17 @@
 
   <view wx:if="{{fullscreen}}" class="float-exit" bindtap="toggleFullscreen">退出全屏</view>
 
+  <!-- 全屏时保留操作：播放 / 坐标 / 复位 -->
+  <view wx:if="{{fullscreen}}" class="fs-ctrl">
+    <view class="key" bindtap="togglePlay">{{playing ? '暂停' : '播放'}}</view>
+    <view class="key" bindtap="toggleMode">{{mode === 'eq' ? '赤道坐标' : '地平坐标'}}</view>
+    <view class="key" bindtap="reset">复位视角</view>
+    <view class="fov">视野 {{fovText}}</view>
+  </view>
+  <view wx:if="{{fullscreen}}" class="fs-slider">
+    <slider min="0" max="{{maxK}}" value="{{k}}" block-size="14" bindchanging="onSlide" bindchange="onSlide" activeColor="#2f66c9" />
+  </view>
+
   <block wx:if="{{!fullscreen}}">
     <view class="tip">拖动转视角（左右转向 / 上下俯仰）· 双指缩放</view>
     <view class="ctrl">
@@ -20,7 +31,7 @@
     <view class="ctrl">
       <view class="key" bindtap="toggleMode">{{mode === 'eq' ? '赤道坐标' : '地平坐标'}}</view>
       <view class="key" bindtap="reset">复位视角</view>
-      <view class="key" bindtap="toggleFullscreen">放大横屏</view>
+      <view class="key" bindtap="toggleFullscreen">全屏显示</view>
       <view class="fov">视野 {{fovText}}</view>
     </view>
   </block>

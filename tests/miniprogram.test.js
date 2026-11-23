@@ -215,7 +215,7 @@ test('小程序端：超时只提示「查询超时」', () => {
 test('开屏页：首页是 splash，1 秒后跳查询页', () => {
   const app = JSON.parse(readFileSync(join(ROOT, 'miniprogram', 'app.json'), 'utf8'))
   assert.equal(app.pages[0], 'pages/splash/index', 'splash 必须是首个页面')
-  assert.match(app.window.navigationBarTitleText, /by Sirius YANG/u, '全局标题应带作者')
+  assert.equal(app.window.navigationBarTitleText, '星野计划', '全局标题不应带 byline')
   const js = readFileSync(join(ROOT, 'miniprogram', 'pages', 'splash', 'index.js'), 'utf8')
   assert.match(js, /setTimeout\([\s\S]*?, 1000\)/u, '开屏应 1 秒后跳转')
   assert.ok(js.includes("wx.redirectTo({ url: '/pages/search/index' })"), '应跳转到查询页')
@@ -224,10 +224,12 @@ test('开屏页：首页是 splash，1 秒后跳查询页', () => {
   assert.ok(wxml.includes('欢迎使用星野计划'), '开屏应显示欢迎语')
 })
 
-test('标题：各页都带「星野计划」', () => {
-  for (const page of ['pages/search/index.json', 'pages/results/index.json', 'pages/map/index.json', 'pages/splash/index.json']) {
+test('标题：导航栏不带 byline', () => {
+  const app = JSON.parse(readFileSync(join(ROOT, 'miniprogram', 'app.json'), 'utf8'))
+  assert.equal(app.window.navigationBarTitleText, '星野计划')
+  for (const page of ['pages/search/index.json', 'pages/results/index.json', 'pages/map/index.json', 'pages/splash/index.json', 'pages/note/index.json']) {
     const conf = JSON.parse(readFileSync(join(ROOT, 'miniprogram', page), 'utf8'))
-    assert.match(conf.navigationBarTitleText, /星野计划/u, page + ' 标题应含星野计划')
+    assert.ok(!/by Sirius YANG/u.test(conf.navigationBarTitleText || ''), page + ' 标题不应带 byline')
   }
 })
 
@@ -449,7 +451,7 @@ test('手势：单指同时改 yaw/pitch，双指捏合改 fov（第二根手指
   assert.equal(inst.camera.fov, 5, 'fov 不应低于 5°')
   inst.setFov(999)
   assert.equal(inst.camera.fov, 180, 'fov 不应超过 180°')
-  assert.equal(typeof inst.toggleFullscreen, 'function', '应有放大横屏')
+  assert.equal(typeof inst.toggleFullscreen, 'function', '应有全屏显示')
   assert.equal(typeof inst.reset, 'function')
 })
 
@@ -482,7 +484,7 @@ test('画面模拟：去掉缩放/俯仰按钮与双击说明，保留横屏与�
     assert.ok(!js.includes(`${handler}(`), `应删除 ${handler} 方法`)
   }
   assert.ok(!wxml.includes('双击复位'), '不应再提示双击复位')
-  assert.ok(wxml.includes('放大横屏'), '应有放大横屏按钮')
+  assert.ok(wxml.includes('全屏显示'), '应有全屏显示按钮')
   assert.ok(wxml.includes('bindchanging="onSlide"'), '拖动进度条要实时重绘')
   assert.ok(js.includes('toggleFullscreen') && js.includes('onWindowResize'), '全屏与尺寸变化处理')
   const sky = readFileSync(join(ROOT, 'lib', 'skyview.js'), 'utf8')
@@ -502,4 +504,29 @@ test('查询页：三张卡片有色差 class', () => {
   for (const cls of ['card-target', 'card-date', 'card-place']) {
     assert.ok(wxml.includes(cls), `缺少 ${cls}`)
   }
+})
+
+test('查询页：日期标签、页眉副标题同行、行间距放宽', () => {
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
+  assert.ok(wxml.includes('开始日期') && wxml.includes('结束日期'), '日期要有标签')
+  const heroLine = wxml.slice(wxml.indexOf('hero-line'), wxml.indexOf('hero-line') + 400)
+  assert.ok(heroLine.includes('hero-title') && heroLine.includes('hero-sub'), 'byline 应与标题同行')
+  assert.ok(!/class="hero"\s*>[\s\S]{0,120}<\/view>\s*<view class="hero-sub"/u.test(wxml), '不应再有独立一行的 byline')
+
+  const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxss'), 'utf8')
+  assert.match(css, /\.frow \{[^}]*padding: 10rpx 0/u, '行间距应放宽到 10rpx')
+  assert.match(css, /\.card \{[^}]*margin-bottom: 14rpx/u, '卡片间距应放宽')
+
+  const app = JSON.parse(readFileSync(join(ROOT, 'miniprogram', 'app.json'), 'utf8'))
+  assert.equal(app.window.navigationBarTitleText, '星野计划', '导航栏标题不应再带 byline')
+})
+
+test('地图页：预设点单选、按钮文案与半球经纬度', () => {
+  const js = readFileSync(join(ROOT, 'miniprogram', 'pages', 'map', 'index.js'), 'utf8')
+  assert.ok(js.includes('const index = Number(e.detail.value)'), '预设选择不应再 -1')
+  assert.ok(!/Number\(e\.detail\.value\) - 1/u.test(js), '不应残留 -1 偏移')
+  assert.ok(js.includes('presetIndex: index,'), 'presetIndex 不应 +1')
+  assert.ok(js.includes("presetLabel: site.name"), '选中预设点只显示站点名')
+  assert.ok(js.includes("'自定义地点'"), '自选点显示「自定义地点」')
+  assert.ok(js.includes('hemiText') && js.includes("'N' : 'S'") && js.includes("'E' : 'W'"), '经纬度要带 N/S/E/W')
 })

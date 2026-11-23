@@ -3,6 +3,13 @@ const { parseCoord, formatCoord } = require('../../utils/coord')
 
 const PICKED_ID = 99999
 
+/** 经纬度显示成「38.737000 N」这种带半球字母的格式 */
+function hemiText(value, kind) {
+  const num = Number(value)
+  const hemi = kind === 'lat' ? (num >= 0 ? 'N' : 'S') : (num >= 0 ? 'E' : 'W')
+  return `${Math.abs(num).toFixed(6)} ${hemi}`
+}
+
 Page({
   data: {
     latitude: 35,
@@ -83,8 +90,8 @@ Page({
     this.setData({
       markers: this.buildMarkers(site.id),
       selectedSiteId: site.id,
-      presetIndex: index + 1,
-      presetLabel: `${site.name}（B${site.bortle}）`,
+      presetIndex: index,
+      presetLabel: site.name,
     })
     this.setPoint(site.lat, site.lon, { siteId: site.id, name: site.name })
     return site
@@ -100,8 +107,8 @@ Page({
   },
 
   onPresetChange(e) {
-    const index = Number(e.detail.value) - 1
-    if (index < 0) return
+    const index = Number(e.detail.value)
+    if (!Number.isInteger(index) || index < 0 || index >= this.data.presets.length) return
     const site = this.selectSite(index)
     if (site) this.setData({ latitude: site.lat, longitude: site.lon, scale: 8 })
   },
@@ -112,7 +119,7 @@ Page({
     const lat = detail.latitude
     const lon = detail.longitude
     if (typeof lat !== 'number' || typeof lon !== 'number') return
-    this.setData({ markers: this.buildMarkers(''), selectedSiteId: '', presetLabel: '选择预设地点', presetIndex: 0 })
+    this.setData({ markers: this.buildMarkers(''), selectedSiteId: '', presetIndex: 0 })
     this.setPoint(lat, lon, {})
   },
 
@@ -129,12 +136,15 @@ Page({
       }
     }
     const name = extra.name || (nearest && best <= 3 ? nearest.name : '')
-    const label = extra.siteId ? `预设点 · ${name}` : `自定义 · ${formatCoord(lat)}, ${formatCoord(lon)}`
+    const label = extra.siteId
+      ? `预设点 · ${name}`
+      : `自定义 · ${hemiText(lat, 'lat')}, ${hemiText(lon, 'lon')}`
     const origin = this.origin()
     this.setData({
       picked: { lat, lon, ...extra },
-      latText: formatCoord(lat),
-      lonText: formatCoord(lon),
+      latText: hemiText(lat, 'lat'),
+      lonText: hemiText(lon, 'lon'),
+      presetLabel: extra.siteId ? name : '自定义地点',
       selectedText: label,
       hint: origin
         ? (nearest ? `最近预设站：${nearest.name}（约 ${Math.round(best)} km）` : '')
@@ -146,7 +156,7 @@ Page({
         width: 22,
         height: 22,
         callout: {
-          content: extra.siteId ? name : `${formatCoord(lat)}, ${formatCoord(lon)}`,
+          content: extra.siteId ? name : `${hemiText(lat, 'lat')}, ${hemiText(lon, 'lon')}`,
           display: 'ALWAYS',
           padding: 8,
           borderRadius: 6,

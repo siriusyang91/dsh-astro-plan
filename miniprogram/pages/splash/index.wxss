@@ -16,9 +16,8 @@
   font-size: 64rpx; font-weight: 700; letter-spacing: 8rpx; color: #f2f6ff;
   text-shadow: 0 6rpx 30rpx rgba(0, 0, 0, .6);
 }
-.sub {
-  margin-top: 10rpx; font-size: 26rpx; color: rgba(223, 231, 245, .8); letter-spacing: 4rpx;
-}
+.title-line { display: flex; align-items: baseline; gap: 12rpx; }
+.sub { font-size: 26rpx; color: rgba(223, 231, 245, .8); letter-spacing: 4rpx; }
 .welcome {
   margin-top: 40rpx; padding: 14rpx 34rpx; border-radius: 999rpx;
   border: 1rpx solid rgba(255, 212, 121, .55);

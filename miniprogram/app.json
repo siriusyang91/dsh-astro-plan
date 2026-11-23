@@ -7,7 +7,7 @@
     "pages/map/index"
   ],
   "window": {
-    "navigationBarTitleText": "星野计划 by Sirius YANG",
+    "navigationBarTitleText": "星野计划",
     "navigationBarBackgroundColor": "#0b0f17",
     "navigationBarTextStyle": "white",
     "backgroundColor": "#0b0f17",

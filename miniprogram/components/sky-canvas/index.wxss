@@ -20,3 +20,19 @@
 }
 .frame { color: var(--dim); font-size: 22rpx; width: 80rpx; text-align: right; }
 .fov { color: var(--dim); font-size: 22rpx; margin-left: auto; }
+
+.fs-ctrl {
+  position: absolute; left: 24rpx; right: 24rpx; bottom: 96rpx;
+  display: flex; align-items: center; gap: 12rpx;
+  padding: 12rpx 16rpx; border-radius: 999rpx;
+  background: rgba(10, 16, 26, .72);
+  border: 1rpx solid #26364f;
+  z-index: 901;
+}
+.fs-slider {
+  position: absolute; left: 24rpx; right: 24rpx; bottom: 28rpx;
+  padding: 6rpx 16rpx; border-radius: 999rpx;
+  background: rgba(10, 16, 26, .72);
+  border: 1rpx solid #26364f;
+  z-index: 901;
+}

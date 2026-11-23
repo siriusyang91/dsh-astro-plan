@@ -8,8 +8,10 @@
 
   <block wx:else>
     <view class="hero">
-      <view class="hero-title">星野计划</view>
-      <view class="hero-sub">by Sirius YANG</view>
+      <view class="hero-line">
+        <text class="hero-title">星野计划</text>
+        <text class="hero-sub">by Sirius YANG</text>
+      </view>
     </view>
 
     <!-- 1. 拍摄目标（置顶） -->
@@ -37,12 +39,18 @@
     <view class="card card-date">
       <view class="card-title">拍摄日期</view>
       <view class="grid2">
-        <picker mode="date" value="{{d1}}" bindchange="onDate1">
-          <view class="fv">{{d1}}</view>
-        </picker>
-        <picker mode="date" value="{{d2}}" bindchange="onDate2">
-          <view class="fv">{{d2}}</view>
-        </picker>
+        <view>
+          <view class="label">开始日期</view>
+          <picker mode="date" value="{{d1}}" bindchange="onDate1">
+            <view class="fv">{{d1}}</view>
+          </picker>
+        </view>
+        <view>
+          <view class="label">结束日期</view>
+          <picker mode="date" value="{{d2}}" bindchange="onDate2">
+            <view class="fv">{{d2}}</view>
+          </picker>
+        </view>
       </view>
       <view class="hint tiny">跨度上限 5 年</view>
     </view>

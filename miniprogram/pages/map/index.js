@@ -1,17 +1,25 @@
 const api = require('../../utils/api')
 const { parseCoord, formatCoord } = require('../../utils/coord')
 
+const PICKED_ID = 99999
+
 Page({
   data: {
     latitude: 35,
     longitude: 105,
     scale: 4,
     markers: [],
+    polyline: [],
+    pickedMarker: [],
+    presets: [],
+    presetIndex: 0,
+    presetLabel: '选择预设地点',
+    selectedText: '未选择位置',
     latText: '',
     lonText: '',
     hint: '',
     picked: null,
-    siteName: '',
+    selectedSiteId: '',
     loading: true,
   },
 
@@ -22,23 +30,17 @@ Page({
   loadSites() {
     const cached = getApp().globalData.meta
     const ready = (meta) => {
-      const markers = (meta.sites || []).map((s, index) => ({
-        id: index,
-        latitude: s.lat,
-        longitude: s.lon,
-        width: 6,
-        height: 6,
-        callout: {
-          content: `${s.name}（B${s.bortle}）`,
-          display: 'BYCLICK',
-          padding: 8,
-          borderRadius: 6,
-          bgColor: '#16223a',
-          color: '#dfe7f5',
-          fontSize: 12,
-        },
+      this.siteList = meta.sites || []
+      const presets = this.siteList.map((s, index) => ({
+        index,
+        label: `${s.name}（B${s.bortle}）`,
       }))
-      this.setData({ markers, loading: false })
+      this.setData({
+        presets,
+        markerBase: this.buildMarkers(''),
+        markers: this.buildMarkers(''),
+        loading: false,
+      })
     }
     if (cached) { ready(cached); return }
     api.meta()
@@ -46,16 +48,75 @@ Page({
       .catch((error) => this.setData({ loading: false, hint: error.message }))
   },
 
-  /** 点击地图空白：取该点经纬度（并显示最近的预设站点名） */
+  /** 预设站点 marker：默认 10px、只给选中项挂常驻气泡（保证同时只选中一个） */
+  buildMarkers(selectedId) {
+    const list = this.siteList || []
+    return list.map((s, index) => {
+      const active = s.id === selectedId
+      return {
+        id: index,
+        latitude: s.lat,
+        longitude: s.lon,
+        width: active ? 18 : 10,
+        height: active ? 18 : 10,
+        ...(active
+          ? {
+            callout: {
+              content: `${s.name}（B${s.bortle}）`,
+              display: 'ALWAYS',
+              padding: 8,
+              borderRadius: 6,
+              bgColor: '#16223a',
+              color: '#dfe7f5',
+              fontSize: 12,
+            },
+          }
+          : {}),
+      }
+    })
+  },
+
+  /** 选中一个预设站点（只保留一个选中态） */
+  selectSite(index) {
+    const site = (this.siteList || [])[index]
+    if (!site) return
+    this.setData({
+      markers: this.buildMarkers(site.id),
+      selectedSiteId: site.id,
+      presetIndex: index + 1,
+      presetLabel: `${site.name}（B${site.bortle}）`,
+    })
+    this.setPoint(site.lat, site.lon, { siteId: site.id, name: site.name })
+    return site
+  },
+
+  onMarkerTap(e) {
+    const index = Number(e.detail && e.detail.markerId)
+    if (!Number.isInteger(index)) return
+    const site = this.selectSite(index)
+    if (site) {
+      this.setData({ latitude: site.lat, longitude: site.lon, scale: Math.max(this.data.scale, 6) })
+    }
+  },
+
+  onPresetChange(e) {
+    const index = Number(e.detail.value) - 1
+    if (index < 0) return
+    const site = this.selectSite(index)
+    if (site) this.setData({ latitude: site.lat, longitude: site.lon, scale: 8 })
+  },
+
+  /** 点击地图空白：作为自定义点（清除预设选中态） */
   onMapTap(e) {
     const detail = e.detail || {}
     const lat = detail.latitude
     const lon = detail.longitude
     if (typeof lat !== 'number' || typeof lon !== 'number') return
-    this.setPoint(lat, lon)
+    this.setData({ markers: this.buildMarkers(''), selectedSiteId: '', presetLabel: '选择预设地点', presetIndex: 0 })
+    this.setPoint(lat, lon, {})
   },
 
-  setPoint(lat, lon) {
+  setPoint(lat, lon, extra = {}) {
     const meta = getApp().globalData.meta
     let nearest = null
     let best = Infinity
@@ -67,17 +128,58 @@ Page({
         if (d < best) { best = d; nearest = site }
       }
     }
+    const name = extra.name || (nearest && best <= 3 ? nearest.name : '')
+    const label = extra.siteId ? `预设点 · ${name}` : `自定义 · ${formatCoord(lat)}, ${formatCoord(lon)}`
+    const origin = this.origin()
     this.setData({
-      picked: { lat, lon },
+      picked: { lat, lon, ...extra },
       latText: formatCoord(lat),
       lonText: formatCoord(lon),
-      hint: nearest ? `最近站点：${nearest.name}（约 ${Math.round(best)} km）` : '',
-      siteName: nearest && best <= 3 ? nearest.name : '',
+      selectedText: label,
+      hint: origin
+        ? (nearest ? `最近预设站：${nearest.name}（约 ${Math.round(best)} km）` : '')
+        : '未设置出发地，不显示连线',
+      pickedMarker: [{
+        id: PICKED_ID,
+        latitude: lat,
+        longitude: lon,
+        width: 22,
+        height: 22,
+        callout: {
+          content: extra.siteId ? name : `${formatCoord(lat)}, ${formatCoord(lon)}`,
+          display: 'ALWAYS',
+          padding: 8,
+          borderRadius: 6,
+          bgColor: '#2f66c9',
+          color: '#ffffff',
+          fontSize: 12,
+        },
+      }],
+      polyline: origin
+        ? [{
+          points: [
+            { latitude: origin.lat, longitude: origin.lon },
+            { latitude: lat, longitude: lon },
+          ],
+          color: '#ffd479',
+          width: 3,
+          dottedLine: true,
+          arrowLine: false,
+        }]
+        : [],
     })
     this.checkBortle(lat, lon)
   },
 
-  /** 城市光晕模型算波特尔（与网页版同一套逻辑） */
+  /** 出发地坐标（查询条件里的 origin） */
+  origin() {
+    const query = (getApp().globalData.query) || {}
+    if (typeof query.originLat === 'number' && typeof query.originLon === 'number') {
+      return { lat: query.originLat, lon: query.originLon }
+    }
+    return null
+  },
+
   checkBortle(lat, lon) {
     api.bortle(lat, lon)
       .then((res) => {
@@ -100,26 +202,15 @@ Page({
     this.tryApply(this.data.latText, text)
   },
 
-  /** 两个框都合法才落点（支持小数与角分秒） */
   tryApply(latText, lonText) {
     const lat = parseCoord(latText, 'lat')
     const lon = parseCoord(lonText, 'lon')
     if (lat === null && lon === null) { this.setData({ hint: '' }); return }
     if (lat === null) { this.setData({ hint: '纬度格式不对：39.9042 或 39°54′15″N' }); return }
     if (lon === null) { this.setData({ hint: '经度格式不对：116.4074 或 116°24′27″E' }); return }
-    this.setData({
-      latitude: lat,
-      longitude: lon,
-      picked: { lat, lon },
-      hint: '',
-    })
-    this.checkBortle(lat, lon)
-  },
-
-  useNearestCity() {
-    const beijing = { lat: 39.904, lon: 116.407 }
-    this.setData({ latitude: beijing.lat, longitude: beijing.lon, scale: 6 })
-    this.setPoint(beijing.lat, beijing.lon)
+    this.setData({ latitude: lat, longitude: lon })
+    this.setData({ markers: this.buildMarkers(''), selectedSiteId: '', presetLabel: '选择预设地点', presetIndex: 0 })
+    this.setPoint(lat, lon, {})
   },
 
   onConfirm() {
@@ -131,7 +222,8 @@ Page({
     getApp().globalData.pickedPoint = {
       lat: Math.round(picked.lat * 1e6) / 1e6,
       lon: Math.round(picked.lon * 1e6) / 1e6,
-      name: this.data.siteName || '',
+      name: picked.name || '',
+      siteId: picked.siteId || '',
     }
     wx.navigateBack()
   },

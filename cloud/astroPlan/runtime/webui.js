@@ -415,10 +415,9 @@ function resolveOrigin(){
   }
   return new Promise(function(resolve){
     var fallback = function(reason){
-      var bj = cityByName('北京');
-      if(!bj){ applyOrigin(null, '不计算距离', ''); resolve(); return; }
-      el('originSel').value = '北京';
-      applyOrigin({ lat: bj.lat, lon: bj.lon }, '北京', reason + '，按北京计算');
+      // 未授权定位：不计算距离（不再回退到北京）
+      el('originSel').value = '';
+      applyOrigin(null, '不计算距离', reason + '，不计算距离');
       resolve();
     };
     if(typeof navigator === 'undefined' || !navigator.geolocation){ fallback('浏览器不支持定位'); return; }

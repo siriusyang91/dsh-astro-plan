@@ -205,10 +205,11 @@ test('云函数：超时与内存配置、天气预算已压到 2.5 秒', () => 
   assert.ok(app.includes('setWeatherBudget(2500)'), '云函数里天气预算应为 2.5 秒')
 })
 
-test('小程序端：把 -504003 翻成可操作提示', () => {
+test('小程序端：超时只提示「查询超时」', () => {
   const src = readFileSync(join(ROOT, 'miniprogram', 'utils', 'api.js'), 'utf8')
   assert.ok(src.includes('-504003'), '应识别超时错误码')
-  assert.ok(src.includes('超时时间'), '提示应告诉用户去改超时时间')
+  assert.ok(src.includes("reject(new Error('查询超时'))"), '文案应只有「查询超时」')
+  assert.ok(!src.includes('超时时间'), '不应提示去改控制台超时时间')
 })
 
 test('开屏页：首页是 splash，1 秒后跳查询页', () => {
@@ -363,10 +364,13 @@ test('便签与查询页：弹层可点开、首页内容完整', () => {
   assert.ok(results.includes('catchtap="openNote"'), '卡片上要有明确可点的「查看便签」')
 
   const search = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
-  for (const label of ['开始日期', '结束日期', '目标地区', '目标省份', '目标地点', '出发地点', '目标类型', '最低高度角', '波特尔上限']) {
+  for (const label of ['拍摄目标', '拍摄日期', '目的地及出发地', '目标地区', '目标省份', '目标地点', '出发地点']) {
     assert.ok(search.includes(label), `查询页缺字段「${label}」`)
   }
-  assert.ok(search.includes('16 类拍摄目标'))
+  assert.ok(search.includes('multiSelector'), '拍摄目标应为两级筛选')
+  assert.ok(!search.includes('全国 173 站'), '不应再有 173 站小字')
+  assert.ok(!search.includes('波特尔越低越好'), '不应再有波特尔说明小字')
+  assert.ok(search.includes('bindchanging'), '滑块应实时更新数字')
 })
 
 test('结果页：翻页优先用本地缓存', () => {
@@ -439,11 +443,63 @@ test('手势：单指同时改 yaw/pitch，双指捏合改 fov（第二根手指
   call('onTouchMove', { touches: [{ clientX: 0, clientY: 0 }, { clientX: 200, clientY: 0 }] })
   assert.ok(Math.abs(inst.camera.fov - 50) < 1, `双指距离翻倍应让 fov 减半，实际 ${inst.camera.fov}`)
 
-  // 按钮缩放与俯仰
+  // fov 边界与全屏/复位
   inst.camera.fov = 6
-  call('zoomIn')
-  assert.ok(inst.camera.fov >= 5, 'fov 不应低于 5°')
-  call('pitchUp')
-  call('pitchDown')
-  assert.ok(inst.camera.pitch <= 90 && inst.camera.pitch >= -10)
+  inst.setFov(1)
+  assert.equal(inst.camera.fov, 5, 'fov 不应低于 5°')
+  inst.setFov(999)
+  assert.equal(inst.camera.fov, 180, 'fov 不应超过 180°')
+  assert.equal(typeof inst.toggleFullscreen, 'function', '应有放大横屏')
+  assert.equal(typeof inst.reset, 'function')
+})
+
+test('两级筛选：分组变化时类型列重建', () => {
+  const js = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.js'), 'utf8')
+  assert.ok(js.includes('onTargetColumnChange'), '需要列变化联动')
+  assert.ok(js.includes('targetColumns'), '需要两列数据')
+  assert.ok(js.includes("'any'"), '默认应是不限')
+  assert.ok(js.includes('eventType: this.data.eventType'), '查询应使用选中的 eventType')
+})
+
+test('地图页：小标点、单选、连线与预设地点按钮', () => {
+  const js = readFileSync(join(ROOT, 'miniprogram', 'pages', 'map', 'index.js'), 'utf8')
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'map', 'index.wxml'), 'utf8')
+  assert.ok(js.includes('width: active ? 18 : 10'), '预设点标点应小（10px）')
+  assert.ok(js.includes('bindmarkertap') || wxml.includes('bindmarkertap'), '需要 marker 点击事件')
+  assert.ok(js.includes('buildMarkers(site.id)'), '选中时只保留一个高亮')
+  assert.ok(js.includes('polyline') && wxml.includes('polyline="{{polyline}}"'), '需要有连线')
+  assert.ok(js.includes('pickedMarker'), '需要有选中点标记')
+  assert.ok(js.includes('选择预设地点'), '左下按钮应为选择预设地点')
+  assert.ok(!js.includes('useNearestCity'), '不应再有北京按钮')
+  assert.ok(wxml.includes('bindchange="onPresetChange"'), '预设地点选择器')
+})
+
+test('画面模拟：去掉缩放/俯仰按钮与双击说明，保留横屏与实时拖动', () => {
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.wxml'), 'utf8')
+  const js = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.js'), 'utf8')
+  for (const handler of ['pitchUp', 'pitchDown', 'zoomIn', 'zoomOut']) {
+    assert.ok(!wxml.includes(`bindtap="${handler}"`), `不应再有 ${handler} 按钮`)
+    assert.ok(!js.includes(`${handler}(`), `应删除 ${handler} 方法`)
+  }
+  assert.ok(!wxml.includes('双击复位'), '不应再提示双击复位')
+  assert.ok(wxml.includes('放大横屏'), '应有放大横屏按钮')
+  assert.ok(wxml.includes('bindchanging="onSlide"'), '拖动进度条要实时重绘')
+  assert.ok(js.includes('toggleFullscreen') && js.includes('onWindowResize'), '全屏与尺寸变化处理')
+  const sky = readFileSync(join(ROOT, 'lib', 'skyview.js'), 'utf8')
+  assert.ok(sky.includes("ctx.textAlign = 'right'") && sky.includes('W - 9 * S, H - 6 * S'), '最佳时段应在右下角')
+})
+
+test('结果页：加载文案为「计划中」且字号更大', () => {
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
+  assert.ok(wxml.includes('计划中'), '加载文案应为计划中')
+  assert.ok(!wxml.includes('正在计算'), '不应再显示正在计算')
+  const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxss'), 'utf8')
+  assert.ok(/\.loading \{[^}]*font-size: 30rpx/u.test(css), '加载文字应加大')
+})
+
+test('查询页：三张卡片有色差 class', () => {
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
+  for (const cls of ['card-target', 'card-date', 'card-place']) {
+    assert.ok(wxml.includes(cls), `缺少 ${cls}`)
+  }
 })

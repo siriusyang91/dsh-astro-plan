@@ -10,80 +10,79 @@
     <view class="hero">
       <view class="hero-title">星野计划</view>
       <view class="hero-sub">by Sirius YANG</view>
-      <view class="hint">全国 173 站 · 16 类拍摄目标 · 7 天天气 · 3D 天球画面模拟</view>
     </view>
 
     <!-- 1. 拍摄目标（置顶） -->
-    <view class="card">
+    <view class="card card-target">
       <view class="card-title">拍摄目标</view>
 
-      <view class="label">目标类型</view>
-      <picker mode="selector" range="{{types}}" range-key="label" value="{{typeIndex}}" bindchange="onType">
-        <view class="picker-value">{{types[typeIndex].label}}</view>
-      </picker>
+      <view class="frow">
+        <text class="flabel">目标</text>
+        <picker mode="multiSelector" range="{{targetColumns}}" value="{{targetIndex}}" bindcolumnchange="onTargetColumnChange" bindchange="onTargetChange">
+          <view class="fv">{{targetLabel}}</view>
+        </picker>
+      </view>
 
-      <view class="row">
-        <view class="row-key">最低高度角 {{minAlt}}°</view>
-        <slider style="flex:1" min="0" max="60" step="5" value="{{minAlt}}" show-value="{{false}}" bindchange="onAlt" activeColor="#2f66c9" />
+      <view class="frow">
+        <text class="flabel">高度角≥{{minAlt}}°</text>
+        <slider class="sl" min="0" max="60" step="5" value="{{minAlt}}" block-size="14" show-value="{{false}}" bindchanging="onAltChanging" bindchange="onAlt" activeColor="#2f66c9" />
       </view>
-      <view class="row">
-        <view class="row-key">波特尔上限 B{{bortle}}</view>
-        <slider style="flex:1" min="1" max="9" step="1" value="{{bortle}}" show-value="{{false}}" bindchange="onBortle" activeColor="#2f66c9" />
+      <view class="frow">
+        <text class="flabel">波特尔≤B{{bortle}}</text>
+        <slider class="sl" min="1" max="9" step="1" value="{{bortle}}" block-size="14" show-value="{{false}}" bindchanging="onBortleChanging" bindchange="onBortle" activeColor="#2f66c9" />
       </view>
-      <view class="hint tiny">波特尔越低越好（B1 最暗），城市中心通常 B8–9。</view>
     </view>
 
     <!-- 2. 拍摄日期 -->
-    <view class="card">
+    <view class="card card-date">
       <view class="card-title">拍摄日期</view>
       <view class="grid2">
-        <view>
-          <view class="label">开始日期</view>
-          <picker mode="date" value="{{d1}}" bindchange="onDate1">
-            <view class="picker-value">{{d1}}</view>
-          </picker>
-        </view>
-        <view>
-          <view class="label">结束日期</view>
-          <picker mode="date" value="{{d2}}" bindchange="onDate2">
-            <view class="picker-value">{{d2}}</view>
-          </picker>
-        </view>
+        <picker mode="date" value="{{d1}}" bindchange="onDate1">
+          <view class="fv">{{d1}}</view>
+        </picker>
+        <picker mode="date" value="{{d2}}" bindchange="onDate2">
+          <view class="fv">{{d2}}</view>
+        </picker>
       </view>
       <view class="hint tiny">跨度上限 5 年</view>
     </view>
 
     <!-- 3. 目的地及出发地 -->
-    <view class="card">
+    <view class="card card-place">
       <view class="card-title">目的地及出发地</view>
 
-      <view class="label">目标地区</view>
-      <picker mode="selector" range="{{regions}}" value="{{regionIndex}}" bindchange="onRegion">
-        <view class="picker-value">{{regions[regionIndex]}}</view>
-      </picker>
-
-      <view class="label">目标省份</view>
-      <picker mode="selector" range="{{provinces}}" range-key="label" value="{{provinceIndex}}" bindchange="onProvince">
-        <view class="picker-value">{{provinces[provinceIndex].label}}</view>
-      </picker>
-
-      <view class="label">目标地点</view>
-      <picker mode="selector" range="{{sites}}" range-key="label" value="{{siteIndex}}" bindchange="onSite" disabled="{{custom}}">
-        <view class="picker-value">{{custom ? customLabel : sites[siteIndex].label}}</view>
-      </picker>
-
-      <view class="grid2">
-        <button class="btn btn-ghost" bindtap="openMap">地图选点</button>
-        <button wx:if="{{custom}}" class="btn btn-ghost" bindtap="clearCustom">清除自定义点</button>
-        <view wx:else></view>
+      <view class="frow">
+        <text class="flabel">目标地区</text>
+        <picker mode="selector" range="{{regions}}" value="{{regionIndex}}" bindchange="onRegion">
+          <view class="fv">{{regions[regionIndex]}}</view>
+        </picker>
       </view>
-      <view wx:if="{{custom}}" class="hint tiny">结果只包含这个自定义点</view>
 
-      <view class="label">出发地点</view>
-      <picker mode="selector" range="{{origins}}" range-key="label" value="{{originIndex}}" bindchange="onOrigin">
-        <view class="picker-value">{{origins[originIndex].label}}</view>
-      </picker>
-      <view class="hint tiny">未授权定位时按北京计算</view>
+      <view class="frow">
+        <text class="flabel">目标省份</text>
+        <picker mode="selector" range="{{provinces}}" range-key="label" value="{{provinceIndex}}" bindchange="onProvince">
+          <view class="fv">{{provinces[provinceIndex].label}}</view>
+        </picker>
+      </view>
+
+      <view class="frow">
+        <text class="flabel">目标地点</text>
+        <picker mode="selector" range="{{sites}}" range-key="label" value="{{siteIndex}}" bindchange="onSite" disabled="{{custom}}">
+          <view class="fv">{{custom ? customLabel : sites[siteIndex].label}}</view>
+        </picker>
+      </view>
+
+      <view class="frow">
+        <text class="flabel">出发地点</text>
+        <picker mode="selector" range="{{origins}}" range-key="label" value="{{originIndex}}" bindchange="onOrigin">
+          <view class="fv">{{origins[originIndex].label}}</view>
+        </picker>
+      </view>
+
+      <view class="map-row">
+        <button class="btn map-btn" bindtap="openMap">🗺 地图选点</button>
+        <button wx:if="{{custom}}" class="btn btn-ghost clear-btn" bindtap="clearCustom">清除</button>
+      </view>
     </view>
 
     <view class="actions">

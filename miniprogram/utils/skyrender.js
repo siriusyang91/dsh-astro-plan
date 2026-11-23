@@ -1040,10 +1040,10 @@ function skyRender(ctx, view, k) {
     ctx.fillText(follow ? '跟随目标 · 滚轮缩放' : '跟踪已暂停 · 滚轮缩放', W - 9 * S, H - 8 * S);
   }
   if (sim.window) {
-    ctx.textAlign = 'center';
+    ctx.textAlign = 'right';
     ctx.font = font(10);
     ctx.fillStyle = hudDim;
-    ctx.fillText('最佳时段 ' + sim.window.start + ' – ' + sim.window.end, W / 2, H - 6 * S);
+    ctx.fillText('最佳时段 ' + sim.window.start + ' – ' + sim.window.end, W - 9 * S, H - 6 * S);
   }
 }
 

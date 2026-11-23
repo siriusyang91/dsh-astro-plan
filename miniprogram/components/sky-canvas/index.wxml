@@ -1,25 +1,27 @@
-<view class="sky">
+<view class="sky {{fullscreen ? 'full' : ''}}">
   <canvas
     id="sky"
     type="2d"
-    class="cv"
+    class="cv {{fullscreen ? 'cv-full' : ''}}"
     bindtouchstart="onTouchStart"
     catchtouchmove="onTouchMove"
     bindtouchend="stop"
   ></canvas>
-  <view class="tip">拖动转视角（左右转向 / 上下俯仰）· 双指缩放 · 双击复位</view>
-  <view class="ctrl">
-    <view class="play" bindtap="togglePlay">{{playing ? '暂停' : '播放'}}</view>
-    <slider style="flex:1" min="0" max="{{maxK}}" value="{{k}}" block-size="14" bindchange="onSlide" activeColor="#2f66c9" />
-    <view class="frame">{{k}}/{{maxK}}</view>
-  </view>
-  <view class="ctrl">
-    <view class="key" bindtap="pitchUp">上仰</view>
-    <view class="key" bindtap="pitchDown">下俯</view>
-    <view class="key" bindtap="zoomIn">放大</view>
-    <view class="key" bindtap="zoomOut">缩小</view>
-    <view class="key" bindtap="toggleMode">{{mode === 'eq' ? '赤道坐标' : '地平坐标'}}</view>
-    <view class="key" bindtap="reset">复位</view>
-    <view class="fov">视野 {{fovText}}</view>
-  </view>
+
+  <view wx:if="{{fullscreen}}" class="float-exit" bindtap="toggleFullscreen">退出全屏</view>
+
+  <block wx:if="{{!fullscreen}}">
+    <view class="tip">拖动转视角（左右转向 / 上下俯仰）· 双指缩放</view>
+    <view class="ctrl">
+      <view class="play" bindtap="togglePlay">{{playing ? '暂停' : '播放'}}</view>
+      <slider style="flex:1" min="0" max="{{maxK}}" value="{{k}}" block-size="14" bindchanging="onSlide" bindchange="onSlide" activeColor="#2f66c9" />
+      <view class="frame">{{k}}/{{maxK}}</view>
+    </view>
+    <view class="ctrl">
+      <view class="key" bindtap="toggleMode">{{mode === 'eq' ? '赤道坐标' : '地平坐标'}}</view>
+      <view class="key" bindtap="reset">复位视角</view>
+      <view class="key" bindtap="toggleFullscreen">放大横屏</view>
+      <view class="fov">视野 {{fovText}}</view>
+    </view>
+  </block>
 </view>

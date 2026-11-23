@@ -446,12 +446,12 @@ test('三级联动：下拉选地点 → 自动补地区与省份', async () => 
   assert.equal(ctx.doc.getElementById('province').value, '北京')
 })
 
-test('未授权定位时，出发地点下拉与标签都显示北京', async () => {
+test('未授权定位时不计算距离（不再回退北京）', async () => {
   const ctx = await runPage()
   await globalThis.__bootPromise
   // 沙箱里的 navigator 没有 geolocation → 走「未获取到定位」分支
-  assert.equal(ctx.doc.getElementById('originSel').value, '北京', '下拉框应显示北京')
+  assert.equal(ctx.doc.getElementById('originSel').value, '', '下拉框应回到「不计算距离」')
   const hint = ctx.doc.getElementById('hint').textContent
-  assert.match(hint, /出发地点：北京/, '标签应显示北京')
-  assert.match(hint, /按北京计算/, '应说明按北京计算')
+  assert.match(hint, /不计算距离/, '应说明不计算距离')
+  assert.doesNotMatch(hint, /按北京计算/, '不应再按北京估算')
 })

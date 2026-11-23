@@ -7,8 +7,11 @@ Page({
   data: {
     loading: true,
     error: '',
-    types: [],
-    typeIndex: 0,
+    targetGroups: [{ label: '不限', types: [{ id: 'any', label: '不限' }] }],
+    targetColumns: [['不限'], ['不限']],
+    targetIndex: [0, 0],
+    targetLabel: '不限',
+    eventType: 'any',
     regions: ['全国'],
     regionIndex: 0,
     provinces: [{ name: '', label: '全部省份' }],
@@ -46,9 +49,22 @@ Page({
         const origins = [{ name: '', label: '不计算距离' }, { name: HERE, label: '目前所在地' }]
           .concat((meta.cities || []).map((c) => ({ name: c.name, label: c.name })))
         this.meta = meta
+        const allTypes = meta.eventTypes || []
+        const groupDefs = meta.eventTypeGroups || []
+        const targetGroups = [{
+          label: '不限',
+          types: allTypes.filter((t) => t.id === 'any').length
+            ? allTypes.filter((t) => t.id === 'any')
+            : [{ id: 'any', label: '不限' }],
+        }]
+        for (const group of groupDefs) {
+          const types = allTypes.filter((t) => t.group === group.id)
+          if (types.length) targetGroups.push({ label: group.label, types })
+        }
         this.setData({
           loading: false,
-          types: (meta.eventTypes || []).map((t) => ({ id: t.id, label: t.label })),
+          targetGroups,
+          targetColumns: [targetGroups.map((g) => g.label), targetGroups[0].types.map((t) => t.label)],
           regions,
           origins,
         })
@@ -91,7 +107,38 @@ Page({
     this.setData(data)
   },
 
-  onType(e) { this.setData({ typeIndex: Number(e.detail.value) }) },
+  /** 两级筛选：滚动第一列（分组）时重建第二列（类型） */
+  onTargetColumnChange(e) {
+    const column = Number(e.detail.column)
+    const value = Number(e.detail.value)
+    if (column !== 0) {
+      const index = this.data.targetIndex.slice()
+      index[1] = value
+      this.setData({ targetIndex: index })
+      return
+    }
+    const groups = this.data.targetGroups
+    const types = (groups[value] || groups[0]).types.map((t) => t.label)
+    this.setData({
+      targetColumns: [groups.map((g) => g.label), types],
+      targetIndex: [value, 0],
+    })
+  },
+
+  onTargetChange(e) {
+    const value = e.detail.value || [0, 0]
+    const groupIndex = Number(value[0]) || 0
+    const typeIndex = Number(value[1]) || 0
+    const group = this.data.targetGroups[groupIndex] || this.data.targetGroups[0]
+    const type = group.types[typeIndex] || group.types[0]
+    const label = group.label === '不限' ? type.label : `${group.label} · ${type.label}`
+    this.setData({
+      eventType: type.id,
+      targetLabel: label,
+      targetIndex: [groupIndex, typeIndex],
+      targetColumns: [this.data.targetGroups.map((g) => g.label), group.types.map((t) => t.label)],
+    })
+  },
 
   onRegion(e) {
     this.setData({ custom: null, customLabel: '' })
@@ -154,7 +201,9 @@ Page({
   onDate1(e) { this.setData({ d1: e.detail.value }) },
   onDate2(e) { this.setData({ d2: e.detail.value }) },
   onAlt(e) { this.setData({ minAlt: Number(e.detail.value) }) },
+  onAltChanging(e) { this.setData({ minAlt: Number(e.detail.value) }) },
   onBortle(e) { this.setData({ bortle: Number(e.detail.value) }) },
+  onBortleChanging(e) { this.setData({ bortle: Number(e.detail.value) }) },
 
   onOrigin(e) {
     const index = Number(e.detail.value)
@@ -169,7 +218,7 @@ Page({
     this.setData({ custom: null, customLabel: '' })
   },
 
-  /** 出发地坐标：目前所在地 → 定位；失败按北京（与网页版一致） */
+  /** 出发地坐标：目前所在地 → 定位；未授权/失败则不计算距离（与网页版一致） */
   resolveOrigin() {
     return new Promise((resolve) => {
       const picked = this.data.origins[this.data.originIndex]
@@ -183,10 +232,9 @@ Page({
         type: 'gcj02',
         success: (res) => resolve({ lat: res.latitude, lon: res.longitude }),
         fail: () => {
-          const beijing = (this.meta.cities || []).find((c) => c.name === '北京')
-          this.setData({ originLabel: '北京' })
-          wx.showToast({ title: '未获取到定位，按北京计算', icon: 'none' })
-          resolve(beijing ? { lat: beijing.lat, lon: beijing.lon } : null)
+          this.setData({ originIndex: 0, originLabel: '不计算距离' })
+          wx.showToast({ title: '未获取到定位，不计算距离', icon: 'none' })
+          resolve(null)
         },
       })
     })
@@ -197,7 +245,10 @@ Page({
     app.globalData.pickedPoint = null
     app.globalData.query = null
     this.setData({
-      typeIndex: 0,
+      eventType: 'any',
+      targetLabel: '不限',
+      targetIndex: [0, 0],
+      targetColumns: [this.data.targetGroups.map((g) => g.label), this.data.targetGroups[0].types.map((t) => t.label)],
       d1: today(0),
       d2: today(6),
       minAlt: 0,
@@ -220,7 +271,7 @@ Page({
     const origin = await this.resolveOrigin()
     const site = this.data.sites[this.data.siteIndex]
     const opts = {
-      eventType: this.data.types[this.data.typeIndex].id,
+      eventType: this.data.eventType,
       dateStart: this.data.d1,
       dateEnd: this.data.d2,
       minAltitude: this.data.minAlt,

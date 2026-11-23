@@ -17,7 +17,7 @@ function call(action, payload = {}, options = {}) {
         const message = error && error.errMsg ? error.errMsg : '网络异常'
         // 云函数默认超时只有 3 秒：给出可操作的提示，而不是原始错误码
         if (message.includes('-504003') || message.includes('TIME_LIMIT_EXCEEDED')) {
-          reject(new Error('云函数超时：请在云开发控制台把 astroPlan 的超时时间调到 60 秒后重试'))
+          reject(new Error('查询超时'))
           return
         }
         if (message.includes('YOUR_CLOUD_ENV') || message.includes('env')) {

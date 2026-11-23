@@ -147,10 +147,9 @@ test('apply 在没有 slots 的宿主上安全降级', () => {
   assert.doesNotThrow(() => mod.apply(null))
 })
 
-test('客户端：定位失败时出发地点显示北京（不再假装「目前所在地」）', () => {
+test('客户端：定位失败时不计算距离', () => {
   const src = captured.factory.toString()
-  assert.ok(src.includes("setOriginLabel('北京')"), '失败时应把标签设为北京')
-  assert.ok(src.includes("patch({ origin: '北京' })"), '失败时下拉框也应切到北京')
-  assert.ok(src.includes('按北京计算'), '应说明按北京计算')
-  assert.ok(!src.includes('按上次定位结果'), '不再复用缓存位置当「目前所在地」')
+  assert.ok(src.includes("setOriginLabel('不计算距离')"), '失败时标签应为不计算距离')
+  assert.ok(!src.includes("patch({ origin: '北京' })"), '不应再切到北京')
+  assert.ok(!src.includes('按北京计算'), '不应再按北京估算')
 })

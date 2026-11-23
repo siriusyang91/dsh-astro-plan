@@ -6,14 +6,18 @@
     longitude="{{longitude}}"
     scale="{{scale}}"
     markers="{{markers}}"
+    polyline="{{polyline}}"
     show-location="{{false}}"
     enable-zoom="{{true}}"
     enable-scroll="{{true}}"
     bindtap="onMapTap"
+    bindmarkertap="onMarkerTap"
   ></map>
 
   <view class="panel">
-    <view class="hint">点击地图任意位置选点；也可直接输入经纬度（支持 39.9042 或 39°54′15″N）</view>
+    <view class="picked">{{selectedText}}</view>
+    <view class="hint" wx:if="{{hint}}">{{hint}}</view>
+
     <view class="coord-row">
       <view class="coord-field">
         <view class="label">纬度</view>
@@ -24,11 +28,16 @@
         <input class="input" value="{{lonText}}" placeholder="116.4074" bindinput="onLonInput" />
       </view>
     </view>
-    <view class="hint warn" wx:if="{{hint}}">{{hint}}</view>
+
+    <view class="preset-row">
+      <picker mode="selector" range="{{presets}}" range-key="label" value="{{presetIndex}}" bindchange="onPresetChange">
+        <view class="preset-btn">选择预设地点 · {{presetLabel}}</view>
+      </picker>
+    </view>
+
     <view class="coord-btns">
-      <button class="btn btn-ghost" style="flex:1" bindtap="useNearestCity">北京</button>
       <button class="btn btn-ghost" style="flex:1" bindtap="onCancel">取消</button>
-      <button class="btn" style="flex:1.2" bindtap="onConfirm">确定</button>
+      <button class="btn" style="flex:1.4" bindtap="onConfirm">确定</button>
     </view>
     <view class="hint" wx:if="{{loading}}">正在加载 173 个预设站点…</view>
   </view>

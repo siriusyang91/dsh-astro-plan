@@ -24,6 +24,7 @@ Component({
     w: 0,
     h: 0,
     ready: false,
+    fullscreen: false,
     fovText: '100°',
   },
 
@@ -44,8 +45,21 @@ Component({
   },
 
   lifetimes: {
-    ready() { this.initCanvas() },
-    detached() { this.stop() },
+    ready() {
+      this.initCanvas()
+      // 横屏/窗口尺寸变化后重新按新尺寸出图
+      this.onResize = () => {
+        if (!this.data.ready) return
+        clearTimeout(this.resizeTimer)
+        this.resizeTimer = setTimeout(() => this.initCanvas(), 200)
+      }
+      if (typeof wx.onWindowResize === 'function') wx.onWindowResize(this.onResize)
+    },
+    detached() {
+      this.stop()
+      if (typeof wx.offWindowResize === 'function' && this.onResize) wx.offWindowResize(this.onResize)
+      if (this.resizeTimer) clearTimeout(this.resizeTimer)
+    },
   },
 
   methods: {
@@ -65,7 +79,7 @@ Component({
         canvas.width = Math.round(info.width * dpr)
         canvas.height = Math.round(info.height * dpr)
         const ctx = canvas.getContext('2d')
-        ctx.scale(dpr, dpr)
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
         this.canvas = canvas
         this.ctx = ctx
         this.dpr = dpr
@@ -128,17 +142,14 @@ Component({
       this.draw()
     },
 
-    zoomIn() { this.setFov((this.camera ? this.camera.fov : 100) / 1.25) },
-    zoomOut() { this.setFov((this.camera ? this.camera.fov : 100) * 1.25) },
-
-    /** 俯仰：按钮入口（手势之外） */
-    pitchBy(deg) {
-      if (!this.camera) return
-      this.camera.pitch = clamp(this.camera.pitch + deg, PITCH_MIN, PITCH_MAX)
-      this.draw()
+    /** 放大横屏：铺满屏幕并重新初始化 canvas（配合页面 pageOrientation: auto） */
+    toggleFullscreen() {
+      const fullscreen = !this.data.fullscreen
+      this.setData({ fullscreen }, () => {
+        clearTimeout(this.resizeTimer)
+        this.resizeTimer = setTimeout(() => this.initCanvas(), 120)
+      })
     },
-    pitchUp() { this.pitchBy(8) },
-    pitchDown() { this.pitchBy(-8) },
 
     toggleMode() {
       this.setData({ mode: this.data.mode === 'eq' ? 'altaz' : 'eq' })

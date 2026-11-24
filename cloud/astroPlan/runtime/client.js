@@ -16,6 +16,9 @@ window.__ModuleLoader__.load({
     var module = { exports: {} }
     var exports = module.exports
 
+    // 插件版本（发布时由 tools/release-core.mjs 的 syncVersionFile 同步）
+    var PLUGIN_VERSION = '0.4.3'
+
     var React = require('react')
     var h = React.createElement
 
@@ -2363,7 +2366,7 @@ window.__ModuleLoader__.load({
 
       return h('div', { className: 'ap-wrap', 'data-ap-theme': theme },
         h('div', { className: 'ap-hero' },
-          h('h2', { className: 'ap-title' }, '星野计划', h('span', { className: 'ap-ver' }, 'v' + VERSION)),
+          h('h2', { className: 'ap-title' }, '星野计划', h('span', { className: 'ap-ver' }, 'v' + PLUGIN_VERSION)),
           h('span', { className: 'ap-by' }, 'by Sirius YANG')),
         h('div', { className: 'ap-panel' },
           prow('拍摄日期', [
@@ -2530,7 +2533,7 @@ window.__ModuleLoader__.load({
         if (!ctx || !ctx.slots || typeof ctx.slots.inject !== 'function') return
         ctx.slots.inject('conversation.view', function () {
           return ctx.slots.register(
-            { name: 'conversation.view', id: 'astro-plan', order: 85, label: function () { return '星野计划' } },
+            { name: 'conversation.view', id: 'astro-plan', order: 85, label: function () { return '星野计划 v' + PLUGIN_VERSION } },
             function (props) { return h(View, props) },
           )
         })

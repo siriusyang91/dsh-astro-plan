@@ -45,7 +45,7 @@ https://raw.githubusercontent.com/SiriusYANG91/dsh-astro-plan/main/docs/market-i
 **2）npm**
 
 ```bash
-dsh plugin --profile desktop add dsh-astro-plan@0.4.2
+dsh plugin --profile desktop add dsh-astro-plan@0.4.3
 ```
 
 **3）本地目录（开发）**

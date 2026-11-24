@@ -99,5 +99,9 @@ export function syncVersionFile(root = process.cwd()) {
 export const VERSION = '${pkg.version}'
 `
   writeFileSync(file, body, 'utf8')
+  // 客户端是 loader 工厂（不能 import），版本以常量形式同步
+  const clientFile = join(root, 'lib', 'client.js')
+  const client = readFileSync(clientFile, 'utf8')
+  writeFileSync(clientFile, client.replace(/var PLUGIN_VERSION = '[^']*'/u, `var PLUGIN_VERSION = '${pkg.version}'`), 'utf8')
   return pkg.version
 }

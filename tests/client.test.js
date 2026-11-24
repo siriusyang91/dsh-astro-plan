@@ -137,7 +137,7 @@ test('apply 注册 conversation.view Tab 且 id/order 正确', () => {
   assert.equal(registered[0].options.name, 'conversation.view')
   assert.equal(registered[0].options.id, 'astro-plan')
   assert.equal(registered[0].options.order, 85)
-  assert.equal(registered[0].options.label(), '星野计划')
+  assert.match(registered[0].options.label(), /^星野计划 v\d+\.\d+\.\d+$/, 'Tab 标题应带版本号')
   assert.equal(typeof registered[0].component, 'function')
 })
 
@@ -152,4 +152,13 @@ test('客户端：定位失败时不计算距离', () => {
   assert.ok(src.includes("setOriginLabel('不计算距离')"), '失败时标签应为不计算距离')
   assert.ok(!src.includes("patch({ origin: '北京' })"), '不应再切到北京')
   assert.ok(!src.includes('按北京计算'), '不应再按北京估算')
+})
+
+test('客户端：版本常量存在且 Tab 标题带版本（不能再引用未定义的 VERSION）', () => {
+  const src = readFileSync(join(ROOT, 'lib', 'client.js'), 'utf8')
+  assert.match(src, /var PLUGIN_VERSION = '\d+\.\d+\.\d+'/u, '工厂内应定义 PLUGIN_VERSION')
+  assert.ok(!/\bVERSION\b/u.test(src.replace(/PLUGIN_VERSION/g, '')), '不能引用未定义的 VERSION')
+  assert.ok(src.includes("'星野计划 v' + PLUGIN_VERSION"), 'Tab 标题应带版本号')
+  const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'))
+  assert.ok(src.includes(`PLUGIN_VERSION = '${pkg.version}'`), 'PLUGIN_VERSION 应与 package.json 一致')
 })

@@ -46,7 +46,7 @@
 ```bash
 # 1) 插件市场：插件 → 发现 → 添加索引 → 粘贴索引地址 → 安装「星野计划」
 # 2) npm
-dsh plugin --profile desktop add dsh-astro-plan@0.3.4
+dsh plugin --profile desktop add dsh-astro-plan@0.4.0
 # 3) 本地目录（开发用）
 dsh plugin --profile desktop add "<本目录绝对路径>"
 ```
@@ -361,7 +361,7 @@ curl "http://127.0.0.1:<端口>/astro-plan/api/search?...&withSim=0"
 
 ---
 
-**版本**：0.3.4 · **许可**：MIT · **作者**：Sirius YANG
+**版本**：0.4.0 · **许可**：MIT · **作者**：Sirius YANG
 
 ## 15. 地图选点
 
@@ -395,3 +395,10 @@ curl "http://127.0.0.1:<端口>/astro-plan/api/search?...&withSim=0"
 - 需要你自己的**小程序 AppID** 与**云开发环境 ID**，填到 `miniprogram/app.js` 与 `project.config.json`
 - 与网页版的差别：结果是卡片列表（不是表格）；便签是半屏弹层，**暂无 3D 天球**；地图用微信原生 `<map>`，没有离线省界
 - 完整步骤见 [miniprogram.md](miniprogram.md)
+
+## 18. 地形建模精度与天气核对
+
+- **三层真实高程**：近景 0.1–1.5 km（DEM z12 ≈38 m/px）、近中 1.5–25 km（z9 ≈300 m/px）、远景 25–140 km（z8 ≈600 m/px），方位步长 5°（72 个方向），射线步进近景 0.05 km、近中 0.2 km、远景 0.6 km；含地球曲率与大气折射，站点高度用实测海拔。
+- **近景形态**：按地景类型（森林/建筑/水面/草甸/沙漠/山脊）与实测高程取高，只在该地景的方位窗口内绘制。
+- **天气逐时**：便签天气分区列出拍摄当晚 19:00–05:00 的逐时云量与气温，并给出「多源一致性」（MET Norway 与 Open-Meteo 的差值，高/中/低/单源）。
+- **准确性抽检**：`node tools/verify-weather.mjs --sites=12 --days=7` 用两个独立数值模式对比同期预报差异，结果写 `docs/weather-accuracy.json`（当前样本云量差约 7%、气温差约 1.2℃）。

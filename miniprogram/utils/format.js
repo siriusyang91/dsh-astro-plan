@@ -99,12 +99,23 @@ function buildSections(item) {
         ['说明', params.note || '—'],
       ],
     },
-    {
-      title: '天气',
-      rows: [
-        ['状态', weatherText(item.weather)],
-      ],
-    },
+    (() => {
+      const w = item.weather || {}
+      const rows = [['状态', weatherText(w)]]
+      if (w.crossCheck) {
+        const cc = w.crossCheck
+        const detail = cc.level === '单源'
+          ? '单源（无法交叉核对）'
+          : `${cc.level}（云量差 ${cc.cloudDiff == null ? '—' : cc.cloudDiff + '%'}，气温差 ${cc.tempDiff == null ? '—' : cc.tempDiff + '℃'}）`
+        rows.push(['多源一致性', detail])
+      }
+      if (Array.isArray(w.hours) && w.hours.length) {
+        for (const h of w.hours) {
+          rows.push([h.t, `云 ${h.cloud == null ? '—' : h.cloud + '%'} · ${h.temp == null ? '—' : h.temp + '℃'}`])
+        }
+      }
+      return { title: '天气', rows }
+    })(),
     {
       title: '推荐度明细',
       rows: [

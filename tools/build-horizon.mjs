@@ -30,9 +30,19 @@ const OUT = join(DATA, 'horizon.json')
 const PARTIAL = join(DATA, 'horizon.partial.json')
 const CACHE = join(tmpdir(), 'dsh-astro-plan-terrain')
 
-const Z = 8
-const STEP = 10
+const ARGS = process.argv.slice(2)
+function arg(name, fallback) {
+  const hit = ARGS.find((a) => a.startsWith('--' + name + '='))
+  return hit ? hit.split('=')[1] : fallback
+}
+const ONLY_V = ARGS.includes('--only-v')
+const Z = Number(arg('zoom', 8))
+const Z_V = Number(arg('zoom-v', 12))
+const STEP = Number(arg('step', 10))
+const STEP_V = Number(arg('step-v', STEP))
+const NEAR_V_KM = Number(arg('near-v', 1.5))
 const AZS = Array.from({ length: 360 / STEP }, (_, i) => i * STEP)
+const AZS_V = Array.from({ length: 360 / STEP_V }, (_, i) => i * STEP_V)
 const NEAR_KM = 25
 const MAX_KM = 140
 const CAP_DEG = 45
@@ -122,23 +132,23 @@ function decodePng(buf) {
 
 const tileCache = new Map()
 
-function tileXY(lat, lon) {
-  const n = 2 ** Z
+function tileXY(lat, lon, zoom = Z) {
+  const n = 2 ** zoom
   const x = ((lon + 180) / 360) * n
   const s = Math.sin(lat * D2R)
   const y = (0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * n
   return { x, y }
 }
 
-async function fetchTile(tx, ty) {
-  const key = `${Z}/${tx}/${ty}`
+async function fetchTile(tx, ty, zoom = Z) {
+  const key = `${zoom}/${tx}/${ty}`
   if (tileCache.has(key)) return tileCache.get(key)
-  const file = join(CACHE, String(Z), String(tx), `${ty}.png`)
+  const file = join(CACHE, String(zoom), String(tx), `${ty}.png`)
   let buf = null
   if (existsSync(file)) {
     buf = readFileSync(file)
   } else {
-    const url = `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${Z}/${tx}/${ty}.png`
+    const url = `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${zoom}/${tx}/${ty}.png`
     for (let attempt = 0; attempt < 4 && !buf; attempt += 1) {
       try {
         const res = await fetch(url)
@@ -158,11 +168,11 @@ async function fetchTile(tx, ty) {
 }
 
 /** 某经纬度的高程（米）；取不到的瓦片返回 null。 */
-function elevationAt(lat, lon) {
-  const p = tileXY(lat, lon)
+function elevationAt(lat, lon, zoom = Z) {
+  const p = tileXY(lat, lon, zoom)
   const tx = Math.floor(p.x)
   const ty = Math.floor(p.y)
-  const png = tileCache.get(`${Z}/${tx}/${ty}`)
+  const png = tileCache.get(`${zoom}/${tx}/${ty}`)
   if (!png) return null
   const px = Math.min(png.width - 1, Math.max(0, Math.floor((p.x - tx) * png.width)))
   const py = Math.min(png.height - 1, Math.max(0, Math.floor((p.y - ty) * png.height)))
@@ -236,8 +246,69 @@ async function profileOf(site) {
   return { n: nArr, f: fArr }
 }
 
+/** 近景层（0.1–1.5 km，高分辨率 DEM）：树线/建筑/近处山脚。 */
+async function nearProfileOf(site) {
+  const n = 2 ** Z_V
+  const p = tileXY(site.lat, site.lon)
+  const cx = Math.floor(p.x)
+  const cy = Math.floor(p.y)
+  const tasks = []
+  for (let dx = -1; dx <= 1; dx += 1) {
+    for (let dy = -1; dy <= 1; dy += 1) {
+      tasks.push(fetchTile((((cx + dx) % n) + n) % n, Math.max(0, Math.min(n - 1, cy + dy)), Z_V))
+    }
+  }
+  await Promise.all(tasks)
+  const dem0 = elevationAt(site.lat, site.lon, Z_V)
+  const h0 = Number.isFinite(site.altM) ? Math.max(site.altM, dem0 ?? 0) : (dem0 ?? 0)
+  const out = []
+  const samplesV = []
+  for (let d = 100; d <= NEAR_V_KM * 1000; d += 50) samplesV.push(d)
+  for (const az of AZS_V) {
+    let alt = -90
+    for (const dM of samplesV) {
+      const [la, lo] = destination(site.lat, site.lon, az, dM)
+      const h = elevationAt(la, lo, Z_V)
+      if (h == null) continue
+      const ang = Math.atan2(h - h0 - (dM * dM) / (2 * R_EFF), dM) * R2D
+      alt = Math.max(alt, ang)
+    }
+    out.push(Math.round(Math.max(-6, Math.min(CAP_DEG, alt === -90 ? 0 : alt)) * 10) / 10)
+  }
+  return out
+}
+
 async function main() {
   const sites = loadSites()
+  if (ONLY_V) {
+    const base = JSON.parse(readFileSync(OUT, 'utf8'))
+    const partialKey = OUT + '.vpartial'
+    let doneV = existsSync(partialKey) ? JSON.parse(readFileSync(partialKey, 'utf8')) : {}
+    mkdirSync(CACHE, { recursive: true })
+    const t0 = Date.now()
+    for (let i = 0; i < sites.length; i += 1) {
+      const site = sites[i]
+      if (doneV[site.id]) continue
+      doneV[site.id] = await nearProfileOf(site)
+      if (i % 10 === 0 || i === sites.length - 1) {
+        writeFileSync(partialKey, JSON.stringify(doneV), 'utf8')
+        console.log(`v 层 ${Object.keys(doneV).length}/${sites.length} 用时 ${((Date.now() - t0) / 1000).toFixed(0)}s`)
+      }
+    }
+    for (const id of Object.keys(doneV)) {
+      if (base.sites[id]) base.sites[id].v = doneV[id]
+    }
+    base.schema = 'astro-plan/horizon@3'
+    base.step = base.step || 10
+    base.steps = { v: STEP_V, n: base.step, f: base.step }
+    base.nearVKm = NEAR_V_KM
+    base.zoomV = Z_V
+    base.generated = new Date().toISOString().slice(0, 10)
+    writeFileSync(OUT, JSON.stringify(base), 'utf8')
+    if (existsSync(partialKey)) unlinkSync(partialKey)
+    console.log(`写入近景层：${Object.keys(doneV).length} 站，schema @3`)
+    return
+  }
   let done = {}
   if (existsSync(PARTIAL)) {
     done = JSON.parse(readFileSync(PARTIAL, 'utf8'))

@@ -38,7 +38,14 @@ Page({
     const picked = app.globalData.pickedPoint
     if (picked) {
       app.globalData.pickedPoint = null
-      this.setData({ custom: picked, customLabel: `自定义点 ${picked.lat.toFixed(3)}, ${picked.lon.toFixed(3)}` })
+      // 自定义点：重置地区/省份，避免沿用上一次的省市筛选
+      this.setData({
+        custom: picked,
+        customLabel: picked.siteId ? picked.name : `自定义点 ${picked.lat.toFixed(3)}, ${picked.lon.toFixed(3)}`,
+        regionIndex: 0,
+        provinceIndex: 0,
+      })
+      if (this.meta) this.applyRegion(0)
     }
   },
 

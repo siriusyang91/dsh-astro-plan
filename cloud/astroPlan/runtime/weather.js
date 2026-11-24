@@ -257,7 +257,40 @@ export function scoreNight(data, dateStr) {
     windMax: windMax === null ? null : Math.round(windMax),
     visKm: visKm === null ? null : Math.round(visKm),
     source: data.__source ?? 'open-meteo',
+    hours: idx.map((i) => ({
+      t: H.time[i]?.slice(11, 16) ?? '',
+      cloud: Number.isFinite(Number(H.cloudcover?.[i])) ? Math.round(Number(H.cloudcover[i])) : null,
+      temp: Number.isFinite(Number(H.temperature_2m?.[i])) ? Math.round(Number(H.temperature_2m[i]) * 10) / 10 : null,
+    })).filter((row) => row.t && (row.cloud !== null || row.temp !== null)),
   }
+}
+
+/**
+ * 多源一致性：用缓存里已有的多个源对比同一夜的云量均值与最低温。
+ * 只有一个源可用时返回 level: '单源'（不编造差值）。
+ */
+export function weatherConsensus(site, dateStr) {
+  const rows = []
+  for (const source of SOURCES) {
+    const data = cacheGet(source.id, site.id)
+    if (!data) continue
+    const score = scoreNight(data, dateStr)
+    if (!score) continue
+    rows.push({ source: source.id, name: source.name ?? source.id, cloud: score.cloudMean, temp: score.tMin })
+  }
+  if (rows.length < 2) {
+    return { level: '单源', sources: rows.map((r) => r.name), cloudDiff: null, tempDiff: null }
+  }
+  const clouds = rows.map((r) => r.cloud).filter((v) => Number.isFinite(v))
+  const temps = rows.map((r) => r.temp).filter((v) => Number.isFinite(v))
+  const cloudDiff = clouds.length > 1 ? Math.round(Math.max(...clouds) - Math.min(...clouds)) : null
+  const tempDiff = temps.length > 1 ? Math.round((Math.max(...temps) - Math.min(...temps)) * 10) / 10 : null
+  let level = '中'
+  if (cloudDiff !== null && tempDiff !== null) {
+    if (cloudDiff <= 15 && tempDiff <= 2) level = '高'
+    else if (cloudDiff > 30 || tempDiff > 4) level = '低'
+  }
+  return { level, sources: rows.map((r) => r.name), cloudDiff, tempDiff }
 }
 
 /** 白天窗口评分（日食用）。 */

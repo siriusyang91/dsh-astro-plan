@@ -1,0 +1,93 @@
+{
+  "generated": "2026-11-24T12:30:08.056Z",
+  "days": 7,
+  "baseline": "best_match vs ecmwf_ifs025 同期预报差异（不确定度）",
+  "sites": [
+    {
+      "id": "haituo",
+      "name": "海坨山",
+      "tempMae": 1.3,
+      "cloudMae": 7.8,
+      "hours": 168
+    },
+    {
+      "id": "lingshan",
+      "name": "灵山",
+      "tempMae": 0.8,
+      "cloudMae": 6.5,
+      "hours": 168
+    },
+    {
+      "id": "baihuashan",
+      "name": "百花山",
+      "tempMae": 1.6,
+      "cloudMae": 5.9,
+      "hours": 168
+    },
+    {
+      "id": "wulingshan",
+      "name": "雾灵山",
+      "tempMae": 0.6,
+      "cloudMae": 6.8,
+      "hours": 168
+    },
+    {
+      "id": "baihepu",
+      "name": "白河堡水库",
+      "tempMae": 0.9,
+      "cloudMae": 6.2,
+      "hours": 168
+    },
+    {
+      "id": "puwa",
+      "name": "蒲洼",
+      "tempMae": 1.2,
+      "cloudMae": 8,
+      "hours": 168
+    },
+    {
+      "id": "bulootun",
+      "name": "密云不老屯",
+      "tempMae": 0.8,
+      "cloudMae": 6.3,
+      "hours": 168
+    },
+    {
+      "id": "yudu",
+      "name": "玉渡山",
+      "tempMae": 1.8,
+      "cloudMae": 7,
+      "hours": 168
+    },
+    {
+      "id": "panshan",
+      "name": "蓟州盘山",
+      "tempMae": 0.5,
+      "cloudMae": 6,
+      "hours": 168
+    },
+    {
+      "id": "guyuan",
+      "name": "沽源闪电湖",
+      "tempMae": 0.7,
+      "cloudMae": 8.7,
+      "hours": 168
+    },
+    {
+      "id": "caoyuantianlu",
+      "name": "张北草原天路",
+      "tempMae": 1.4,
+      "cloudMae": 9.1,
+      "hours": 168
+    },
+    {
+      "id": "chongli",
+      "name": "崇礼",
+      "tempMae": 0.5,
+      "cloudMae": 5.5,
+      "hours": 168
+    }
+  ],
+  "tempMaeAvg": 1,
+  "cloudMaeAvg": 7
+}

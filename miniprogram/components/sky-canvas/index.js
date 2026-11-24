@@ -2,7 +2,7 @@
 const { skyRender } = require('../../utils/skyrender')
 
 const FOV_MIN = 5
-const FOV_MAX = 180
+const FOV_MAX = 300
 const PITCH_MIN = -10
 const PITCH_MAX = 90
 
@@ -27,7 +27,8 @@ Component({
     fullscreen: false,
     justExited: false,
     fovText: '100°',
-    hud: { time: '', modeLabel: '地平坐标', fov: '100°', altaz: '', radec: '', geo: '', window: '' },
+    trackerOn: false,
+    hud: { time: '', modeLabel: '地平坐标', fov: '100°', altaz: '', radec: '', window: '' },
   },
 
   observers: {
@@ -39,8 +40,9 @@ Component({
         yaw: camera.yaw === undefined ? 180 : camera.yaw,
         pitch: camera.pitch === undefined ? 30 : camera.pitch,
         fov: camera.fov === undefined ? 100 : camera.fov,
+        tracker: Boolean(camera.tracker),
       }
-      this.setData({ k, maxK: value.frames.length - 1 })
+      this.setData({ k, maxK: value.frames.length - 1, trackerOn: Boolean(this.camera.tracker) })
       this.syncFovText()
       this.draw()
     },
@@ -110,7 +112,6 @@ Component({
         fov: `${Math.round(this.camera.fov)}°`,
         altaz: tp ? `高度角 ${Number(tp[2]).toFixed(0)}° · 方位角 ${Number(tp[3]).toFixed(0)}°` : '高度角 —',
         radec: tp ? `赤经 ${raText} · 赤纬 ${dec >= 0 ? '+' : ''}${dec.toFixed(1)}°` : '赤经 —',
-        geo: `北纬 ${Math.abs(sim.lat).toFixed(2)}° · 东经 ${Math.abs(sim.lon).toFixed(2)}°`,
         window: sim.window ? `最佳时段 ${sim.window.start} – ${sim.window.end}` : '',
       }
       this.setData({ hud, fovText: hud.fov })
@@ -188,8 +189,22 @@ Component({
       })
     },
 
-    onLongPress() {
-      this.toggleFullscreen()
+    /** 双击切换全屏（两次点击间隔 < 320ms，拖动不计） */
+    onTap() {
+      const now = Date.now()
+      if (this.lastTapAt && now - this.lastTapAt < 320) {
+        this.lastTapAt = 0
+        this.toggleFullscreen()
+        return
+      }
+      this.lastTapAt = now
+    },
+
+    toggleTracker() {
+      if (!this.camera) return
+      this.camera.tracker = !this.camera.tracker
+      this.setData({ trackerOn: Boolean(this.camera.tracker) })
+      this.draw()
     },
 
     toggleMode() {

@@ -32,7 +32,14 @@ function call(action, payload = {}, options = {}) {
 
 module.exports = {
   meta: () => call('meta'),
-  search: (opts) => call('search', { opts }),
+  search: (opts) => {
+    const once = () => call('search', { opts }, { timeout: 70000 })
+    return once().catch((error) => {
+      // 超时：云端通常已算完（结果缓存 10 分钟），立刻重试一次即可拿到结果
+      if (error && /查询超时/u.test(error.message || '')) return once()
+      throw error
+    })
+  },
   night: (payload) => call('night', payload),
   bortle: (lat, lon) => call('bortle', { lat, lon }),
   sim: (payload) => call('sim', payload, { timeout: 60000 }),

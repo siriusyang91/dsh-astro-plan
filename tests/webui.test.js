@@ -386,7 +386,7 @@ test('画面模拟：绘制会裁剪天际线、标方位、显示日期与高�
     assert.ok(texts.some((t) => String(t).startsWith(first.d + ' ' + first.t)), `左上应显示月日与时刻，实际 ${texts.slice(0, 6).join('|')}`)
     assert.ok(texts.some((t) => String(t).includes('最佳时段内')), '默认帧应在最佳时段内')
     assert.ok(texts.some((t) => String(t).startsWith('高度角')), '左下应有高度角')
-    assert.ok(texts.some((t) => String(t).startsWith('北纬')), '左下应有经纬度')
+    assert.ok(!texts.some((t) => String(t).startsWith('北纬')), '左下不再显示拍摄地经纬度')
     assert.ok(texts.includes('黄道'), '应标出黄道')
     assert.ok(texts.some((t) => /^(高度|方位) /.test(String(t))), '网格线应标数值：' + texts.join('|'))
 

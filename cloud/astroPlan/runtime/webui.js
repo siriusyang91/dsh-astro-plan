@@ -712,10 +712,7 @@ function note(x, i){
       +kv('最佳 3h 窗口', w.best3Start+' 起 / 云 '+w.best3Cloud+'%')+kv('降水概率峰值', w.precipMax+'%')
       +kv('最低温', num(w.tMin,' ℃'))+kv('露点差', num(w.dewGap,' ℃'))+kv('最大风速', num(w.windMax,' km/h'))+kv('能见度', num(w.visKm,' km'))
       + kv('多源一致性', w.crossCheck ? (w.crossCheck.level + '（云量差 ' + (w.crossCheck.cloudDiff==null?'—':w.crossCheck.cloudDiff+'%') + '，气温差 ' + (w.crossCheck.tempDiff==null?'—':w.crossCheck.tempDiff+'℃') + '）') : '—')
-      + (Array.isArray(w.hours) && w.hours.length
-        ? '<div class="dim" style="margin:6px 0 2px">逐时云量 / 气温</div>'
-          + w.hours.map(function(h){ return kv(h.t, (h.cloud==null?'—':h.cloud+'%') + ' · ' + (h.temp==null?'—':h.temp+'℃')) }).join('')
-        : '')
+     
     : '<div class="dim">'+esc(w.status==='out_of_range'?'该日期超出 7 天预报范围，仅按天文条件评估':'天气数据不可用')+'</div>';
   var fg = x.foreground || {};
   var fgLevel = (fg.irreplaceability||0) >= 70 ? '高' : ((fg.irreplaceability||0) >= 40 ? '中' : '低');
@@ -919,7 +916,7 @@ function simWheel(e, i){
   var dy = (e && e.deltaY) || 0;
   if(!dy) return;
   // 只改视场，不动 free：跟随时继续跟、固定机位保持当前方向（不再甩到默认机位）
-  s.cam.fov = Math.max(5, Math.min(300, s.cam.fov * Math.exp(dy * 0.0015)));
+  s.cam.fov = Math.max(5, Math.min(180, s.cam.fov * Math.exp(dy * 0.0015)));
   syncSimUI(i);
   drawSimAt(i);
 }
@@ -927,7 +924,7 @@ function zoomSim(i, dir){
   var s = sims[i];
   if(!s) return;
   // dir > 0 = 放大（视野变小），dir < 0 = 缩小
-  s.cam.fov = Math.max(5, Math.min(300, s.cam.fov * (dir > 0 ? 1 / 1.3 : 1.3)));
+  s.cam.fov = Math.max(5, Math.min(180, s.cam.fov * (dir > 0 ? 1 / 1.3 : 1.3)));
   syncSimUI(i);
   drawSimAt(i);
 }

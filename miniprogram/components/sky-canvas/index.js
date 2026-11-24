@@ -2,7 +2,7 @@
 const { skyRender } = require('../../utils/skyrender')
 
 const FOV_MIN = 5
-const FOV_MAX = 300
+const FOV_MAX = 180
 const PITCH_MIN = -10
 const PITCH_MAX = 90
 

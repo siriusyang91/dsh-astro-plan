@@ -109,11 +109,6 @@ function buildSections(item) {
           : `${cc.level}（云量差 ${cc.cloudDiff == null ? '—' : cc.cloudDiff + '%'}，气温差 ${cc.tempDiff == null ? '—' : cc.tempDiff + '℃'}）`
         rows.push(['多源一致性', detail])
       }
-      if (Array.isArray(w.hours) && w.hours.length) {
-        for (const h of w.hours) {
-          rows.push([h.t, `云 ${h.cloud == null ? '—' : h.cloud + '%'} · ${h.temp == null ? '—' : h.temp + '℃'}`])
-        }
-      }
       return { title: '天气', rows }
     })(),
     {

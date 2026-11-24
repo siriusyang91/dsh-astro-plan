@@ -1333,3 +1333,33 @@ test('日月食：用站点实际可见的标签（全食/偏食）', async () =
   assert.match(row.target.name, /月全食|月偏食|半影月食/, `行标签 ${row.target.name}`)
   assert.equal(row.sim.targets[0].name, row.target.name, '画面模拟用同一份 per-site 标签')
 })
+
+test('竖条纹回归：不再用地平线多边形裁剪，宽视角/高俯仰无密集竖条', async () => {
+  const fn = renderer()
+  const sky = skyview.skyMeta()
+  const r = await search({ eventType: 'milkyway', dateStart: '2027-07-10', dateEnd: '2027-07-10', pageSize: 1, withSim: true, siteLimit: 3, maxBortle: 9 })
+  const sim = r.ranked[0].sim
+  const k = sim.frames.findIndex((f) => f.w === 1)
+  for (const pitch of [30, 60, 85]) {
+    const clips = []
+    let cur = null
+    const noop = () => {}
+    const ctx = {
+      createLinearGradient: () => ({ addColorStop: noop }),
+      createRadialGradient: () => ({ addColorStop: noop }),
+      fillRect: noop, strokeRect: noop, fillText: noop, setLineDash: noop, save: noop, restore: noop,
+      closePath: noop, rect: noop, translate: noop, rotate: noop, scale: noop,
+      beginPath() { cur = { pts: [] } },
+      moveTo(x, y) { if (cur) cur.pts.push([x, y]) },
+      lineTo(x, y) { if (cur) cur.pts.push([x, y]) },
+      arc() {},
+      clip() { clips.push(cur ? cur.pts.length : 0) },
+      fill() {}, stroke() {},
+      measureText: () => ({ width: 10 }),
+      fillStyle: '#000', strokeStyle: '#000', lineWidth: 1, globalAlpha: 1, globalCompositeOperation: 'source-over',
+    }
+    fn.skyRender(ctx, { sim, sky, camera: { yaw: sim.camera.yaw, pitch, fov: 180 }, w: 480, h: 270 }, k)
+    assert.ok(clips.length <= 1, `pitch ${pitch}: 只允许一次矩形裁剪，实际 ${clips.length}`)
+    for (const n of clips) assert.ok(n <= 5, `pitch ${pitch}: 裁剪路径不应是多边形（${n} 点）`)
+  }
+})

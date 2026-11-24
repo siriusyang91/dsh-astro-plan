@@ -12,7 +12,6 @@
   <!-- 全屏：顶部操作栏 -->
   <view wx:if="{{fullscreen}}" class="fs-top">
     <view class="key" bindtap="toggleMode">切换坐标系</view>
-    <view class="key" bindtap="toggleTracker">跟踪 {{trackerOn ? '开' : '关'}}</view>
     <view class="key" bindtap="reset">复位视角</view>
     <view class="key" bindtap="toggleFullscreen">退出全屏</view>
   </view>
@@ -35,6 +34,7 @@
     <view class="key" bindtap="togglePlay">{{playing ? '暂停' : '播放'}}</view>
     <slider style="flex:1" min="0" max="{{maxK}}" value="{{k}}" block-size="14" bindchanging="onSlide" bindchange="onSlide" activeColor="#2f66c9" />
     <view class="frame">{{k}}/{{maxK}}</view>
+    <view class="key" bindtap="toggleTracker">跟踪 {{trackerOn ? '开' : '关'}}</view>
   </view>
 
   <block wx:if="{{!fullscreen}}">
@@ -43,10 +43,10 @@
       <view class="play" bindtap="togglePlay">{{playing ? '暂停' : '播放'}}</view>
       <slider style="flex:1" min="0" max="{{maxK}}" value="{{k}}" block-size="14" bindchanging="onSlide" bindchange="onSlide" activeColor="#2f66c9" />
       <view class="frame">{{k}}/{{maxK}}</view>
+      <view class="key" bindtap="toggleTracker">跟踪 {{trackerOn ? '开' : '关'}}</view>
     </view>
     <view class="ctrl">
       <view class="key" bindtap="toggleMode">切换坐标系</view>
-      <view class="key" bindtap="toggleTracker">跟踪 {{trackerOn ? '开' : '关'}}</view>
       <view class="key" bindtap="reset">复位视角</view>
       <view class="key" bindtap="toggleFullscreen">全屏显示</view>
       <view class="fov">视野 {{fovText}}</view>

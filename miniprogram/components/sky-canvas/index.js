@@ -28,6 +28,7 @@ Component({
     justExited: false,
     fovText: '100°',
     trackerOn: false,
+    constellationOn: true,
     hud: { time: '', modeLabel: '地平坐标', fov: '100°', altaz: '', radec: '', window: '' },
   },
 
@@ -137,6 +138,7 @@ Component({
           w: this.data.w,
           h: this.data.h,
           hideHud: this.data.fullscreen,
+          showConstellations: this.data.constellationOn,
         }, this.data.k)
         if (this.data.fullscreen) this.syncHud()
       } catch (error) {
@@ -204,6 +206,11 @@ Component({
       if (!this.camera) return
       this.camera.tracker = !this.camera.tracker
       this.setData({ trackerOn: Boolean(this.camera.tracker) })
+      this.draw()
+    },
+
+    toggleConstellations() {
+      this.setData({ constellationOn: !this.data.constellationOn })
       this.draw()
     },
 

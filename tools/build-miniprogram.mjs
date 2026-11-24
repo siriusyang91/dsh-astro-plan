@@ -229,7 +229,7 @@ function buildCoordModule() {
  * 经纬度解析（由 lib/coord.js 生成，请勿手改；改逻辑请改 lib/coord.js 后重跑构建）。
  */
 ${body}
-module.exports = { parseCoord, formatCoord, formatDms }
+module.exports = { parseCoord, formatCoord, formatDms, formatLat, formatLon, formatLatLon }
 `
   writeFileSync(join(MP_UTILS, 'coord.js'), out)
 }

@@ -14,6 +14,7 @@ import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
 import { validateMarketIndex, formatIndexError } from './validate-market-index.mjs'
 import { buildMarketIndex, isPlaceholder, repoUrls } from './build-market-index.mjs'
+import { syncVersionFile } from './release-core.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(HERE, '..')
@@ -22,6 +23,9 @@ const REGISTRY = 'https://registry.npmjs.org/'
 const CACHE = join(ROOT, '.npm-cache')
 // 直接跑 npm-cli.js：Windows 上 npm 是 .cmd，走 shell 在沙箱里会 EPERM
 const NPM_CLI = join(dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js')
+
+// 发布前把 package.json 版本写进 lib/version.js，保证网页/小程序显示一致
+syncVersionFile(ROOT)
 
 const args = process.argv.slice(2)
 const mode = args.includes('--publish') ? 'publish' : 'check'

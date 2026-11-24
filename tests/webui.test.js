@@ -143,8 +143,8 @@ test('页面脚本可执行：结果表、分页跳转、提示位置都正确',
   assert.match(note, /最高高度<\/span><b>\d+(\.\d+)?°（[北东南西]+ \d+°）<\/b>/,
     '最高高度应显示方位（方向名 + 方位角）')
   // 坐标用经纬度表述，而不是 "40.50, 115.83"
-  assert.match(note, /坐标<\/span><b>北纬 \d+\.\d+° · 东经 \d+\.\d+°<\/b>/,
-    '坐标应写成「北纬 xx° · 东经 xx°」')
+  assert.match(note, /坐标<\/span><b>\d+\.\d+° N · \d+\.\d+° E<\/b>/,
+    '坐标应写成「xx° N · xx° E」')
   // 深空只给赤道仪参数：赤道仪「必须使用」+ 曝光依据
   assert.ok(note.includes('必须使用'), '深空/行星类赤道仪应为「必须使用」')
   assert.match(note, /曝光<\/span><b>120 s × 20 张<\/b>/, '深空曝光按赤道仪 120s × 20')
@@ -154,7 +154,7 @@ test('页面脚本可执行：结果表、分页跳转、提示位置都正确',
   assert.match(stats.textContent, /候选 \d+ 条/, '应渲染候选统计')
   assert.match(stats.textContent, /点击行展开详情/, '第 2 行小字应包含点击提示')
   assert.match(page(), /<title>星野计划/, '页面标题应为星野计划')
-  assert.match(page(), /<h1>星野计划 <small>by Sirius YANG<\/small><\/h1>/, '标题下应有 by Sirius YANG')
+  assert.match(page(), /<h1>星野计划 <small>by Sirius YANG<\/small> <span class="ver">v\d+\.\d+\.\d+<\/span><\/h1>/, '标题应含 byline 与版本号')
   delete globalThis.__bootPromise
 })
 

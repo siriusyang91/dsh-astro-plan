@@ -17,7 +17,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { spawnSync } from 'node:child_process'
 
-import { hashFiles, listPublishable, lockActive, nextPatch, shouldRelease } from './release-core.mjs'
+import {hashFiles, listPublishable, lockActive, nextPatch, shouldRelease, syncVersionFile } from './release-core.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(HERE, '..')
@@ -96,6 +96,7 @@ async function waitForTarball(version, maxMs = 8 * 60 * 1000) {
 }
 
 async function main() {
+  syncVersionFile()
   log(`星野计划 · 自动发布 ${dryRun ? '（dry-run）' : ''}`)
   const files = listPublishable(ROOT)
   const hash = hashFiles(ROOT, files)

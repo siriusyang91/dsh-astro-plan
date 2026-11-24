@@ -152,8 +152,8 @@ test('表格上方只保留两行小字（页头 1 行 + 统计/提示/备注 1 
   assert.ok(script.includes("d.notes.join(' ｜ ')"), '备注应拼进同一行')
 
   // 页头：标题 + by Sirius YANG + 一行站点/出发地提示
-  assert.match(out.body, /<title>星野计划 · by Sirius YANG<\/title>/)
-  assert.match(out.body, /<h1>星野计划 <small>by Sirius YANG<\/small><\/h1>/)
+  assert.match(out.body, /<title>星野计划 · by Sirius YANG · v\d+\.\d+\.\d+<\/title>/)
+  assert.match(out.body, /<h1>星野计划 <small>by Sirius YANG<\/small> <span class="ver">v\d+\.\d+\.\d+<\/span><\/h1>/)
   const subs = [...out.body.matchAll(/class="sub"/g)].length
   assert.equal(subs, 1, '页头只应有一行小字')
 })
@@ -333,7 +333,7 @@ test('拍摄参数：页面只负责显示规划层给的曝光依据，坐标�
   const out = await invoke(ctx.captured.route, '/astro-plan/')
   assert.match(out.body, /function exposureHint\(p\)\{\s*return p\.hint \|\| '';/, '曝光依据由规划层给出，页面不重复实现公式')
   assert.match(out.body, /function latLonText\(lat, lon\)/, '坐标改用经纬度表述')
-  assert.match(out.body, /北纬/, '坐标应带「北纬/南纬」')
+  assert.match(out.body, /° N/, '坐标应带半球字母 N')
   assert.match(out.body, /trackerRequired \? '必须使用'/, '深空/行星类赤道仪标「必须使用」')
 })
 

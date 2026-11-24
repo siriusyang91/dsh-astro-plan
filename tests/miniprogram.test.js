@@ -596,8 +596,10 @@ test('全屏布局：顶/底操作栏、信息区、长按与动画', () => {
   assert.ok(wxml.includes('切换坐标系'), '坐标按钮文案')
   assert.ok(wxml.includes('toggleTracker'), '应有跟踪开关')
   assert.ok(!wxml.includes('地平坐标</view>'), '按钮不再显示坐标名')
-  assert.ok(wxml.includes('fs-top') && wxml.includes('fs-bottom'), '顶部/底部操作栏')
-  assert.ok(wxml.includes('fs-info-top') && wxml.includes('fs-info-bottom'), '顶部/底部信息区')
+  assert.ok(!wxml.includes('fs-top'), '全屏不再有顶部操作栏')
+  assert.ok(wxml.includes('fs-bottom'), '全屏操作在底部')
+  assert.ok(!wxml.includes('fs-info-top'), '全屏不再有顶部信息栏')
+  assert.ok(wxml.includes('fs-info-bottom'), '参数在底部信息区')
   for (const word of ['高度角', '赤经', '最佳时段', '视野']) {
     assert.ok(wxml.includes(word), `信息区应含「${word}」`)
   }
@@ -620,4 +622,23 @@ test('天气：不再展示逐时行，保留多源一致性', () => {
   const w = readFileSync(join(ROOT, 'lib', 'webui.js'), 'utf8')
   assert.ok(!w.includes('逐时云量'), '网页便签不应再渲染逐时')
   assert.ok(w.includes('多源一致性'))
+})
+
+test('小程序：版本号、星座开关、间距与文案', () => {
+  const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'))
+  const ver = readFileSync(join(ROOT, 'lib', 'version.js'), 'utf8')
+  assert.ok(ver.includes(pkg.version), 'lib/version.js 应等于 package.json 版本')
+
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
+  assert.ok(wxml.includes('hero-ver') && wxml.includes('{{version}}'), '标题应显示版本号')
+
+  const note = readFileSync(join(ROOT, 'miniprogram', 'pages', 'note', 'index.wxml'), 'utf8')
+  assert.ok(!note.includes('1–3 秒'), '加载文案不应再写约 1–3 秒')
+
+  const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxss'), 'utf8')
+  assert.match(css, /\.frow \{[^}]*gap: 2rpx/u, '标签与控件间距应缩小')
+
+  const skyWxml = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.wxml'), 'utf8')
+  assert.ok(skyWxml.includes('toggleConstellations'), '应有星座名开关')
+  assert.ok(skyWxml.includes("key {{trackerOn ? 'on' : ''}}"), '跟踪开启时按钮变色')
 })

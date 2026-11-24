@@ -60,3 +60,16 @@ export function formatDms(value, kind) {
   const hemi = kind === 'lat' ? (value >= 0 ? 'N' : 'S') : (value >= 0 ? 'E' : 'W')
   return `${deg}°${carryMin}′${carrySec}″${hemi}`
 }
+
+/** 纬度/经度带半球字母：40.50° N · 115.83° E（南纬/西经自动 S/W）。 */
+export function formatLat(lat, digits = 2) {
+  const value = Math.abs(Number(lat))
+  return `${value.toFixed(digits)}° ${Number(lat) >= 0 ? 'N' : 'S'}`
+}
+export function formatLon(lon, digits = 2) {
+  const value = Math.abs(Number(lon))
+  return `${value.toFixed(digits)}° ${Number(lon) >= 0 ? 'E' : 'W'}`
+}
+export function formatLatLon(lat, lon, digits = 2) {
+  return `${formatLat(lat, digits)} · ${formatLon(lon, digits)}`
+}

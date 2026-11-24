@@ -70,6 +70,7 @@ Page({
         }
         this.setData({
           loading: false,
+          version: meta.version || '',
           targetGroups,
           targetColumns: [targetGroups.map((g) => g.label), targetGroups[0].types.map((t) => t.label)],
           regions,

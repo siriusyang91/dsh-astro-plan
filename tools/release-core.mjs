@@ -8,7 +8,7 @@
  */
 
 import { createHash } from 'node:crypto'
-import { readFileSync, readdirSync, existsSync } from 'node:fs'
+import { readFileSync, readdirSync, existsSync, writeFileSync } from 'node:fs'
 import { join, posix, relative } from 'node:path'
 
 /** 运行时数据：内容每周会变，不能作为「有新版本」的依据。 */
@@ -89,4 +89,15 @@ export function lockActive(lock, now = Date.now(), staleMs = 2 * 3600 * 1000) {
 /** 相对路径（便于日志/断言）。 */
 export function relOf(root, abs) {
   return relative(root, abs).replace(/\\/gu, '/')
+}
+
+/** 把 package.json 的版本写进 lib/version.js（发布前调用，保证两端一致）。 */
+export function syncVersionFile(root = process.cwd()) {
+  const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
+  const file = join(root, 'lib', 'version.js')
+  const body = `/** 插件版本（由 tools/release-core.mjs 同步为 package.json 的 version）。 */
+export const VERSION = '${pkg.version}'
+`
+  writeFileSync(file, body, 'utf8')
+  return pkg.version
 }

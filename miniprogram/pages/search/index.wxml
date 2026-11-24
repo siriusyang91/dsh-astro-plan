@@ -11,6 +11,7 @@
       <view class="hero-line">
         <text class="hero-title">星野计划</text>
         <text class="hero-sub">by Sirius YANG</text>
+        <text class="hero-ver" wx:if="{{version}}">v{{version}}</text>
       </view>
     </view>
 

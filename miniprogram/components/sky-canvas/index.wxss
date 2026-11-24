@@ -33,13 +33,18 @@
 .fs-line { color: #cfe0f7; font-size: 22rpx; line-height: 1.35; }
 /* 底部操作栏 */
 .fs-bottom {
-  position: absolute; left: 24rpx; right: 24rpx; bottom: 24rpx;
-  display: flex; align-items: center; gap: 12rpx;
-  padding: 12rpx 16rpx; border-radius: 999rpx;
-  background: rgba(10, 16, 26, .78);
+  position: absolute; left: 16rpx; right: 16rpx; bottom: 16rpx;
+  display: flex; flex-direction: column; gap: 8rpx;
+  padding: 10rpx 13rpx; border-radius: 18rpx;
+  background: rgba(10, 16, 26, .8);
   border: 1rpx solid #26364f;
   z-index: 901;
 }
+.fs-row { display: flex; align-items: center; gap: 10rpx; }
+.fs-info-bottom { bottom: 190rpx; }
+.key.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.fs-line { display: flex; align-items: center; justify-content: space-between; }
+.fs-right { color: #9fb4d4; font-size: 20rpx; }
 
 /* 切换动画 */
 .zoom-in { animation: zoomIn 260ms ease-out both; }

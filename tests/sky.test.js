@@ -1363,3 +1363,61 @@ test('竖条纹回归：不再用地平线多边形裁剪，宽视角/高俯仰�
     for (const n of clips) assert.ok(n <= 5, `pitch ${pitch}: 裁剪路径不应是多边形（${n} 点）`)
   }
 })
+
+test('星座名称：默认绘制，关闭后不画', async () => {
+  const fn = renderer()
+  const sky = skyview.skyMeta()
+  const sim = {
+    version: 3, sky: 'night', lat: 40, lon: 116, targets: [], bodyNames: [], foregrounds: [],
+    palettes: {
+      night: { gradient: ['#02040a', '#0a1220', '#1a2133'], ground: '#05070c', label: '#cfe0f7' },
+      twilight: { gradient: ['#1b2340', '#4a3f63', '#b06a4a'], ground: '#0a0c12', label: '#ffd9a8' },
+      day: { gradient: ['#3f74c9', '#7aa8e6', '#cfe0f5'], ground: '#28313a', label: '#10305c' },
+    },
+    camera: { yaw: 180, pitch: 30, fov: 100, tracker: false, fovH: 10, fovV: 7, focal: 200 },
+    ridge: Array.from({ length: 360 }, (_, i) => [i, 1, 0]),
+    ridgeFar: Array.from({ length: 360 }, (_, i) => [i, 0.5, 0]),
+    frames: [{ t: '22:00', d: '03-10', lst: 0, sun: -30, w: 1, tp: [], bodies: [], moon: null, comet: null, meteors: [] }],
+  }
+  const run = (show) => {
+    const texts = []
+    const ops = { fillText: (t2) => texts.push(String(t2)) }
+    const ctx = {
+      createLinearGradient: () => ({ addColorStop() {} }), createRadialGradient: () => ({ addColorStop() {} }),
+      fillRect() {}, strokeRect() {}, fillText: ops.fillText, setLineDash() {}, save() {}, restore() {},
+      clip() {}, rect() {}, translate() {}, rotate() {}, scale() {}, arc() {}, stroke() {}, fill() {}, closePath() {},
+      beginPath() {}, moveTo() {}, lineTo() {}, measureText: () => ({ width: 10 }),
+      fillStyle: '#000', strokeStyle: '#000', lineWidth: 1, globalAlpha: 1, globalCompositeOperation: 'source-over',
+    }
+    fn.skyRender(ctx, { sim, sky, camera: sim.camera, w: 960, h: 540, showConstellations: show }, 0)
+    return texts.filter((x) => x.includes('座'))
+  }
+  assert.ok(run(true).length > 0, '默认应画星座名')
+  assert.equal(run(false).length, 0, '关闭后不应画星座名')
+})
+
+test('地面遮罩：最后一次地景填充晚于最后一次银河填充', async () => {
+  const fn = renderer()
+  const sky = skyview.skyMeta()
+  const r = await search({ eventType: 'milkyway', dateStart: '2027-07-10', dateEnd: '2027-07-10', pageSize: 1, withSim: true, siteLimit: 3, maxBortle: 9 })
+  const sim = r.ranked[0].sim
+  const k = sim.frames.findIndex((f) => f.w === 1)
+  for (const pitch of [30, 85]) {
+    const seq = []
+    const noop = () => {}
+    const ctx = {
+      createLinearGradient: () => ({ addColorStop: noop }), createRadialGradient: () => ({ addColorStop: noop }),
+      fillRect: noop, strokeRect: noop, fillText: noop, setLineDash: noop, save: noop, restore: noop,
+      clip: noop, rect: noop, translate: noop, rotate: noop, scale: noop, arc: noop, stroke: noop, closePath: noop,
+      beginPath() { ctx._path = true }, moveTo: noop, lineTo: noop,
+      fill() { if (ctx._path) seq.push(ctx.globalCompositeOperation === 'lighter' ? 'mw' : 'ground') },
+      measureText: () => ({ width: 10 }),
+      fillStyle: '#000', strokeStyle: '#000', lineWidth: 1, globalAlpha: 1, globalCompositeOperation: 'source-over',
+    }
+    fn.skyRender(ctx, { sim, sky, camera: { yaw: sim.camera.yaw, pitch, fov: 180 }, w: 960, h: 540 }, k)
+    const lastMw = seq.lastIndexOf('mw')
+    const lastGround = seq.lastIndexOf('ground')
+    assert.ok(lastMw >= 0, '应有银河填充')
+    assert.ok(lastGround > lastMw, `pitch ${pitch}: 地景遮罩应晚于银河（mw ${lastMw} / ground ${lastGround}）`)
+  }
+})

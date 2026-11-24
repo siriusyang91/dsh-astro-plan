@@ -73,7 +73,7 @@ function buildSections(item) {
         ['波特尔', site.bortle ? `B${site.bortle}` : '—'],
         ['海拔', site.altM ? `${site.altM} m` : '—'],
         ['直线距离', km(item.distanceKm)],
-        ['坐标', site.lat !== undefined ? `${Number(site.lat).toFixed(3)}, ${Number(site.lon).toFixed(3)}` : '—'],
+        ['坐标', site.lat !== undefined ? `${Math.abs(Number(site.lat)).toFixed(3)}° ${Number(site.lat) >= 0 ? 'N' : 'S'} · ${Math.abs(Number(site.lon)).toFixed(3)}° ${Number(site.lon) >= 0 ? 'E' : 'W'}` : '—'],
       ],
     },
     {

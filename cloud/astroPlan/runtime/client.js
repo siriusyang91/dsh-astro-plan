@@ -99,6 +99,7 @@ window.__ModuleLoader__.load({
       '.ap-btn:disabled{opacity:.5}',
       '.ap-hint{font-size:11px;opacity:.6}',
       '.ap-hero{display:flex;align-items:baseline;gap:8px;padding:2px 2px 0}',
+      '.ap-ver{font-size:11px;color:#8fa3c0;border:1px solid #2b3a55;border-radius:999px;padding:1px 6px;margin-left:6px;vertical-align:2px}',
       '.ap-title{margin:0;font-size:16px;letter-spacing:.5px}',
       '.ap-by{font-size:11px;opacity:.55}',
       '.ap-tablewrap{overflow-x:auto;border:1px solid var(--ap-line);border-radius:11px}',
@@ -187,9 +188,9 @@ window.__ModuleLoader__.load({
     }
     /** 坐标用经纬度表述：北纬 40.50° · 东经 115.83° */
     function latLonText(lat, lon) {
-      var ns = lat >= 0 ? '北纬' : '南纬'
-      var ew = lon >= 0 ? '东经' : '西经'
-      return ns + ' ' + Math.abs(lat).toFixed(2) + '° · ' + ew + ' ' + Math.abs(lon).toFixed(2) + '°'
+      // 统一「数值 + 半球字母」：40.50° N · 115.83° E
+      return Math.abs(lat).toFixed(2) + '° ' + (lat >= 0 ? 'N' : 'S')
+        + ' · ' + Math.abs(lon).toFixed(2) + '° ' + (lon >= 0 ? 'E' : 'W')
     }
     /** 曝光：行星/日月/极光的曝光不是整数秒，数据里已给好文案 */
     function exposureTextOf(p) {
@@ -1052,99 +1053,104 @@ window.__ModuleLoader__.load({
           ctx.stroke();
         }
       }
-      var farPts = ridgeScreen(farData);
-      fillSilhouette(farPts, dark ? mixHex(pal.ground, '#54688c', 0.42) : 'rgba(96,116,146,.45)', null);
-      var nearPts = ridgeScreen(ridgeData);
-      fillSilhouette(nearPts, pal.ground, dark ? 'rgba(150,180,225,.35)' : 'rgba(20,30,45,.55)');
+      // 地景绘制：天空内容前后各调一次，后一次作为遮罩，盖住地平线以下的天体
+      function paintGround(labels) {
+        var farPts = ridgeScreen(farData);
+        fillSilhouette(farPts, dark ? mixHex(pal.ground, '#54688c', 0.42) : 'rgba(96,116,146,.45)', null);
+        var nearPts = ridgeScreen(ridgeData);
+        fillSilhouette(nearPts, pal.ground, dark ? 'rgba(150,180,225,.35)' : 'rgba(20,30,45,.55)');
 
-      // 近景只加「真实存在」的细节：林线、水面反光、建筑块。
-      // 山脊高度完全来自实测高程剖面，不再往上叠人工装饰。
-      var deco = dark ? 'rgba(8,12,20,.9)' : 'rgba(28,36,50,.35)';
-      for (var di = 1; di < nearPts.length; di += 1) {
-        var p0 = nearPts[di - 1];
-        var p1 = nearPts[di];
-        var dx = p1.x - p0.x;
-        if (dx < 6 || dx > W * 0.5) continue;
-        var midX = (p0.x + p1.x) / 2;
-        var midY = Math.min(p0.y, p1.y);
-        var kind = p1.kind;
-        if (kind === 1) {
-          // 林线：沿山脊的一条深色软带（不再是锯齿三角）
-          ctx.strokeStyle = dark ? 'rgba(9,16,12,.55)' : 'rgba(34,52,38,.30)';
-          ctx.lineWidth = Math.max(1.2, 2.4 * S);
-          ctx.beginPath();
-          ctx.moveTo(p0.x, p0.y + 1 * S);
-          ctx.lineTo(p1.x, p1.y + 1 * S);
-          ctx.stroke();
-        } else if (kind === 2) {
-          // 水面：基线加反光
-          ctx.strokeStyle = dark ? 'rgba(120,170,220,.35)' : 'rgba(40,70,110,.35)';
-          ctx.lineWidth = Math.max(1, 1.2 * S);
-          ctx.beginPath();
-          ctx.moveTo(p0.x, p0.y);
-          ctx.lineTo(p1.x, p1.y);
-          ctx.stroke();
-          var refl = ctx.createLinearGradient(0, midY, 0, midY + 14 * S);
-          refl.addColorStop(0, dark ? 'rgba(90,140,200,.18)' : 'rgba(120,160,210,.22)');
-          refl.addColorStop(1, 'rgba(90,140,200,0)');
-          ctx.fillStyle = refl;
-          ctx.fillRect(p0.x, midY, dx, 14 * S);
-        } else if (kind === 4) {
-          // 建筑：1–3 个方块 + 桅杆
-          var blocks = Math.max(1, Math.min(3, Math.round(dx / (26 * S))));
-          ctx.fillStyle = dark ? 'rgba(12,17,26,.95)' : 'rgba(30,40,56,.55)';
-          for (var bi2 = 0; bi2 < blocks; bi2 += 1) {
-            var bw = Math.min(12 * S, dx / (blocks + 1));
-            var bh = Math.min(22 * S, 7 * S + dx * 0.12);
-            var bx = p0.x + (dx * (bi2 + 0.5)) / blocks - bw / 2;
-            ctx.fillRect(bx, p0.y - bh, bw, bh);
+        // 近景只加「真实存在」的细节：林线、水面反光、建筑块。
+        // 山脊高度完全来自实测高程剖面，不再往上叠人工装饰。
+        var deco = dark ? 'rgba(8,12,20,.9)' : 'rgba(28,36,50,.35)';
+        for (var di = 1; di < nearPts.length; di += 1) {
+          var p0 = nearPts[di - 1];
+          var p1 = nearPts[di];
+          var dx = p1.x - p0.x;
+          if (dx < 6 || dx > W * 0.5) continue;
+          var midX = (p0.x + p1.x) / 2;
+          var midY = Math.min(p0.y, p1.y);
+          var kind = p1.kind;
+          if (kind === 1) {
+            // 林线：沿山脊的一条深色软带（不再是锯齿三角）
+            ctx.strokeStyle = dark ? 'rgba(9,16,12,.55)' : 'rgba(34,52,38,.30)';
+            ctx.lineWidth = Math.max(1.2, 2.4 * S);
+            ctx.beginPath();
+            ctx.moveTo(p0.x, p0.y + 1 * S);
+            ctx.lineTo(p1.x, p1.y + 1 * S);
+            ctx.stroke();
+          } else if (kind === 2) {
+            // 水面：基线加反光
+            ctx.strokeStyle = dark ? 'rgba(120,170,220,.35)' : 'rgba(40,70,110,.35)';
+            ctx.lineWidth = Math.max(1, 1.2 * S);
+            ctx.beginPath();
+            ctx.moveTo(p0.x, p0.y);
+            ctx.lineTo(p1.x, p1.y);
+            ctx.stroke();
+            var refl = ctx.createLinearGradient(0, midY, 0, midY + 14 * S);
+            refl.addColorStop(0, dark ? 'rgba(90,140,200,.18)' : 'rgba(120,160,210,.22)');
+            refl.addColorStop(1, 'rgba(90,140,200,0)');
+            ctx.fillStyle = refl;
+            ctx.fillRect(p0.x, midY, dx, 14 * S);
+          } else if (kind === 4) {
+            // 建筑：1–3 个方块 + 桅杆
+            var blocks = Math.max(1, Math.min(3, Math.round(dx / (26 * S))));
+            ctx.fillStyle = dark ? 'rgba(12,17,26,.95)' : 'rgba(30,40,56,.55)';
+            for (var bi2 = 0; bi2 < blocks; bi2 += 1) {
+              var bw = Math.min(12 * S, dx / (blocks + 1));
+              var bh = Math.min(22 * S, 7 * S + dx * 0.12);
+              var bx = p0.x + (dx * (bi2 + 0.5)) / blocks - bw / 2;
+              ctx.fillRect(bx, p0.y - bh, bw, bh);
+            }
+            ctx.strokeStyle = deco;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(midX, midY);
+            ctx.lineTo(midX, midY - 16 * S);
+            ctx.stroke();
           }
-          ctx.strokeStyle = deco;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(midX, midY);
-          ctx.lineTo(midX, midY - 16 * S);
-          ctx.stroke();
         }
-      }
 
-      // 地面压暗：只压地平线以下（clipGround），不会把天上的银河一起压暗
-      var horizonY = H * 0.7;
-      if (groundPts.length) {
-        var hy = groundPts[0].y;
-        for (var hi2 = 1; hi2 < groundPts.length; hi2 += 1) hy = Math.min(hy, groundPts[hi2].y);
-        horizonY = Math.min(H + 40, hy);
-      }
-      var gg = ctx.createLinearGradient(0, Math.max(0, horizonY - 10 * S), 0, Math.max(horizonY + 40, H));
-      gg.addColorStop(0, 'rgba(0,0,0,0)');
-      gg.addColorStop(1, dark ? 'rgba(0,0,0,.55)' : 'rgba(0,0,0,.18)');
-      ctx.save();
-      fillGroundGradient(gg);
-      ctx.restore();
+        // 地面压暗：只压地平线以下（clipGround），不会把天上的银河一起压暗
+        var horizonY = H * 0.7;
+        if (groundPts.length) {
+          var hy = groundPts[0].y;
+          for (var hi2 = 1; hi2 < groundPts.length; hi2 += 1) hy = Math.min(hy, groundPts[hi2].y);
+          horizonY = Math.min(H + 40, hy);
+        }
+        var gg = ctx.createLinearGradient(0, Math.max(0, horizonY - 10 * S), 0, Math.max(horizonY + 40, H));
+        gg.addColorStop(0, 'rgba(0,0,0,0)');
+        gg.addColorStop(1, dark ? 'rgba(0,0,0,.55)' : 'rgba(0,0,0,.18)');
+        ctx.save();
+        fillGroundGradient(gg);
+        ctx.restore();
 
-      // 地景名
-      ctx.font = font(10);
-      ctx.textAlign = 'center';
-      ctx.fillStyle = dark ? 'rgba(175,200,235,.5)' : 'rgba(25,35,50,.65)';
-      var fgs = sim.foregrounds || [];
-      for (var fi = 0; fi < fgs.length; fi += 1) {
-        var fg = fgs[fi];
-        var fgAz = (fg.azFrom + (fg.azTo < fg.azFrom ? fg.azTo + 360 : fg.azTo)) / 2;
-        var qfg = screen(skyVec(ridgeHeight(fgAz) + 1.6, fgAz));
-        if (qfg && qfg.y < H - 6 * S && qfg.y > 8 && fg.name) ctx.fillText(fg.name, qfg.x, qfg.y);
-      }
+        if (!labels) return;
+        // 地景名
+        ctx.font = font(10);
+        ctx.textAlign = 'center';
+        ctx.fillStyle = dark ? 'rgba(175,200,235,.5)' : 'rgba(25,35,50,.65)';
+        var fgs = sim.foregrounds || [];
+        for (var fi = 0; fi < fgs.length; fi += 1) {
+          var fg = fgs[fi];
+          var fgAz = (fg.azFrom + (fg.azTo < fg.azFrom ? fg.azTo + 360 : fg.azTo)) / 2;
+          var qfg = screen(skyVec(ridgeHeight(fgAz) + 1.6, fgAz));
+          if (qfg && qfg.y < H - 6 * S && qfg.y > 8 && fg.name) ctx.fillText(fg.name, qfg.x, qfg.y);
+        }
 
-      // 方位字（东南西北）
-      var CARD = [[0, '北'], [90, '东'], [180, '南'], [270, '西']];
-      ctx.font = font(12);
-      ctx.textAlign = 'center';
-      for (var ci = 0; ci < CARD.length; ci += 1) {
-        var qc = screen(skyVec(ridgeHeight(CARD[ci][0]) + 2.6, CARD[ci][0]));
-        if (!qc) continue;
-        ctx.fillStyle = dark ? 'rgba(200,220,250,.55)' : 'rgba(25,40,60,.7)';
-        ctx.fillText(CARD[ci][1], qc.x, qc.y);
-      }
+        // 方位字（东南西北）
+        var CARD = [[0, '北'], [90, '东'], [180, '南'], [270, '西']];
+        ctx.font = font(12);
+        ctx.textAlign = 'center';
+        for (var ci = 0; ci < CARD.length; ci += 1) {
+          var qc = screen(skyVec(ridgeHeight(CARD[ci][0]) + 2.6, CARD[ci][0]));
+          if (!qc) continue;
+          ctx.fillStyle = dark ? 'rgba(200,220,250,.55)' : 'rgba(25,40,60,.7)';
+          ctx.fillText(CARD[ci][1], qc.x, qc.y);
+        }
 
+      }
+      paintGround(false);
       // ---- 以下全部裁剪在地景以上 ----
       ctx.save();
       clipSky();
@@ -1331,6 +1337,8 @@ window.__ModuleLoader__.load({
         }
         ctx.save();
         ctx.globalCompositeOperation = 'lighter';
+        // 长边细分：只插入共线点，不改变形状，避免宽视场下出现上千像素的长边
+        var MW_EDGE_MAX = W * 0.28;
         for (var li = 0; li < mw.length; li += 1) {
           var lvl2 = mw[li].level || 0;
           // 五级是**嵌套的环带**（每级 = 外环 − 内洞）：第 0 级是包住银河带的一圈极淡薄雾（89% 天空），
@@ -1386,7 +1394,23 @@ window.__ModuleLoader__.load({
                   }
                 }
               }
-              if (!bad && loop.length >= 3) subs.push(loop);
+              if (!bad && loop.length >= 3) {
+                // 共线细分：长边拆成多段，路径形状不变，避免宽视场下的超长边
+                var dense = [];
+                for (var dj = 0; dj < loop.length; dj += 1) {
+                  var pj = loop[dj];
+                  var qj = loop[(dj + 1) % loop.length];
+                  dense.push(pj);
+                  var seg = Math.hypot(qj[0] - pj[0], qj[1] - pj[1]);
+                  if (seg > MW_EDGE_MAX) {
+                    var parts = Math.ceil(seg / MW_EDGE_MAX);
+                    for (var pk = 1; pk < parts; pk += 1) {
+                      dense.push([pj[0] + (qj[0] - pj[0]) * pk / parts, pj[1] + (qj[1] - pj[1]) * pk / parts]);
+                    }
+                  }
+                }
+                subs.push(dense);
+              }
             }
             if (!subs.length) continue;
             // 保险丝：投影出来的奇偶必须和球面绕数一致，否则这一组会画成"补集"（就是换色），宁可不画
@@ -1402,6 +1426,7 @@ window.__ModuleLoader__.load({
             ctx.fill('evenodd');
           }
         }
+        ctx.globalCompositeOperation = 'source-over';
         ctx.restore();
       }
 
@@ -1495,6 +1520,37 @@ window.__ModuleLoader__.load({
       var a = Math.max(0, Math.min(1, dim));
       return 'rgba(' + r + ',' + g + ',' + bl + ',' + a.toFixed(2) + ')';
     }
+      // 星座名称（可开关）：取 paths 的质心，转地平后画中文名
+      if (view.showConstellations !== false) {
+        var cons = meta.lines || [];
+        ctx.font = font(9);
+        ctx.textAlign = 'center';
+        for (var cn = 0; cn < cons.length; cn += 1) {
+          var cItem = cons[cn];
+          var paths = cItem && cItem.paths;
+          if (!paths || !paths.length || !cItem.n) continue;
+          var sx = 0, sy = 0, sz = 0, cnt = 0;
+          for (var cp = 0; cp < paths.length; cp += 1) {
+            var seg = paths[cp] || [];
+            for (var cq = 0; cq < seg.length; cq += 1) {
+              var pa = skyEqToAltAz(seg[cq][0], seg[cq][1], f.lst, sim.lat);
+              // 只用地平线以上的点求质心（整星座不必全在天空里）
+              if (pa.alt < 2) continue;
+              var vv = skyVec(pa.alt, pa.az);
+              sx += vv[0]; sy += vv[1]; sz += vv[2]; cnt += 1;
+            }
+          }
+          if (cnt < 2) continue;
+          var norm = Math.sqrt(sx * sx + sy * sy + sz * sz);
+          if (norm < 1e-6) continue;
+          var center = [sx / norm, sy / norm, sz / norm];
+          var qc2 = screen(center);
+          if (!qc2) continue;
+          ctx.fillStyle = dark ? 'rgba(170,200,240,.5)' : 'rgba(30,50,80,.6)';
+          ctx.fillText(cItem.n, qc2.x, qc2.y - 6 * S);
+        }
+      }
+
       // 亮星
       if (starAlpha > 0) {
         var stars = meta.stars || [];
@@ -1755,6 +1811,7 @@ window.__ModuleLoader__.load({
             ctx.fillStyle = glow2;
             ctx.beginPath(); ctx.arc(qt2.x, qt2.y, tr, 0, Math.PI * 2); ctx.fill();
           }
+          ctx.globalCompositeOperation = 'source-over';
           ctx.restore();
         } else if (kind === 'milkyway' || kind === 'glow') {
           // 银河 / 黄道光（以及任何 glow 类目标）不画中心光晕：
@@ -1812,6 +1869,9 @@ window.__ModuleLoader__.load({
           ctx.fillText((sim.camera.focal || '') + 'mm', bcx - bw / 2 + 2 * S, bcy - bh / 2 - 3 * S);
         }
       }
+
+      // 天空内容画完后，再铺一次地景：把地平线以下的银河/星点/网格遮掉
+      paintGround(true);
 
       ctx.restore(); // 结束天空裁剪
 
@@ -2303,7 +2363,7 @@ window.__ModuleLoader__.load({
 
       return h('div', { className: 'ap-wrap', 'data-ap-theme': theme },
         h('div', { className: 'ap-hero' },
-          h('h2', { className: 'ap-title' }, '星野计划'),
+          h('h2', { className: 'ap-title' }, '星野计划', h('span', { className: 'ap-ver' }, 'v' + VERSION)),
           h('span', { className: 'ap-by' }, 'by Sirius YANG')),
         h('div', { className: 'ap-panel' },
           prow('拍摄日期', [

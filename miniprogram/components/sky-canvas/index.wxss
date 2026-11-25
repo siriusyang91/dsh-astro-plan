@@ -72,5 +72,5 @@
 .frame { color: var(--dim); font-size: 22rpx; width: 80rpx; text-align: right; }
 .fov { color: var(--dim); font-size: 22rpx; margin-left: auto; }
 
-.sky { transition: transform 160ms ease-out; }
-.sky.flipping { transform: rotateY(90deg); }
+.key { transition: transform 160ms ease-out; }
+.key.flipping { transform: rotateY(90deg); }

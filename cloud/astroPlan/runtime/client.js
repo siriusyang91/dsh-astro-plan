@@ -17,7 +17,7 @@ window.__ModuleLoader__.load({
     var exports = module.exports
 
     // 插件版本（发布时由 tools/release-core.mjs 的 syncVersionFile 同步）
-    var PLUGIN_VERSION = '0.4.4'
+    var PLUGIN_VERSION = '0.4.5'
 
     var React = require('react')
     var h = React.createElement
@@ -355,7 +355,7 @@ window.__ModuleLoader__.load({
         var state = {
           z: o.zoom || 5,
           center: { lat: o.lat || 35, lon: o.lon || 105 },
-          picked: o.picked || nearestSite(o.lat || 35, o.lon || 105) || null,
+          picked: o.picked || null,
           bortle: (o.picked && o.picked.bortle) || 4,
           name: (o.picked && o.picked.name) || '',
           origin: o.origin || null,
@@ -364,6 +364,9 @@ window.__ModuleLoader__.load({
           tileFail: 0,
           tileOk: 0,
         }
+        // state 建好之后再兜底（nearestSite 内部读 state.sites）
+        if (!state.picked) state.picked = nearestSite(state.center.lat, state.center.lon)
+
         var tiles = {}
         var gesture = null
 
@@ -547,8 +550,9 @@ window.__ModuleLoader__.load({
         function nearestSite(lat, lon) {
           var best = null
           var bestD = Infinity
-          for (var i = 0; i < state.sites.length; i += 1) {
-            var s = state.sites[i]
+          var list = (state && state.sites) || []
+          for (var i = 0; i < list.length; i += 1) {
+            var s = list[i]
             var dLat = (s.lat - lat) * 111
             var dLon = (s.lon - lon) * 111 * Math.cos(lat * Math.PI / 180)
             var d = Math.sqrt(dLat * dLat + dLon * dLon)

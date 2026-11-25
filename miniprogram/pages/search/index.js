@@ -6,6 +6,7 @@ const HERE = '@here'
 Page({
   data: {
     loading: true,
+    miniVersion: getApp().globalData.miniVersion || '',
     error: '',
     targetGroups: [{ label: '不限', types: [{ id: 'any', label: '不限' }] }],
     targetColumns: [['不限'], ['不限']],

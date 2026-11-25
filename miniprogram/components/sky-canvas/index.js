@@ -30,7 +30,7 @@ Component({
     trackerOn: false,
     constellationOn: true,
     hud: { time: '', window: '', altaz: '', radec: '', fov: '100°', modeLabel: '地平坐标' },
-    flipping: false,
+    flipping: '',
   },
 
   observers: {
@@ -205,26 +205,37 @@ Component({
 
     toggleTracker() {
       if (!this.camera) return
-      this.camera.tracker = !this.camera.tracker
-      this.setData({ trackerOn: Boolean(this.camera.tracker) })
-      this.draw()
+      this.flipButton('track', () => {
+        this.camera.tracker = !this.camera.tracker
+        this.setData({ trackerOn: Boolean(this.camera.tracker) })
+        this.draw()
+      })
     },
 
     toggleConstellations() {
-      this.setData({ constellationOn: !this.data.constellationOn })
-      this.draw()
+      this.flipButton('const', () => {
+        this.setData({ constellationOn: !this.data.constellationOn })
+        this.draw()
+      })
     },
 
-    /** 切换坐标系：先翻面到侧立，再换模式翻回来 */
-    toggleMode() {
+    /** 按钮翻面：先转 90°，换状态后再转回来 */
+    flipButton(key, apply) {
       if (this.data.flipping) return
-      this.setData({ flipping: true })
+      this.setData({ flipping: key })
       clearTimeout(this.flipTimer)
       this.flipTimer = setTimeout(() => {
-        this.setData({ mode: this.data.mode === 'eq' ? 'altaz' : 'eq', flipping: false })
+        apply()
+        this.setData({ flipping: '' })
+      }, 160)
+    },
+
+    toggleMode() {
+      this.flipButton('mode', () => {
+        this.setData({ mode: this.data.mode === 'eq' ? 'altaz' : 'eq' })
         this.draw()
         if (this.data.fullscreen) this.syncHud()
-      }, 160)
+      })
     },
 
     reset() {

@@ -1,4 +1,4 @@
-<view class="sky {{fullscreen ? 'full zoom-in' : ''}} {{flipping ? 'flipping' : ''}} {{justExited ? 'zoom-out' : ''}}">
+<view class="sky {{fullscreen ? 'full zoom-in' : ''}} {{justExited ? 'zoom-out' : ''}}">
   <canvas
     id="sky"
     type="2d"
@@ -24,11 +24,11 @@
       <view class="key" bindtap="togglePlay">{{playing ? '暂停' : '播放'}}</view>
       <slider style="flex:1" min="0" max="{{maxK}}" value="{{k}}" block-size="14" bindchanging="onSlide" bindchange="onSlide" activeColor="#2f66c9" />
       <view class="frame">{{k}}/{{maxK}}</view>
-      <view class="key {{trackerOn ? 'on' : ''}}" bindtap="toggleTracker">跟踪 {{trackerOn ? '开' : '关'}}</view>
+      <view class="key {{trackerOn ? 'on' : ''}} {{flipping === 'track' ? 'flipping' : ''}}" bindtap="toggleTracker">跟踪 {{trackerOn ? '开' : '关'}}</view>
     </view>
     <view class="fs-row">
-      <view class="key" bindtap="toggleMode">{{hud.modeLabel}}</view>
-      <view class="key {{constellationOn ? 'on' : ''}}" bindtap="toggleConstellations">星座名 {{constellationOn ? '开' : '关'}}</view>
+      <view class="key {{flipping === 'mode' ? 'flipping' : ''}}" bindtap="toggleMode">{{hud.modeLabel}}</view>
+      <view class="key {{constellationOn ? 'on' : ''}} {{flipping === 'const' ? 'flipping' : ''}}" bindtap="toggleConstellations">星座名 {{constellationOn ? '开' : '关'}}</view>
       <view class="key" bindtap="reset">复位视角</view>
       <view class="key" bindtap="toggleFullscreen">退出全屏</view>
     </view>
@@ -40,11 +40,11 @@
       <view class="play" bindtap="togglePlay">{{playing ? '暂停' : '播放'}}</view>
       <slider style="flex:1" min="0" max="{{maxK}}" value="{{k}}" block-size="14" bindchanging="onSlide" bindchange="onSlide" activeColor="#2f66c9" />
       <view class="frame">{{k}}/{{maxK}}</view>
-      <view class="key {{trackerOn ? 'on' : ''}}" bindtap="toggleTracker">跟踪 {{trackerOn ? '开' : '关'}}</view>
+      <view class="key {{trackerOn ? 'on' : ''}} {{flipping === 'track' ? 'flipping' : ''}}" bindtap="toggleTracker">跟踪 {{trackerOn ? '开' : '关'}}</view>
     </view>
     <view class="ctrl">
-      <view class="key" bindtap="toggleMode">{{hud.modeLabel}}</view>
-      <view class="key {{constellationOn ? 'on' : ''}}" bindtap="toggleConstellations">星座名 {{constellationOn ? '开' : '关'}}</view>
+      <view class="key {{flipping === 'mode' ? 'flipping' : ''}}" bindtap="toggleMode">{{hud.modeLabel}}</view>
+      <view class="key {{constellationOn ? 'on' : ''}} {{flipping === 'const' ? 'flipping' : ''}}" bindtap="toggleConstellations">星座名 {{constellationOn ? '开' : '关'}}</view>
       <view class="key" bindtap="reset">复位视角</view>
       <view class="key" bindtap="toggleFullscreen">全屏显示</view>
       <view class="fov">视野 {{fovText}}</view>

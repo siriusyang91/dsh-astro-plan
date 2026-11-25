@@ -661,5 +661,7 @@ test('小程序：预设点回首页带出省市、评分条、全屏五行与�
   const order = ['hud.time', 'hud.window', 'hud.altaz', 'hud.radec', 'hud.fov'].map((k) => sky.indexOf(k))
   assert.ok(order.every((v, i) => v > 0 && (i === 0 || v > order[i - 1])), '全屏信息应 5 行按序')
   assert.ok(sky.includes('{{hud.modeLabel}}'), '按钮显示当前坐标系')
-  assert.ok(sky.includes("flipping ? 'flipping' : ''"), '应有翻面动画类')
+  assert.ok(sky.includes("flipping === 'mode' ? 'flipping' : ''"), '坐标按钮应有翻面动画类')
+  assert.ok(sky.includes("flipping === 'const' ? 'flipping' : ''"), '星座名按钮应有翻面动画类')
+  assert.ok(sky.includes("flipping === 'track' ? 'flipping' : ''"), '跟踪按钮应有翻面动画类')
 })

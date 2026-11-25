@@ -18,3 +18,18 @@
 }
 .reason { color: var(--dim); font-size: 24rpx; line-height: 1.7; overflow-wrap: anywhere; }
 .retry { color: var(--gold); margin-left: 12rpx; }
+
+.grade-row {
+  display: grid;
+  grid-template-columns: 90rpx 160rpx 60rpx minmax(0, 1fr);
+  gap: 10rpx;
+  align-items: center;
+  padding: 8rpx 0;
+  border-bottom: 1rpx dashed var(--line);
+}
+.grade-row:last-child { border-bottom: 0; }
+.grade-name { font-size: 24rpx; color: var(--dim); }
+.grade-bar { height: 12rpx; border-radius: 999rpx; background: var(--panel-2); overflow: hidden; }
+.grade-fill { height: 100%; background: linear-gradient(90deg, #2f66c9, #7aa8e6); border-radius: 999rpx; }
+.grade-score { font-size: 24rpx; text-align: right; color: var(--gold); }
+.grade-text { font-size: 22rpx; color: var(--dim); overflow-wrap: anywhere; }

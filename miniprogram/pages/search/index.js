@@ -38,10 +38,35 @@ Page({
     const picked = app.globalData.pickedPoint
     if (picked) {
       app.globalData.pickedPoint = null
-      // 自定义点：重置地区/省份，避免沿用上一次的省市筛选
+      const site = picked.siteId ? (this.meta.sites || []).find((s) => s.id === picked.siteId) : null
+      if (site) {
+        // 预设站点：带出目标地区 / 省份 / 地点
+        const regionIndex = Math.max(0, this.data.regions.indexOf(site.region))
+        const provinces = (this.meta.provinces || [])
+          .filter((p) => !site.region || site.region === '全国' || p.region === site.region)
+          .map((p) => ({ name: p.name, label: p.name }))
+        const list = [{ name: '', label: '全部省份' }].concat(provinces)
+        const provinceIndex = Math.max(0, list.findIndex((p) => p.name === site.province))
+        const sites = (this.meta.sites || [])
+          .filter((s) => s.region === site.region && s.province === site.province)
+          .sort((a, b) => a.bortle - b.bortle)
+          .map((s) => ({ id: s.id, label: `${s.name}（B${s.bortle}）` }))
+        const siteIndex = Math.max(0, [{ id: '' }].concat(sites).findIndex((s) => s.id === site.id))
+        this.setData({
+          custom: null,
+          customLabel: '',
+          regionIndex,
+          provinces: list,
+          provinceIndex,
+          sites: [{ id: '', label: '全部具体地点' }].concat(sites),
+          siteIndex,
+        })
+        return
+      }
+      // 自定义点：重置地区/省份
       this.setData({
         custom: picked,
-        customLabel: picked.siteId ? picked.name : `自定义点 ${picked.lat.toFixed(3)}, ${picked.lon.toFixed(3)}`,
+        customLabel: `自定义点 ${picked.lat.toFixed(3)}, ${picked.lon.toFixed(3)}`,
         regionIndex: 0,
         provinceIndex: 0,
       })

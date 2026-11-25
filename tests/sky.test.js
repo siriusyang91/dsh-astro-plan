@@ -545,12 +545,12 @@ test('银河：嵌套等值线只叠加相邻两级的差，核心不会叠成�
   )
   const alphas = calls
     .filter((c) => c[0] === 'fill' && c[1] === 'lighter')
-    .map((c) => Number((/rgba\((?:74,90,134|110,112,148|146,138,162|196,170,168|255,227,194),([\d.]+)\)/.exec(c[3]) || [])[1]))
+    .map((c) => Number((/rgba\((?:91,110,168|124,120,166|156,143,184|206,180,176|255,240,214),([\d.]+)\)/.exec(c[3]) || [])[1]))
   // 五级环带各一笔：最外圈极淡，往里逐级变亮
   assert.equal(alphas.length, 5, `五级环带各画一笔，实际 ${alphas.length}`)
-  assert.deepEqual(alphas, [0.012, 0.034, 0.056, 0.078, 0.1], '第 0 级最淡，逐级变亮')
+  assert.deepEqual(alphas, [0.02, 0.05, 0.08, 0.11, 0.14], '第 0 级最淡，逐级变亮')
   const total = alphas.reduce((a, b) => a + b, 0)
-  assert.ok(total <= 0.34 && total > 0.24, `核心累计 alpha 应在 0.24–0.34 之间，实际 ${total.toFixed(2)}`)
+  assert.ok(total <= 0.45 && total > 0.34, `核心累计 alpha 应在 0.34–0.45 之间，实际 ${total.toFixed(2)}`)
   assert.ok(alphas[0] * 2 < alphas[1], '最外圈薄雾必须远暗于银河带')
   // 全部走加色混合：只会比夜空亮，不会变暗
   const mwFills = calls.filter((c) => c[0] === 'fill' && /rgba\(206,217,242/.test(String(c[3])))
@@ -586,7 +586,7 @@ test('180° 视场不花屏：没有任何宽描边，银河五级仍照常填�
     const wide = calls.filter((c) => c[0] === 'stroke' && c[3] > 12)
     assert.equal(wide.length, 0, `${fov}° 不应出现宽描边（会叠成竖条纹），实际 ${wide.length} 条`)
     assert.equal(calls.filter((c) => c[0] === 'stroke' && /206,217,242/.test(String(c[2]))).length, 0, `${fov}° 不再用描边画银河`)
-    const fills = calls.filter((c) => c[0] === 'fill' && /rgba\((?:74,90,134|110,112,148|146,138,162|196,170,168|255,227,194)/.test(String(c[3])))
+    const fills = calls.filter((c) => c[0] === 'fill' && /rgba\((?:91,110,168|124,120,166|156,143,184|206,180,176|255,240,214)/.test(String(c[3])))
     assert.ok(fills.length >= 1, `${fov}° 银河应仍然填充`)
   }
 })
@@ -978,7 +978,7 @@ test('银河：五级都画、外宽内窄，且与球面真值逐点一致（�
       measureText: () => ({ width: 10 }),
       fill() {
         if (this.globalCompositeOperation !== 'lighter') return
-        const m = /rgba\((?:74,90,134|110,112,148|146,138,162|196,170,168|255,227,194),([\d.]+)\)/.exec(String(this.fillStyle))
+        const m = /rgba\((?:91,110,168|124,120,166|156,143,184|206,180,176|255,240,214),([\d.]+)\)/.exec(String(this.fillStyle))
         if (m) fills.push({ alpha: Number(m[1]), subs: subs.map((s) => s.slice()) })
       },
       globalCompositeOperation: 'source-over', fillStyle: '#000',
@@ -1000,11 +1000,11 @@ test('银河：五级都画、外宽内窄，且与球面真值逐点一致（�
   for (const fov of [60, 120, 180]) {
     const fills = renderAt(fov)
     assert.equal(fills.length, 5, `fov ${fov}: 五级环带各一笔，实际 ${fills.length}`)
-    assert.deepEqual(fills.map((x) => x.alpha), [0.012, 0.034, 0.056, 0.078, 0.1], `fov ${fov}: alpha 序列变了`)
+    assert.deepEqual(fills.map((x) => x.alpha), [0.02, 0.05, 0.08, 0.11, 0.14], `fov ${fov}: alpha 序列变了`)
     const areas = fills.map((x) => area(x.subs))
     assert.ok(areas[0] > 0, `fov ${fov}: 最外圈薄雾必须画出来`)
     assert.ok(areas[4] > 0, `fov ${fov}: 最内圈也必须画出来`)
-    for (const x of fills) assert.ok(x.alpha > 0 && x.alpha <= 0.13, `alpha 越界：${x.alpha}`)
+    for (const x of fills) assert.ok(x.alpha > 0 && x.alpha <= 0.16, `alpha 越界：${x.alpha}`)
   }
   // 与球面真值逐点对拍：每级「屏幕奇偶」必须等于「球面绕数」
   const B = fn.skyBasis({ yaw: sim.camera.yaw, pitch: sim.camera.pitch, fov: 120 }, 960, 540)
@@ -1057,7 +1057,7 @@ test('银河：播放换帧时层间 alpha 不互换', async () => {
       arc() {}, rect() {}, save() {}, restore() {}, clip() {}, setLineDash() {}, stroke() {},
       measureText: () => ({ width: 10 }),
       fill() {
-        const m = /rgba\((?:74,90,134|110,112,148|146,138,162|196,170,168|255,227,194),([\d.]+)\)/.exec(String(this.fillStyle))
+        const m = /rgba\((?:91,110,168|124,120,166|156,143,184|206,180,176|255,240,214),([\d.]+)\)/.exec(String(this.fillStyle))
         if (m && this.globalCompositeOperation === 'lighter') fills.push(Number(m[1]))
       },
       globalCompositeOperation: 'source-over', fillStyle: '#000',
@@ -1070,7 +1070,7 @@ test('银河：播放换帧时层间 alpha 不互换', async () => {
   for (let k = sim.startIndex; k < sim.frames.length; k += 1) {
     const fills = renderAt(k)
     if (fills.length !== 5) continue
-    assert.deepEqual(fills, [0.012, 0.034, 0.056, 0.078, 0.1], `第 ${k} 帧层序/alpha 变了：${fills.join(',')}`)
+    assert.deepEqual(fills, [0.02, 0.05, 0.08, 0.11, 0.14], `第 ${k} 帧层序/alpha 变了：${fills.join(',')}`)
     checked += 1
     if (checked >= 2) break
   }

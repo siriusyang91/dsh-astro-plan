@@ -102,12 +102,17 @@ function buildSections(item) {
     (() => {
       const w = item.weather || {}
       const rows = [['状态', weatherText(w)]]
-      if (w.crossCheck) {
-        const cc = w.crossCheck
-        const detail = cc.level === '单源'
-          ? '单源（无法交叉核对）'
-          : `${cc.level}（云量差 ${cc.cloudDiff == null ? '—' : cc.cloudDiff + '%'}，气温差 ${cc.tempDiff == null ? '—' : cc.tempDiff + '℃'}）`
-        rows.push(['多源一致性', detail])
+      if (w.score != null) {
+        rows.push(['数据源', w.source || '—'])
+        rows.push(['综合评分', `${w.score} 分`])
+        rows.push(['平均云量', `${w.cloudMean}%`])
+        rows.push(['晴夜小时', `${w.clearHours} h`])
+        rows.push(['最佳 3h 窗口', `${w.best3Start || '—'} 起 / 云 ${w.best3Cloud == null ? '—' : w.best3Cloud + '%'}`])
+        rows.push(['降水概率峰值', `${w.precipMax}%`])
+        rows.push(['最低温', w.tMin == null ? '—' : `${w.tMin}℃`])
+        rows.push(['露点差', w.dewGap == null ? '—' : `${w.dewGap}℃`])
+        rows.push(['最大风速', w.windMax == null ? '—' : `${w.windMax} km/h`])
+        rows.push(['能见度', w.visKm == null ? '—' : `${w.visKm} km`])
       }
       return { title: '天气', rows }
     })(),
@@ -125,4 +130,22 @@ function buildSections(item) {
   ]
 }
 
-module.exports = { today, km, deg, exposureText, weatherText, buildSections }
+/** 推荐度五项：分数 + 说明（给横向评分条用） */
+function buildGrades(item) {
+  const b = item.breakdown || {}
+  const rd = item.reasonDetail || {}
+  const rows = [
+    ['天象', b.sky, rd.sky],
+    ['光污染', b.pollution, rd.pollution],
+    ['月相', b.moon, rd.moon],
+    ['天气', b.weather, rd.weather],
+    ['地景', b.foreground, rd.foreground],
+  ]
+  return rows.map(([name, score, text]) => ({
+    name,
+    score: score == null ? null : Math.max(0, Math.min(100, Math.round(score))),
+    text: text || '',
+  }))
+}
+
+module.exports = { today, km, deg, exposureText, weatherText, buildSections, buildGrades }

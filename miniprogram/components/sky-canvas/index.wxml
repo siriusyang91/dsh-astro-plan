@@ -1,4 +1,4 @@
-<view class="sky {{fullscreen ? 'full zoom-in' : ''}} {{justExited ? 'zoom-out' : ''}}">
+<view class="sky {{fullscreen ? 'full zoom-in' : ''}} {{flipping ? 'flipping' : ''}} {{justExited ? 'zoom-out' : ''}}">
   <canvas
     id="sky"
     type="2d"
@@ -11,10 +11,11 @@
 
   <!-- 全屏：底部信息区（高度角 / 赤经赤纬 / 地点 / 最佳时段） -->
   <view wx:if="{{fullscreen}}" class="fs-info-bottom">
-    <view class="fs-line"><text>{{hud.time}}</text><text class="fs-right">{{hud.modeLabel}} · 视野 {{hud.fov}}</text></view>
+    <text class="fs-line">{{hud.time}}</text>
+    <text class="fs-line">{{hud.window}}</text>
     <text class="fs-line">{{hud.altaz}}</text>
     <text class="fs-line">{{hud.radec}}</text>
-    <text class="fs-line">{{hud.window}}</text>
+    <text class="fs-line">{{hud.fov}}</text>
   </view>
 
   <!-- 全屏：底部操作栏（播放 + 进度条） -->
@@ -26,7 +27,7 @@
       <view class="key {{trackerOn ? 'on' : ''}}" bindtap="toggleTracker">跟踪 {{trackerOn ? '开' : '关'}}</view>
     </view>
     <view class="fs-row">
-      <view class="key" bindtap="toggleMode">切换坐标系</view>
+      <view class="key" bindtap="toggleMode">{{hud.modeLabel}}</view>
       <view class="key {{constellationOn ? 'on' : ''}}" bindtap="toggleConstellations">星座名 {{constellationOn ? '开' : '关'}}</view>
       <view class="key" bindtap="reset">复位视角</view>
       <view class="key" bindtap="toggleFullscreen">退出全屏</view>
@@ -42,7 +43,7 @@
       <view class="key {{trackerOn ? 'on' : ''}}" bindtap="toggleTracker">跟踪 {{trackerOn ? '开' : '关'}}</view>
     </view>
     <view class="ctrl">
-      <view class="key" bindtap="toggleMode">切换坐标系</view>
+      <view class="key" bindtap="toggleMode">{{hud.modeLabel}}</view>
       <view class="key {{constellationOn ? 'on' : ''}}" bindtap="toggleConstellations">星座名 {{constellationOn ? '开' : '关'}}</view>
       <view class="key" bindtap="reset">复位视角</view>
       <view class="key" bindtap="toggleFullscreen">全屏显示</view>

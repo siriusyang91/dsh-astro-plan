@@ -593,7 +593,7 @@ test('全屏布局：顶/底操作栏、信息区、长按与动画', () => {
   const css = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.wxss'), 'utf8')
 
   assert.ok(wxml.includes('bindtap="onTap"'), '双击切换全屏（onTap 内判定）')
-  assert.ok(wxml.includes('切换坐标系'), '坐标按钮文案')
+  assert.ok(wxml.includes('{{hud.modeLabel}}'), '坐标按钮显示当前坐标系')
   assert.ok(wxml.includes('toggleTracker'), '应有跟踪开关')
   assert.ok(!wxml.includes('地平坐标</view>'), '按钮不再显示坐标名')
   assert.ok(!wxml.includes('fs-top'), '全屏不再有顶部操作栏')
@@ -615,13 +615,13 @@ test('全屏布局：顶/底操作栏、信息区、长按与动画', () => {
   assert.ok(searchCss.includes('white-space: nowrap'), '标签不换行')
 })
 
-test('天气：不再展示逐时行，保留多源一致性', () => {
+test('天气：不再展示逐时行与多源一致性', () => {
   const f = readFileSync(join(ROOT, 'miniprogram', 'utils', 'format.js'), 'utf8')
   assert.ok(!f.includes('w.hours'), '小程序便签不应再渲染逐时')
-  assert.ok(f.includes('多源一致性'), '仍保留多源一致性')
+  assert.ok(!f.includes('多源一致性'), '已去掉多源一致性')
   const w = readFileSync(join(ROOT, 'lib', 'webui.js'), 'utf8')
   assert.ok(!w.includes('逐时云量'), '网页便签不应再渲染逐时')
-  assert.ok(w.includes('多源一致性'))
+  assert.ok(!w.includes('多源一致性'))
 })
 
 test('小程序：版本号、星座开关、间距与文案', () => {
@@ -641,4 +641,25 @@ test('小程序：版本号、星座开关、间距与文案', () => {
   const skyWxml = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.wxml'), 'utf8')
   assert.ok(skyWxml.includes('toggleConstellations'), '应有星座名开关')
   assert.ok(skyWxml.includes("key {{trackerOn ? 'on' : ''}}"), '跟踪开启时按钮变色')
+})
+
+test('小程序：预设点回首页带出省市、评分条、全屏五行与翻面', () => {
+  const search = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.js'), 'utf8')
+  assert.ok(search.includes('带出目标地区 / 省份 / 地点'), '预设点应联动省市')
+  assert.ok(search.includes('const site = picked.siteId'), '按 siteId 反查站点')
+
+  const fmt = readFileSync(join(ROOT, 'miniprogram', 'utils', 'format.js'), 'utf8')
+  for (const label of ['数据源', '综合评分', '平均云量', '晴夜小时', '最佳 3h 窗口', '降水概率峰值', '最低温', '露点差', '最大风速', '能见度']) {
+    assert.ok(fmt.includes(label), `天气缺少「${label}」`)
+  }
+  assert.ok(fmt.includes('buildGrades'), '应有评分条数据')
+
+  const note = readFileSync(join(ROOT, 'miniprogram', 'pages', 'note', 'index.wxml'), 'utf8')
+  assert.ok(note.includes('grade-bar') && note.includes('grade-fill'), '应有横向评分条')
+
+  const sky = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.wxml'), 'utf8')
+  const order = ['hud.time', 'hud.window', 'hud.altaz', 'hud.radec', 'hud.fov'].map((k) => sky.indexOf(k))
+  assert.ok(order.every((v, i) => v > 0 && (i === 0 || v > order[i - 1])), '全屏信息应 5 行按序')
+  assert.ok(sky.includes('{{hud.modeLabel}}'), '按钮显示当前坐标系')
+  assert.ok(sky.includes("flipping ? 'flipping' : ''"), '应有翻面动画类')
 })

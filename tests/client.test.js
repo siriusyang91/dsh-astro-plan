@@ -162,3 +162,13 @@ test('客户端：版本常量存在且 Tab 标题带版本（不能再引用未
   const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'))
   assert.ok(src.includes(`PLUGIN_VERSION = '${pkg.version}'`), 'PLUGIN_VERSION 应与 package.json 一致')
 })
+
+test('地图：确认按钮独立成行、首次打开自动选最近站点', () => {
+  const src = readFileSync(join(ROOT, 'lib', 'client.js'), 'utf8')
+  assert.ok(src.includes('ap-map-foot'), '应有独立操作行')
+  assert.ok(src.includes('class="ap-map-ok">确定'), '确定按钮存在')
+  const view = readFileSync(join(ROOT, 'lib', 'mapview.js'), 'utf8')
+  assert.ok(view.includes('function nearestSite'), '应能自动选最近站点')
+  assert.ok(view.includes('nearestSite(o.lat || 35'), '首次打开兜底')
+  assert.ok(view.includes("ctx.setLineDash([5, 5])"), '应有虚线连线')
+})

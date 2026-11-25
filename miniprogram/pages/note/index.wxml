@@ -32,6 +32,16 @@
     </view>
   </view>
 
+  <view wx:if="{{grades.length}}" class="card">
+    <view class="card-title">推荐度明细</view>
+    <view wx:for="{{grades}}" wx:key="name" class="grade-row">
+      <text class="grade-name">{{item.name}}</text>
+      <view class="grade-bar"><view class="grade-fill" style="width:{{item.score == null ? 0 : item.score}}%"></view></view>
+      <text class="grade-score">{{item.score == null ? '—' : item.score}}</text>
+      <text class="grade-text">{{item.text}}</text>
+    </view>
+  </view>
+
   <view wx:if="{{reasons.length}}" class="card">
     <view class="card-title">推荐理由</view>
     <view wx:for="{{reasons}}" wx:key="*this" class="reason">· {{item}}</view>

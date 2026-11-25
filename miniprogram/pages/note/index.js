@@ -1,5 +1,5 @@
 const api = require('../../utils/api')
-const { buildSections } = require('../../utils/format')
+const { buildSections, buildGrades } = require('../../utils/format')
 
 Page({
   data: {
@@ -7,6 +7,7 @@ Page({
     title: '',
     subtitle: '',
     sections: [],
+    grades: [],
     reasons: [],
     score: '',
     error: '',
@@ -40,6 +41,7 @@ Page({
       title,
       subtitle: `${raw.date} · ${raw.target.typeLabel || raw.target.type || ''}`,
       sections: buildSections(raw),
+      grades: buildGrades(raw),
       reasons: raw.reasons || [],
       score: String(raw.score || ''),
       sky: (getApp().globalData.meta && getApp().globalData.meta.sky) || null,

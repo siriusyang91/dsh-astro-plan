@@ -113,7 +113,8 @@ export async function handle(event = {}) {
   if (action === 'search') {
     const opts = { ...(event.opts || {}) }
     if (opts.withSim === undefined) opts.withSim = false
-    if (opts.maxContexts === undefined) opts.maxContexts = 4000
+    if (opts.maxContexts === undefined) opts.maxContexts = 2500
+    if (opts.siteLimit === undefined) opts.siteLimit = 90
     const pageSize = Math.max(1, Math.min(100, Number(opts.pageSize) || 20))
     const wantPage = Math.max(1, Number(opts.page) || 1)
     const key = signature(opts)

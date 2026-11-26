@@ -187,7 +187,7 @@ test('自定义点：查询只带坐标，不发 location/province/region', asyn
   const page = buildPage()
   assert.ok(page.includes('if(!state.custom && !herePoint){'), '页面应在自定义点/目前所在地时跳过三个下拉参数')
   const client = read('lib/client.js')
-  assert.ok(client.includes('q.site && !customPoint'), 'Tab 应跳过 location')
+  assert.ok(client.includes("q.site && q.site !== '__here__' && !customPoint"), 'Tab 应跳过 location')
   assert.ok(client.includes('q.province && !customPoint'), 'Tab 应跳过 province')
   assert.ok(client.includes('q.region && !customPoint'), 'Tab 应跳过 region')
 

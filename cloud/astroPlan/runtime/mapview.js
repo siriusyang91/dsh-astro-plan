@@ -516,6 +516,11 @@ function describePick(picked, sites) {
         draw()
       },
       getPicked: function () { return state.picked },
+      /** 补设出发地（打开地图后异步定位拿到坐标时用），立刻重绘连线 */
+      setOrigin: function (o) {
+        state.origin = o || null
+        draw()
+      },
       destroy: function () { host.innerHTML = '' },
     }
   }

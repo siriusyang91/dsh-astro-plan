@@ -565,6 +565,12 @@ function openMap(){
     },
     onClose: closeMap,
   });
+  // 出发地还没设置时尝试定位补上，拿到坐标后立刻画「出发地 → 目标」连线
+  if(!state.origin){
+    resolveHerePoint().then(function(p){
+      if(p && mapView) mapView.setOrigin({ lat: p.lat, lon: p.lon, label: '目前所在地' });
+    });
+  }
 }
 
 /** 「目前所在地」：浏览器定位（6 秒超时），失败返回 null */

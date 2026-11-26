@@ -630,13 +630,13 @@ test('小程序：版本号、星座开关、间距与文案', () => {
   assert.ok(ver.includes(pkg.version), 'lib/version.js 应等于 package.json 版本')
 
   const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
-  assert.ok(wxml.includes('hero-ver') && wxml.includes('{{version}}'), '标题应显示版本号')
+  assert.ok(wxml.includes('hero-ver') && wxml.includes('{{miniVersion}}'), '标题应显示小程序版本号')
 
   const note = readFileSync(join(ROOT, 'miniprogram', 'pages', 'note', 'index.wxml'), 'utf8')
   assert.ok(!note.includes('1–3 秒'), '加载文案不应再写约 1–3 秒')
 
   const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxss'), 'utf8')
-  assert.match(css, /\.frow \{[^}]*gap: 2rpx/u, '标签与控件间距应缩小')
+  assert.match(css, /\.frow \{[^}]*gap: 2em/u, '标签与控件之间应留两个字符')
 
   const skyWxml = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.wxml'), 'utf8')
   assert.ok(skyWxml.includes('toggleConstellations'), '应有星座名开关')
@@ -682,4 +682,20 @@ test('列表：前三名奖牌 + 目前所在地 + 包版本移除', () => {
   assert.match(css, /\.frow \{[^}]*grid-template-columns: max-content/u, '标签列应贴合文字')
   const canvas = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.js'), 'utf8')
   assert.ok(canvas.includes('视角 视野角度'), '视野行应加视角前缀')
+})
+
+test('目标地点：目前所在地在四处列表都保留', () => {
+  const js = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.js'), 'utf8')
+  assert.match(js, /function siteOptions\(list\)/u, '应有统一的站点列表构造函数')
+  const literal = (js.match(/全部具体地点/g) || []).length
+  assert.equal(literal, 1, '只有 siteOptions 里应出现手写列表')
+  assert.ok(js.includes("label: '目前所在地'"), '含目前所在地')
+  assert.ok(js.includes('siteOptions(sites)') && js.includes('siteOptions([])'), '各处都用 helper')
+
+  const client = readFileSync(join(ROOT, 'lib', 'client.js'), 'utf8')
+  assert.ok(client.includes("{ value: '__here__', label: '目前所在地' }"), 'Tab 下拉含目前所在地')
+  const view = readFileSync(join(ROOT, 'lib', 'mapview.js'), 'utf8')
+  assert.ok(view.includes('setOrigin: function'), '地图应支持补设出发地')
+  const web = readFileSync(join(ROOT, 'lib', 'webui.js'), 'utf8')
+  assert.ok(web.includes('mapView.setOrigin'), '打开地图时应对无出发地做定位兜底')
 })

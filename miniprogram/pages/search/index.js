@@ -3,6 +3,10 @@ const { today } = require('../../utils/format')
 
 const HERE = '@here'
 
+function siteOptions(list) {
+  return [{ id: '', label: '全部具体地点' }, { id: '__here__', label: '目前所在地' }].concat(list || [])
+}
+
 Page({
   data: {
     loading: true,
@@ -17,7 +21,7 @@ Page({
     regionIndex: 0,
     provinces: [{ name: '', label: '全部省份' }],
     provinceIndex: 0,
-    sites: [{ id: '', label: '全部具体地点' }],
+    sites: siteOptions([]),
     siteIndex: 0,
     d1: today(0),
     d2: today(6),
@@ -59,7 +63,7 @@ Page({
           regionIndex,
           provinces: list,
           provinceIndex,
-          sites: [{ id: '', label: '全部具体地点' }, { id: '__here__', label: '目前所在地' }].concat(sites),
+          sites: siteOptions(sites),
           siteIndex,
         })
         return
@@ -135,7 +139,7 @@ Page({
       .map((s) => ({ id: s.id, label: `${s.name}（B${s.bortle}）` }))
     const data = {
       provinceIndex,
-      sites: [{ id: '', label: '全部具体地点' }].concat(sites),
+      sites: siteOptions(sites),
     }
     if (!keepSite) data.siteIndex = 0
     this.setData(data)
@@ -227,7 +231,7 @@ Page({
         regionIndex,
         provinces: list,
         provinceIndex,
-        sites: [{ id: '', label: '全部具体地点' }, { id: '__here__', label: '目前所在地' }].concat(sites),
+        sites: siteOptions(sites),
         siteIndex,
         custom: null,
         customLabel: '',

@@ -14,7 +14,7 @@
 .frow {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
-  gap: 2rpx;
+  gap: 2em;
   align-items: center;
   padding: 10rpx 0;
 }

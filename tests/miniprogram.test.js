@@ -699,3 +699,15 @@ test('目标地点：目前所在地在四处列表都保留', () => {
   const web = readFileSync(join(ROOT, 'lib', 'webui.js'), 'utf8')
   assert.ok(web.includes('mapView.setOrigin'), '打开地图时应对无出发地做定位兜底')
 })
+
+test('选点：索引按 siteOptions 计算，两个滑块等长', () => {
+  const js = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.js'), 'utf8')
+  assert.ok(!js.includes("[{ id: '' }].concat(sites)"), '不得再用旧列表算索引')
+  assert.ok(js.includes('options.findIndex((s) => s.id === id)'), '按 siteOptions 结果取索引')
+  assert.ok(js.includes('options.findIndex((s) => s.id === site.id)'), '地图返回预设点同样按 options 取索引')
+
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
+  assert.equal((wxml.match(/frow slider-row/g) || []).length, 2, '两个滑块行都要有 slider-row')
+  const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxss'), 'utf8')
+  assert.match(css, /\.frow\.slider-row \{[^}]*grid-template-columns: 232rpx/u, '滑块列宽固定，长度一致')
+})

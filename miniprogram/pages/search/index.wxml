@@ -26,11 +26,11 @@
         </picker>
       </view>
 
-      <view class="frow">
+      <view class="frow slider-row">
         <text class="flabel">拍摄目标高度角≥{{minAlt}}°</text>
         <slider class="sl" min="0" max="60" step="5" value="{{minAlt}}" block-size="14" show-value="{{false}}" bindchanging="onAltChanging" bindchange="onAlt" activeColor="#2f66c9" />
       </view>
-      <view class="frow">
+      <view class="frow slider-row">
         <text class="flabel">光污染波特尔指数≤B{{bortle}}</text>
         <slider class="sl" min="1" max="9" step="1" value="{{bortle}}" block-size="14" show-value="{{false}}" bindchanging="onBortleChanging" bindchange="onBortle" activeColor="#2f66c9" />
       </view>

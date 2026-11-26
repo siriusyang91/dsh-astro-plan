@@ -7,6 +7,7 @@
 
 .card { padding: 16rpx 18rpx; margin-bottom: 14rpx; border-radius: 14rpx; }
 .card-title { font-size: 26rpx; margin-bottom: 6rpx; }
+.frow.slider-row { grid-template-columns: 232rpx minmax(0, 1fr); }
 .card-target { background: linear-gradient(180deg, #101b2e 0%, #111826 100%); border-color: #1d3556; }
 .card-date { background: linear-gradient(180deg, #141428 0%, #111826 100%); border-color: #2b2450; }
 .card-place { background: linear-gradient(180deg, #0f1e22 0%, #111826 100%); border-color: #17434a; }

@@ -56,14 +56,15 @@ Page({
           .filter((s) => s.region === site.region && s.province === site.province)
           .sort((a, b) => a.bortle - b.bortle)
           .map((s) => ({ id: s.id, label: `${s.name}（B${s.bortle}）` }))
-        const siteIndex = Math.max(0, [{ id: '' }].concat(sites).findIndex((s) => s.id === site.id))
+        const options = siteOptions(sites)
+        const siteIndex = Math.max(0, options.findIndex((s) => s.id === site.id))
         this.setData({
           custom: null,
           customLabel: '',
           regionIndex,
           provinces: list,
           provinceIndex,
-          sites: siteOptions(sites),
+          sites: options,
           siteIndex,
         })
         return
@@ -226,12 +227,13 @@ Page({
         .filter((s) => s.region === site.region && s.province === site.province)
         .sort((a, b) => a.bortle - b.bortle)
         .map((s) => ({ id: s.id, label: `${s.name}（B${s.bortle}）` }))
-      const siteIndex = Math.max(0, [{ id: '' }].concat(sites).findIndex((s) => s.id === id))
+      const options = siteOptions(sites)
+      const siteIndex = Math.max(0, options.findIndex((s) => s.id === id))
       this.setData({
         regionIndex,
         provinces: list,
         provinceIndex,
-        sites: siteOptions(sites),
+        sites: options,
         siteIndex,
         custom: null,
         customLabel: '',

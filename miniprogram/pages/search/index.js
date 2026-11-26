@@ -59,7 +59,7 @@ Page({
           regionIndex,
           provinces: list,
           provinceIndex,
-          sites: [{ id: '', label: '全部具体地点' }].concat(sites),
+          sites: [{ id: '', label: '全部具体地点' }, { id: '__here__', label: '目前所在地' }].concat(sites),
           siteIndex,
         })
         return
@@ -204,6 +204,11 @@ Page({
   onSite(e) {
     const index = Number(e.detail.value)
     const id = this.data.sites[index].id
+    if (id === '__here__') {
+      this.setData({ siteIndex: index, custom: null, customLabel: '', regionIndex: 0, provinceIndex: 0 })
+      if (this.meta) this.applyRegion(0)
+      return
+    }
     const site = id ? (this.meta.sites || []).find((s) => s.id === id) : null
     if (site) {
       // 选地点 → 自动带出地区与省份
@@ -222,7 +227,7 @@ Page({
         regionIndex,
         provinces: list,
         provinceIndex,
-        sites: [{ id: '', label: '全部具体地点' }].concat(sites),
+        sites: [{ id: '', label: '全部具体地点' }, { id: '__here__', label: '目前所在地' }].concat(sites),
         siteIndex,
         custom: null,
         customLabel: '',
@@ -315,7 +320,23 @@ Page({
     }
     getApp().globalData.origin = origin || null
     if (origin) { opts.originLat = origin.lat; opts.originLon = origin.lon }
-    if (this.data.custom) {
+    if (site && site.id === '__here__') {
+      // 目标地点=目前所在地：用定位坐标，不带省市
+      const here = await new Promise((resolve) => {
+        wx.getLocation({
+          type: 'gcj02',
+          success: (res) => resolve({ lat: res.latitude, lon: res.longitude }),
+          fail: () => resolve(null),
+        })
+      })
+      if (here) {
+        opts.siteLat = here.lat
+        opts.siteLon = here.lon
+        opts.siteName = '目前所在地'
+      } else {
+        wx.showToast({ title: '未获取到定位，按全部地点检索', icon: 'none' })
+      }
+    } else if (this.data.custom) {
       opts.siteLat = this.data.custom.lat
       opts.siteLon = this.data.custom.lon
       if (this.data.custom.bortle) opts.siteBortle = this.data.custom.bortle

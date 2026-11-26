@@ -17,7 +17,7 @@ window.__ModuleLoader__.load({
     var exports = module.exports
 
     // 插件版本（发布时由 tools/release-core.mjs 的 syncVersionFile 同步）
-    var PLUGIN_VERSION = '0.4.5'
+    var PLUGIN_VERSION = '0.4.7'
 
     var React = require('react')
     var h = React.createElement
@@ -74,7 +74,7 @@ window.__ModuleLoader__.load({
       '.ap-map-read{display:flex;gap:10px;align-items:center;flex-wrap:wrap}',
       '.ap-map-read label{display:flex;gap:4px;align-items:center;color:#9fb0c8}',
       '.ap-map-read label[hidden],.ap-map-pick-label[hidden]{display:none}',
-      '.ap-map-read input{width:180px;padding:3px 6px;border-radius:6px;border:1px solid #2b3a55;background:#121b2b;color:#dbe3f0}',
+      '.ap-map-read input{width:110px;padding:3px 6px;border-radius:6px;border:1px solid #2b3a55;background:#121b2b;color:#dbe3f0}',
       '.ap-map-read .ap-map-ok{background:#2f66c9;border-color:#2f66c9;color:#fff}',
       '.ap-note-modal{position:fixed;inset:0;background:rgba(6,10,18,.62);display:flex;align-items:center;justify-content:center;z-index:70}',
       '.ap-note-panel{width:min(1320px,96vw);height:auto;max-height:min(92vh,1000px);min-height:min(56vh,520px);display:flex;flex-direction:column;background:var(--ap-bg,#0b0f17);border:1px solid var(--ap-rowline,#1a2434);border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);overflow:hidden}',
@@ -336,7 +336,14 @@ window.__ModuleLoader__.load({
       }
 
       /** 读数文案：站点给名称/省份/波特尔，自定义点给经纬度。 */
-      function describePick(picked, sites) {
+      /** 经纬度显示：39.904° N / 116.407° E */
+    function formatHemi(value, kind) {
+      var num = Number(value)
+      var hemi = kind === 'lat' ? (num >= 0 ? 'N' : 'S') : (num >= 0 ? 'E' : 'W')
+      return Math.abs(num).toFixed(3) + '° ' + hemi
+    }
+
+    function describePick(picked, sites) {
         if (!picked) return '未选择'
         if (picked.kind === 'site') {
           var list = sites || []
@@ -347,7 +354,7 @@ window.__ModuleLoader__.load({
           }
           return picked.name || '站点'
         }
-        return formatCoord(picked.lat) + ', ' + formatCoord(picked.lon)
+        return formatHemi(picked.lat, 'lat') + ', ' + formatHemi(picked.lon, 'lon')
       }
 
       function mount(host, opts) {
@@ -364,9 +371,6 @@ window.__ModuleLoader__.load({
           tileFail: 0,
           tileOk: 0,
         }
-        // state 建好之后再兜底（nearestSite 内部读 state.sites）
-        if (!state.picked) state.picked = nearestSite(state.center.lat, state.center.lon)
-
         var tiles = {}
         var gesture = null
 
@@ -590,8 +594,8 @@ window.__ModuleLoader__.load({
             var site = null
             for (var i = 0; i < state.sites.length; i += 1) if (state.sites[i].id === picked.siteId) site = state.sites[i]
             if (site) {
-              if (latInput) { latInput.value = formatCoord(site.lat); latInput.readOnly = true }
-              if (lonInput) { lonInput.value = formatCoord(site.lon); lonInput.readOnly = true }
+              if (latInput) { latInput.value = formatHemi(site.lat, 'lat'); latInput.readOnly = true }
+              if (lonInput) { lonInput.value = formatHemi(site.lon, 'lon'); lonInput.readOnly = true }
               if (coordHint) coordHint.textContent = ''
               // 预设站点：把名称标在圆点旁边
               if (view) { var sp = pixOf(site.lat, site.lon, view); showLabel(site.name, sp.x, sp.y) }
@@ -601,9 +605,9 @@ window.__ModuleLoader__.load({
           // 自定义点：输入框可编辑，并把坐标标在十字旁边（波特尔由模型异步补上）
           if (state.picked && state.picked.kind === 'point' && !state.bortle) refreshBortle(state.picked.lat, state.picked.lon)
           if (readPick && state.bortle) readPick.textContent = describePick(picked, state.sites) + ' · 波特尔≈' + state.bortle
-          if (latInput) { latInput.readOnly = false; if (document.activeElement !== latInput) latInput.value = formatCoord(picked.lat) }
-          if (lonInput) { lonInput.readOnly = false; if (document.activeElement !== lonInput) lonInput.value = formatCoord(picked.lon) }
-          if (view) { var pp = pixOf(picked.lat, picked.lon, view); showLabel(formatCoord(picked.lat) + ', ' + formatCoord(picked.lon), pp.x, pp.y) }
+          if (latInput) { latInput.readOnly = false; if (document.activeElement !== latInput) latInput.value = formatHemi(picked.lat, 'lat') }
+          if (lonInput) { lonInput.readOnly = false; if (document.activeElement !== lonInput) lonInput.value = formatHemi(picked.lon, 'lon') }
+          if (view) { var pp = pixOf(picked.lat, picked.lon, view); showLabel(formatHemi(picked.lat, 'lat') + ', ' + formatHemi(picked.lon, 'lon'), pp.x, pp.y) }
         }
 
         function hitTest(px, py) {
@@ -868,7 +872,24 @@ window.__ModuleLoader__.load({
       var mode = view.mode === 'eq' ? 'eq' : 'altaz';
       var sunAlt = typeof f.sun === 'number' ? f.sun : (sim.sky === 'day' ? 20 : -25);
       // 晨昏亮度：按太阳高度在「夜 / 暮光 / 白天」三套色板之间插值
-      var pal = skyPhasePalette(sim, sunAlt);
+      // 日食：目标为太阳且帧里有月亮时，用 moonObsc 作为遮蔽比例
+      var eclipseObsc = 0;
+      var isSolarEclipse = false;
+      if (sim.targets && sim.targets[0] && sim.targets[0].kind === 'sun' && f && f.moon) {
+        isSolarEclipse = true;
+        eclipseObsc = Math.max(0, Math.min(1, Number(f.moonObsc) || 0));
+        if (eclipseObsc === 0 && f.sunAA) {
+          var maa0 = skyEqToAltAz(f.moon[0], f.moon[1], f.lst, sim.lat);
+          var sep0 = Math.acos(Math.max(-1, Math.min(1,
+            Math.sin(maa0.alt * SKY_D2R) * Math.sin(f.sunAA[0] * SKY_D2R)
+            + Math.cos(maa0.alt * SKY_D2R) * Math.cos(f.sunAA[0] * SKY_D2R)
+            * Math.cos((maa0.az - f.sunAA[1]) * SKY_D2R)))) / SKY_D2R;
+          var sunR0 = 0.26;
+          var moonR0 = (f.moon[3] || 0.52) / 2;
+          eclipseObsc = Math.max(0, Math.min(1, (sunR0 + moonR0 - sep0) / (2 * sunR0)));
+        }
+      }
+      var pal = skyPhasePalette(sim, sunAlt, eclipseObsc);
       var starAlpha = Math.max(0, Math.min(1, (-sunAlt - 4) / 10));
       var night = sunAlt < -18;
       var dark = sunAlt < -3;
@@ -883,7 +904,8 @@ window.__ModuleLoader__.load({
         var r = Math.round(ar + (br - ar) * t), g = Math.round(ag + (bg - ag) * t), bl = Math.round(ab + (bb - ab) * t);
         return '#' + ((1 << 24) + (r << 16) + (g << 8) + bl).toString(16).slice(1);
       }
-      function skyPhasePalette(sim2, alt) {
+      function skyPhasePalette(sim2, alt, obsc) {
+        var dim = Math.max(0, Math.min(0.85, Number(obsc) || 0));
         var base = sim2.palettes || {
           night: sim2.palette || { gradient: ['#04070f', '#0a1322', '#16233a'], ground: '#05070c', label: '#cfe0f7' },
           twilight: { gradient: ['#1b2340', '#4a3f63', '#b06a4a'], ground: '#0a0c12', label: '#ffd9a8' },
@@ -893,13 +915,14 @@ window.__ModuleLoader__.load({
         var from = t < 0.5 ? base.night : base.twilight;
         var to = t < 0.5 ? base.twilight : base.day;
         var k = t < 0.5 ? t * 2 : (t - 0.5) * 2;
+        var night = base.night;
         return {
           gradient: [
-            mixHex(from.gradient[0], to.gradient[0], k),
-            mixHex(from.gradient[1], to.gradient[1], k),
-            mixHex(from.gradient[2], to.gradient[2], k),
+            mixHex(mixHex(from.gradient[0], to.gradient[0], k), night.gradient[0], dim),
+            mixHex(mixHex(from.gradient[1], to.gradient[1], k), night.gradient[1], dim),
+            mixHex(mixHex(from.gradient[2], to.gradient[2], k), night.gradient[2], dim),
           ],
-          ground: mixHex(from.ground, to.ground, k),
+          ground: mixHex(mixHex(from.ground, to.ground, k), night.ground, dim),
           label: k > 0.5 ? to.label : from.label,
         };
       }
@@ -1648,6 +1671,21 @@ window.__ModuleLoader__.load({
           var mAA = skyEqToAltAz(f.moon[0], f.moon[1], f.lst, sim.lat);
           var mr2 = Math.max(1.4 * S, (f.moon[3] || 0.52) * 0.5 * pxDeg);
           moonRadiusPx = mr2;
+          if (isSolarEclipse) {
+            // 日食：月亮是遮挡体，画成不透明暗盘；食分越高越黑，接近全食时加淡日冕
+            ctx.save();
+            ctx.fillStyle = '#05070c';
+            ctx.beginPath(); ctx.arc(qm.x, qm.y, mr2, 0, Math.PI * 2); ctx.fill();
+            if (eclipseObsc >= 0.98) {
+              ctx.globalCompositeOperation = 'lighter';
+              var corona = ctx.createRadialGradient(qm.x, qm.y, mr2, qm.x, qm.y, mr2 * 2.6);
+              corona.addColorStop(0, 'rgba(255,246,220,.42)');
+              corona.addColorStop(1, 'rgba(255,246,220,0)');
+              ctx.fillStyle = corona;
+              ctx.beginPath(); ctx.arc(qm.x, qm.y, mr2 * 2.6, 0, Math.PI * 2); ctx.fill();
+            }
+            ctx.restore();
+          } else {
           var illum2 = f.moon[2] == null ? 100 : f.moon[2];
           // 月食：按食分把亮面压暗、往铜红偏（全食时是一枚暗红圆盘）
           var obsc2 = Math.max(0, Math.min(1, Number(f.moonObsc) || 0));
@@ -1708,6 +1746,7 @@ window.__ModuleLoader__.load({
           ctx.textAlign = 'left';
           ctx.fillStyle = dark ? 'rgba(240,246,255,.9)' : 'rgba(20,40,70,.9)';
           ctx.fillText('月球', qm.x + Math.max(6 * S, mr2 + 5 * S), qm.y - mr2 - 2 * S);
+          }
         }
       }
 
@@ -1929,8 +1968,10 @@ window.__ModuleLoader__.load({
       if (f.tp && f.tp[0]) {
         var alt = f.tp[0][2];
         var az = f.tp[0][3];
-        var lines2 = ['高度角 ' + alt.toFixed(0) + '° · 方位角 ' + az.toFixed(0) + '°'];
-        if (mode === 'eq') lines2.push('赤经 ' + skyFmtRa(f.tp[0][0]) + ' · 赤纬 ' + (f.tp[0][1] >= 0 ? '+' : '') + f.tp[0][1].toFixed(1) + '°');
+        // 按当前坐标系只显示对应的一行（地平：高度/方位；赤道：赤经/赤纬）
+        var lines2 = mode === 'eq'
+          ? ['赤经 ' + skyFmtRa(f.tp[0][0]) + ' · 赤纬 ' + (f.tp[0][1] >= 0 ? '+' : '') + f.tp[0][1].toFixed(1) + '°']
+          : ['高度角 ' + alt.toFixed(0) + '° · 方位角 ' + az.toFixed(0) + '°'];
         var boxH = (lines2.length * 14 + 6) * S;
         chip(4 * S, H - boxH - 4 * S, Math.min(W * 0.62, 190 * S), boxH, 0.42);
         ctx.textAlign = 'left';

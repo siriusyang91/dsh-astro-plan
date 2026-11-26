@@ -185,7 +185,7 @@ test('手势：松手才算选点，拖动只平移', () => {
 test('自定义点：查询只带坐标，不发 location/province/region', async () => {
   const { page: buildPage } = await import('../lib/webui.js')
   const page = buildPage()
-  assert.ok(page.includes('if(!state.custom){'), '页面应在自定义点时跳过三个下拉参数')
+  assert.ok(page.includes('if(!state.custom && !herePoint){'), '页面应在自定义点/目前所在地时跳过三个下拉参数')
   const client = read('lib/client.js')
   assert.ok(client.includes('q.site && !customPoint'), 'Tab 应跳过 location')
   assert.ok(client.includes('q.province && !customPoint'), 'Tab 应跳过 province')
@@ -249,7 +249,7 @@ test('地图读数：站点给名称，自定义点给经纬度，且不再引�
   const sites = [{ id: 'haituo', name: '海坨山', province: '北京', bortle: 4 }]
   assert.equal(describe(null, sites), '未选择')
   assert.equal(describe({ kind: 'site', siteId: 'haituo' }, sites), '海坨山 · 北京 · 波特尔 4')
-  assert.equal(describe({ kind: 'point', lat: 38.737, lon: 93.332 }, sites), '38.737000, 93.332000')
+  assert.equal(describe({ kind: 'point', lat: 38.737, lon: 93.332 }, sites), '38.737° N, 93.332° E')
   // 0.2.4 的崩溃点：读数节点被删了却还在写
   assert.ok(MAP_SRC.includes('class="ap-map-pick"'), '读数 span 必须存在')
   assert.ok(!MAP_SRC.includes('bortleWrap'), '不应再引用已删除的波特尔输入')

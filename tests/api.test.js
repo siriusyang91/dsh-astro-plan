@@ -414,3 +414,15 @@ test('参数白名单：地图选点的四个参数都在 queryToOptions 里', (
     assert.ok(src.includes(`'${key}'`), `queryToOptions 缺少 ${key}`)
   }
 })
+
+test('不限类型：包含合 / 冲日 / 大距', async () => {
+  const { search } = await import('../lib/planner.js')
+  const r = await search({ eventType: 'any', dateStart: '2027-02-10', dateEnd: '2027-02-12', pageSize: 60, siteLimit: 3, maxBortle: 9 })
+  const types = new Set(r.ranked.map((x) => x.target.type))
+  assert.ok(types.has('opposition') || types.has('conjunction'), '不限类型应包含冲日/合')
+  const page = (await import('../lib/webui.js')).page()
+  assert.ok(page.includes('🥇') && page.includes('🥈') && page.includes('🥉'), '网页结果应有奖牌')
+  assert.ok(page.includes("here.value='__here__'"), '网页地点应有目前所在地')
+  const client = readFileSync(new URL('../lib/client.js', import.meta.url), 'utf8')
+  assert.ok(client.includes('width:110px'), '地图坐标输入框应更短')
+})

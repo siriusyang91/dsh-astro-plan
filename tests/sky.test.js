@@ -4,6 +4,7 @@
  */
 
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import test from 'node:test'
 
 import * as astro from '../lib/astro.js'
@@ -1420,4 +1421,51 @@ test('地面遮罩：最后一次地景填充晚于最后一次银河填充', as
     assert.ok(lastMw >= 0, '应有银河填充')
     assert.ok(lastGround > lastMw, `pitch ${pitch}: 地景遮罩应晚于银河（mw ${lastMw} / ground ${lastGround}）`)
   }
+})
+
+test('日食：月亮遮住太阳，食分越大天空越暗且不低于夜空', () => {
+  const fn = renderer()
+  const palettes = {
+    night: { gradient: ['#02040a', '#0a1220', '#1a2133'], ground: '#05070c', label: '#cfe0f7' },
+    twilight: { gradient: ['#1b2340', '#4a3f63', '#b06a4a'], ground: '#0a0c12', label: '#ffd9a8' },
+    day: { gradient: ['#3f74c9', '#7aa8e6', '#cfe0f5'], ground: '#28313a', label: '#10305c' },
+  }
+  const makeSim = (obsc) => ({
+    version: 3, sky: 'day', lat: 40, lon: 116, targets: [{ name: '日食', kind: 'sun', sizeDeg: 0.52 }], bodyNames: [],
+    palettes, camera: { yaw: 180, pitch: 30, fov: 60, tracker: false, fovH: 10, fovV: 7, focal: 200 },
+    ridge: Array.from({ length: 360 }, (_, i) => [i, 1, 0]),
+    ridgeFar: Array.from({ length: 360 }, (_, i) => [i, 0.5, 0]),
+    frames: [{
+      t: '10:00', d: '08-02', lst: 8, sun: 40, w: 1, tp: [[60, 10, 40, 200]], bodies: [[60, 10, '太阳']], moon: [60.2, 10.1, 0, 0.53], moonObsc: obsc, sunAA: [40, 200], comet: null, meteors: [],
+    }],
+  })
+  const runFrame = (obsc) => {
+    const stops = []
+    const arcs = []
+    const noop = () => {}
+    const ctx = {
+      createLinearGradient: () => ({ addColorStop: (t2, c) => stops.push(c) }),
+      createRadialGradient: () => ({ addColorStop: noop }),
+      fillRect: noop, strokeRect: noop, fillText: noop, setLineDash: noop, save: noop, restore: noop,
+      clip: noop, rect: noop, translate: noop, rotate: noop, scale: noop, stroke: noop, closePath: noop,
+      beginPath: noop, moveTo: noop, lineTo: noop, fill: function () { arcs.push([this.fillStyle, this._lastArc]) },
+      arc: function (x, y, r) { this._lastArc = r },
+      measureText: () => ({ width: 10 }),
+      fillStyle: '#000', strokeStyle: '#000', lineWidth: 1, globalAlpha: 1, globalCompositeOperation: 'source-over',
+    }
+    fn.skyRender(ctx, { sim: makeSim(obsc), sky: { stars: [], lines: [], ecliptic: [], milkyway: [], count: 0 }, camera: makeSim(obsc).camera, w: 960, h: 540 }, 0)
+    return { stops, arcs }
+  }
+  const lum = (hex) => {
+    const n = parseInt(hex.replace('#', ''), 16)
+    return 0.2126 * ((n >> 16) & 255) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255)
+  }
+  const night = runFrame(1).stops[0]
+  const clear = runFrame(0).stops[0]
+  const half = runFrame(0.5).stops[0]
+  assert.ok(lum(clear) > lum(half) && lum(half) > lum(night), '食分越大天空应越暗')
+  assert.ok(lum(night) >= 8, '全食时也不能比夜空更暗')
+  // 暗月盘：源码层面确认日食分支用不透明暗色覆盖太阳
+  const src = readFileSync('lib/skyview.js', 'utf8')
+  assert.ok(src.includes("if (isSolarEclipse)") && src.includes("ctx.fillStyle = '#05070c'"), '全食时应有暗月盘盖住太阳')
 })

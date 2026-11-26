@@ -46,6 +46,7 @@ Page({
     const items = (result.ranked || []).map((item, index) => ({
       key: `${page}-${index}`,
       rank: item.rank,
+      medal: item.rank === 1 ? '🥇' : item.rank === 2 ? '🥈' : item.rank === 3 ? '🥉' : '',
       score: item.score,
       targetName: item.target.name,
       typeLabel: item.target.typeLabel || item.target.type,

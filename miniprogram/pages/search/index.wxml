@@ -12,7 +12,6 @@
         <text class="hero-title">星野计划</text>
         <text class="hero-sub">by Sirius YANG</text>
         <text class="hero-ver" wx:if="{{version}}">v{{version}}</text>
-        <text class="hero-ver" wx:if="{{miniVersion}}">包 {{miniVersion}}</text>
       </view>
     </view>
 

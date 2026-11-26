@@ -387,6 +387,7 @@ function fillSites(){
   var region = el('region').value, province = el('province').value;
   var sel = el('site'); sel.innerHTML = '';
   var all = document.createElement('option'); all.value=''; all.textContent='全部具体地点'; sel.appendChild(all);
+  var here = document.createElement('option'); here.value='__here__'; here.textContent='目前所在地'; sel.appendChild(here);
   var list = state.meta.sites.filter(function(s){
     if(region && s.region!==region) return false;
     if(province && s.province!==province) return false;
@@ -480,6 +481,11 @@ function setMapBtn(text){ var btn = el('mapBtn'); if(btn){ btn.textContent = tex
 
 /* 选中站点：三个下拉自动补齐（地区/省份/地点） */
 function selectSite(id){
+  if (id === '__here__') {
+    state.custom = null; setMapBtn('');
+    el('region').value = ''; fillProvinces();
+    return;
+  }
   var site = siteById(id);
   if(!site){ return; }
   state.custom = null;
@@ -561,6 +567,16 @@ function openMap(){
   });
 }
 
+/** 「目前所在地」：浏览器定位（6 秒超时），失败返回 null */
+function resolveHerePoint(){
+  return new Promise(function(resolve){
+    if(typeof navigator === 'undefined' || !navigator.geolocation){ resolve(null); return; }
+    navigator.geolocation.getCurrentPosition(function(pos){
+      resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+    }, function(){ resolve(null); }, { timeout: 6000, maximumAge: 600000, enableHighAccuracy: false });
+  });
+}
+
 async function run(page){
   var p = Math.max(1, Math.floor(Number(page)) || 1);
   var btn = el('go'); btn.disabled = true;
@@ -574,13 +590,20 @@ async function run(page){
     minAltitude: el('alt').value, maxBortle: el('bortle').value,
     page: String(p), pageSize: '20'
   });
+  // 目标地点=目前所在地：用浏览器定位坐标，不带省市
+  var herePoint = null;
+  if(!state.custom && el('site').value === '__here__'){
+    herePoint = await resolveHerePoint();
+    if(!herePoint) el('site').value = '';
+  }
   // 自定义点：只认坐标，忽略下拉里的 location/province/region（后端也是这个优先级）
-  if(!state.custom){
+  if(!state.custom && !herePoint){
     if(el('site').value) q.set('location', el('site').value);
     if(el('province').value) q.set('province', el('province').value);
     if(el('region').value) q.set('region', el('region').value);
   }
   if(state.origin){ q.set('originLat', state.origin.lat); q.set('originLon', state.origin.lon); }
+  if(herePoint){ q.set('siteLat', herePoint.lat); q.set('siteLon', herePoint.lon); q.set('siteName', '目前所在地'); }
   if(state.custom){ q.set('siteLat', state.custom.lat); q.set('siteLon', state.custom.lon); if(state.custom.bortle) q.set('siteBortle', state.custom.bortle); if(state.custom.name) q.set('siteName', state.custom.name); }
   try {
     var r = await fetch('/astro-plan/api/search?' + q.toString());
@@ -620,7 +643,7 @@ function renderTable(d){
 
   var rows = d.ranked.map(function(x,i){
     return '<div class="rrow ritem" id="row'+i+'" style="'+ROW+'" onclick="toggle('+i+')">'
-      + cell('rank', String(x.rank))
+      + cell('rank', String(x.rank) + (x.rank === 1 ? ' 🥇' : x.rank === 2 ? ' 🥈' : x.rank === 3 ? ' 🥉' : ''))
       + cell('sc', String(x.score))
       + cell('c-type', esc(x.target.typeLabel))
       + cell('c-target', esc(x.target.name))

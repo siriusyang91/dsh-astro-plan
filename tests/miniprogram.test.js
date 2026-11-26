@@ -665,3 +665,21 @@ test('小程序：预设点回首页带出省市、评分条、全屏五行与�
   assert.ok(sky.includes("flipping === 'const' ? 'flipping' : ''"), '星座名按钮应有翻面动画类')
   assert.ok(sky.includes("flipping === 'track' ? 'flipping' : ''"), '跟踪按钮应有翻面动画类')
 })
+
+test('列表：前三名奖牌 + 目前所在地 + 包版本移除', () => {
+  const noteWxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
+  assert.ok(noteWxml.includes('{{item.medal}}'), '结果卡片应有奖牌')
+  const results = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.js'), 'utf8')
+  assert.ok(results.includes("item.rank === 1 ? '🥇'"), '第 1 名金牌')
+  assert.ok(results.includes("item.rank === 2 ? '🥈'"), '第 2 名银牌')
+  assert.ok(results.includes("item.rank === 3 ? '🥉'"), '第 3 名铜牌')
+
+  const search = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.js'), 'utf8')
+  assert.ok(search.includes("id: '__here__'"), '地点应有目前所在地')
+  const hero = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
+  assert.ok(!hero.includes('包 {{miniVersion}}'), '标题后不应有包版本')
+  const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxss'), 'utf8')
+  assert.match(css, /\.frow \{[^}]*grid-template-columns: max-content/u, '标签列应贴合文字')
+  const canvas = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.js'), 'utf8')
+  assert.ok(canvas.includes('视角 视野角度'), '视野行应加视角前缀')
+})

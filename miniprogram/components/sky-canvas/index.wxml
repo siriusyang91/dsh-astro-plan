@@ -13,8 +13,8 @@
   <view wx:if="{{fullscreen}}" class="fs-info-bottom">
     <text class="fs-line">{{hud.time}}</text>
     <text class="fs-line">{{hud.window}}</text>
-    <text class="fs-line">{{hud.altaz}}</text>
-    <text class="fs-line">{{hud.radec}}</text>
+    <text class="fs-line" wx:if="{{hud.altaz}}">{{hud.altaz}}</text>
+    <text class="fs-line" wx:if="{{hud.radec}}">{{hud.radec}}</text>
     <text class="fs-line">{{hud.fov}}</text>
   </view>
 

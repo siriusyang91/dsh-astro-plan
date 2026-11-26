@@ -15,7 +15,7 @@
     <view wx:for="{{items}}" wx:key="key" class="card item" data-index="{{index}}" bindtap="openNote">
       <view class="item-head">
         <view class="item-title">
-          <text class="rank">#{{item.rank}}</text>
+          <text class="rank">#{{item.rank}}{{item.medal}}</text>
           <text class="name">{{item.targetName}}</text>
         </view>
         <view class="score">{{item.score}}</view>

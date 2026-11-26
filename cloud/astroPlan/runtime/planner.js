@@ -1004,28 +1004,33 @@ export function eventTargetsFor(opts) {
     }))
   }
   const planetEvents = events.planetEventsBetween(padFrom, padTo)
+  const tipsOf = {
+    opposition: '冲日前后视直径最大、整夜可见，长焦拍细节',
+    elongation: '大距前后离太阳最远、处于最佳观测窗口，晨昏低空长焦拍摄',
+    conjunction: '两颗天体同框：焦段按角距算，长焦端要上赤道仪，画面里有月球时按月球曝光',
+  }
+  const focalOf = { opposition: [300, 2000], elongation: [300, 2000], conjunction: [200, 1200] }
+  const mapPlanetEvent = (evt) => ({
+    id: `${evt.type}-${evt.id}`,
+    name: evt.label,
+    type: evt.type,
+    body: evt.body,
+    sizeDeg: 0.02,
+    months: [1, 12],
+    minBortle: 7,
+    focalFF: focalOf[evt.type] ?? [300, 2000],
+    tracker: false,
+    fg: evt.type === 'elongation' ? '朝日出的低空 + 地景剪影' : '与地景同框（长焦）',
+    tips: tipsOf[evt.type],
+    event: evt,
+    eventNote: evt.note,
+  })
   if (type === 'opposition' || type === 'elongation' || type === 'conjunction') {
-    const tipsOf = {
-      opposition: '冲日前后视直径最大、整夜可见，长焦拍细节',
-      elongation: '大距前后离太阳最远、处于最佳观测窗口，晨昏低空长焦拍摄',
-      conjunction: '两颗天体同框：焦段按角距算，长焦端要上赤道仪，画面里有月球时按月球曝光',
-    }
-    const focalOf = { opposition: [300, 2000], elongation: [300, 2000], conjunction: [200, 1200] }
-    return planetEvents.filter((e) => e.type === type).map((evt) => ({
-      id: `${evt.type}-${evt.id}`,
-      name: evt.label,
-      type: evt.type,
-      body: evt.body,
-      sizeDeg: 0.02,
-      months: [1, 12],
-      minBortle: 7,
-      focalFF: focalOf[evt.type] ?? [300, 2000],
-      tracker: false,
-      fg: evt.type === 'elongation' ? '朝日出的低空 + 地景剪影' : '与地景同框（长焦）',
-      tips: tipsOf[evt.type],
-      event: evt,
-      eventNote: evt.note,
-    }))
+    return planetEvents.filter((e) => e.type === type).map(mapPlanetEvent)
+  }
+  // 「不限」也要包含合 / 冲日 / 大距（此前只返回 []，导致三类天象在“不限”里完全缺失）
+  if (type === 'any') {
+    return planetEvents.map(mapPlanetEvent)
   }
   return []
 }

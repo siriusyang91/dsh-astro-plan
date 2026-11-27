@@ -26,13 +26,15 @@ function weekKey(meta) {
 /** 知识与热门天象交替排列，最多 20 条 */
 function buildFeed(meta) {
   const hot = (meta && meta.hotEvents) || []
+  const news = (meta && meta.news) || []
   const feed = []
-  const max = Math.max(KNOWLEDGE.length, hot.length)
+  const max = Math.max(KNOWLEDGE.length, hot.length, news.length)
   for (let i = 0; i < max; i += 1) {
     if (KNOWLEDGE[i]) feed.push({ kind: 'tip', title: '摄影知识 · ' + KNOWLEDGE[i].title, text: KNOWLEDGE[i].text })
     if (hot[i]) feed.push({ kind: 'hot', title: '近期天象 · ' + hot[i].title, text: hot[i].text })
+    if (news[i]) feed.push({ kind: 'news', title: '航天新闻 · ' + news[i].title, text: news[i].text })
   }
-  return feed.slice(0, 20)
+  return feed.slice(0, 24)
 }
 
 /** Fisher–Yates 洗牌：轮播随机播放 */

@@ -330,20 +330,26 @@ Page({
     getApp().globalData.origin = origin || null
     if (origin) { opts.originLat = origin.lat; opts.originLon = origin.lon }
     if (site && site.id === '__here__') {
-      // 目标地点=目前所在地：用定位坐标，不带省市
-      const here = await new Promise((resolve) => {
-        wx.getLocation({
-          type: 'gcj02',
-          success: (res) => resolve({ lat: res.latitude, lon: res.longitude }),
-          fail: () => resolve(null),
+      // 目标地点=目前所在地：优先缓存，失败静默回退「全部具体地点」
+      let here = null
+      try { here = wx.getStorageSync('ap:here') || null } catch (e) { here = null }
+      if (!here) {
+        here = await new Promise((resolve) => {
+          wx.getLocation({
+            type: 'gcj02',
+            success: (res) => resolve({ lat: res.latitude, lon: res.longitude }),
+            fail: () => resolve(null),
+          })
         })
-      })
+        if (here) { try { wx.setStorageSync('ap:here', here) } catch (e) { /* 忽略 */ } }
+      }
       if (here) {
         opts.siteLat = here.lat
         opts.siteLon = here.lon
         opts.siteName = '目前所在地'
       } else {
-        wx.showToast({ title: '未获取到定位，按全部地点检索', icon: 'none' })
+        // 静默回退：不提示，直接按全部具体地点检索
+        this.setData({ siteIndex: 0 })
       }
     } else if (this.data.custom) {
       opts.siteLat = this.data.custom.lat

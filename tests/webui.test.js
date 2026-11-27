@@ -450,9 +450,9 @@ test('未授权定位时不计算距离（不再回退北京）', async () => {
   const ctx = await runPage()
   await globalThis.__bootPromise
   // 沙箱里的 navigator 没有 geolocation → 走「未获取到定位」分支
-  assert.equal(ctx.doc.getElementById('originSel').value, '', '下拉框应回到「不计算距离」')
+  assert.equal(ctx.doc.getElementById('originSel').value, '@here', '出发地下拉应保留「目前所在地」')
   const hint = ctx.doc.getElementById('hint').textContent
-  assert.match(hint, /不计算距离/, '应说明不计算距离')
+  assert.match(hint, /不计算|暂不计算/, '应说明暂不计算距离')
   assert.doesNotMatch(hint, /按北京计算/, '不应再按北京估算')
 })
 

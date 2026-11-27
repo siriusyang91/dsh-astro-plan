@@ -687,8 +687,8 @@ test('列表：前三名奖牌 + 目前所在地 + 包版本移除', () => {
 test('目标地点：目前所在地在四处列表都保留', () => {
   const js = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.js'), 'utf8')
   assert.match(js, /function siteOptions\(list\)/u, '应有统一的站点列表构造函数')
-  const literal = (js.match(/全部具体地点/g) || []).length
-  assert.equal(literal, 1, '只有 siteOptions 里应出现手写列表')
+  const literal = (js.match(/label: '全部具体地点'/g) || []).length
+  assert.equal(literal, 1, '只有 siteOptions 里应有该选项')
   assert.ok(js.includes("label: '目前所在地'"), '含目前所在地')
   assert.ok(js.includes('siteOptions(sites)') && js.includes('siteOptions([])'), '各处都用 helper')
 
@@ -754,4 +754,13 @@ test('加载页与焦距显示：随机轮播、单 mm、HUD 黄色标签', () =
   assert.ok((hud.match(/fs-key/g) || []).length >= 5, '五行标签都用 fs-key')
   const css = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.wxss'), 'utf8')
   assert.ok(css.includes('.fs-key { color: #ffd479'), '标签为黄色')
+})
+
+test('小程序：轮播合并新闻、HUD 两列左对齐', () => {
+  const tips = readFileSync(join(ROOT, 'miniprogram', 'utils', 'tips.js'), 'utf8')
+  assert.ok(tips.includes("kind: 'news'") && tips.includes("航天新闻 ·"), '新闻进入轮播')
+  const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxss'), 'utf8')
+  assert.ok(css.includes('.feed-bar.news'), '新闻类型条颜色')
+  const hudCss = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.wxss'), 'utf8')
+  assert.ok(hudCss.includes('width: 150rpx') && hudCss.includes('text-align: left'), 'HUD 标签列固定宽度并左对齐')
 })

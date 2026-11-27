@@ -437,3 +437,19 @@ test('热门天象与光圈：meta.hotEvents、银河 f/1.4', async () => {
   const ap = r.ranked[0].params.aperture
   assert.match(ap, /f\/1\.4/u, '银河光圈应为 f/1.4，实际 ' + ap)
 })
+
+test('新闻：180 天内、正文 ≥30 字、按周稳定', async () => {
+  const { recentNews, newsForWeek } = await import('../lib/news.js')
+  const { meta } = await import('../lib/planner.js')
+  const list = recentNews()
+  assert.ok(list.length >= 3, '至少 3 条近期重大新闻')
+  for (const x of list) {
+    assert.ok(x.text.length >= 30, '正文 ≥30 字：' + x.title)
+    assert.ok(Date.now() - new Date(x.date + 'T00:00:00Z').getTime() <= 180 * 86400000, '不超过 180 天')
+  }
+  const a1 = newsForWeek('2026-11-23', 3).map((x) => x.id)
+  const a2 = newsForWeek('2026-11-23', 3).map((x) => x.id)
+  assert.deepEqual(a1, a2, '同一周顺序固定')
+  const m = meta()
+  assert.ok(Array.isArray(m.news) && m.news.length > 0, 'meta 应带新闻')
+})

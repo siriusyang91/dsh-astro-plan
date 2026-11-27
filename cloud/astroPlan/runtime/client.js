@@ -17,7 +17,7 @@ window.__ModuleLoader__.load({
     var exports = module.exports
 
     // 插件版本（发布时由 tools/release-core.mjs 的 syncVersionFile 同步）
-    var PLUGIN_VERSION = '0.4.10'
+    var PLUGIN_VERSION = '0.4.11'
 
     var React = require('react')
     var h = React.createElement
@@ -2276,14 +2276,14 @@ window.__ModuleLoader__.load({
         }
         // 未授权 / 超时 / 不支持定位：不计算距离（不再回退到北京）
         return new Promise(function (resolve) {
-          var fallback = function (reason) {
+          var fallback = function () {
+            // 定位失败：保留「目前所在地」，只清空距离基准
             setOrigin(null)
-            setOriginLabel('不计算距离')
-            setOriginNote(reason + '，不计算距离')
-            patch({ origin: '' })
+            setOriginLabel('目前所在地')
+            setOriginNote('未获取到定位，暂不计算直线距离')
             resolve(null)
           }
-          if (typeof navigator === 'undefined' || !navigator.geolocation) { fallback('浏览器不支持定位'); return }
+          if (typeof navigator === 'undefined' || !navigator.geolocation) { fallback(); return }
           navigator.geolocation.getCurrentPosition(function (pos) {
             var o = { lat: pos.coords.latitude, lon: pos.coords.longitude }
             saveOrigin(o)
@@ -2331,21 +2331,38 @@ window.__ModuleLoader__.load({
       }, [])
 
       /** 目标地点=目前所在地：先用浏览器定位，再带坐标检索 */
+      function readCachedHere() {
+        try {
+          var raw = window.localStorage && window.localStorage.getItem('ap:here')
+          if (!raw) return null
+          var o = JSON.parse(raw)
+          return o && Number.isFinite(o.lat) && Number.isFinite(o.lon) ? o : null
+        } catch (e) { return null }
+      }
+
+      function locateHereInBackground() {
+        if (typeof navigator === 'undefined' || !navigator.geolocation) return
+        try {
+          navigator.geolocation.getCurrentPosition(function (pos) {
+            try { window.localStorage.setItem('ap:here', JSON.stringify({ lat: pos.coords.latitude, lon: pos.coords.longitude })) } catch (e) { /* 忽略 */ }
+          }, function () {}, { timeout: 6000, maximumAge: 600000 })
+        } catch (e) { /* 忽略 */ }
+      }
+
       function run(f, m, org, pageNo) {
         var qf = f || form
+        var herePoint = null
         if (qf.site === '__here__' && !customPoint) {
-          if (typeof navigator !== 'undefined' && navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-              function (pos) { runQuery(f, m, org, pageNo, { lat: pos.coords.latitude, lon: pos.coords.longitude }) },
-              function () { runQuery(f, m, org, pageNo, null) },
-              { timeout: 6000, maximumAge: 600000 },
-            )
+          herePoint = readCachedHere()
+          if (!herePoint) {
+            // 没有缓存：立即按全部地点查询，后台再定位（不阻塞、不提示）
+            patch({ site: '' })
+            locateHereInBackground()
+            runQuery(f, m, org, pageNo, null)
             return
           }
-          runQuery(f, m, org, pageNo, null)
-          return
         }
-        runQuery(f, m, org, pageNo, null)
+        runQuery(f, m, org, pageNo, herePoint)
       }
 
       function runQuery(f, m, org, pageNo, herePoint) {

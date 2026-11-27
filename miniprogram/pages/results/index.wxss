@@ -55,6 +55,7 @@
 .feed.fade-in { opacity: 1; transform: translateY(0); }
 .feed-bar { width: 6rpx; border-radius: 4rpx; flex: 0 0 auto; }
 .feed-bar.tip { background: linear-gradient(180deg, #4f8fe8, #2f66c9); }
+.feed-bar.news { background: linear-gradient(180deg, #5fe0d0, #2f9c9c); }
 .feed-bar.hot { background: linear-gradient(180deg, #ffd479, #c98a2f); }
 .feed-body { flex: 1; min-width: 0; }
 .feed-title { font-size: 28rpx; font-weight: 700; color: var(--gold); margin-bottom: 8rpx; }

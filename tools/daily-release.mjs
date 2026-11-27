@@ -95,8 +95,27 @@ async function waitForTarball(version, maxMs = 8 * 60 * 1000) {
   return false
 }
 
+/** 每周刷新新闻（news.json 的周键变了才抓），失败保留旧文件 */
+function refreshNewsWeekly() {
+  try {
+    const file = join(ROOT, 'lib', 'data', 'news.json')
+    const data = JSON.parse(readFileSync(file, 'utf8'))
+    const week = (d2) => {
+      const t = new Date(d2)
+      const monday = new Date(t)
+      monday.setUTCDate(monday.getUTCDate() - ((monday.getUTCDay() + 6) % 7))
+      return monday.toISOString().slice(0, 10)
+    }
+    if (data.updatedAt && week(data.updatedAt) === week(new Date())) return
+    execFileSync(process.execPath, [join(ROOT, 'tools', 'build-news.mjs')], { stdio: 'inherit' })
+  } catch (e) {
+    console.warn('新闻周更失败（保留旧文件）：', e.message)
+  }
+}
+
 async function main() {
   syncVersionFile()
+  refreshNewsWeekly()
   log(`星野计划 · 自动发布 ${dryRun ? '（dry-run）' : ''}`)
   const files = listPublishable(ROOT)
   const hash = hashFiles(ROOT, files)

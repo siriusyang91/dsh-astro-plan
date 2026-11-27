@@ -160,6 +160,7 @@ button:disabled{opacity:.5;cursor:default}
   .note .noteright{order:-1;position:static;max-width:880px}
   .note .sec.wide{grid-column:1/-1}
 }
+.fatal{position:sticky;top:0;z-index:80;margin:0 0 8px;padding:8px 12px;border-radius:8px;background:#3a1620;border:1px solid #7a2b3a;color:#ffd7dd;font-size:12.5px}
 .ap-map-modal{position:fixed;inset:0;background:rgba(6,10,18,.72);display:flex;align-items:center;justify-content:center;z-index:60}
 .ap-map-modal[hidden]{display:none}
 .ap-map-panel{display:flex;width:min(1080px,94vw);height:min(760px,92vh);background:#0f1624;border:1px solid #24314a;border-radius:12px;padding:10px;box-shadow:0 18px 50px rgba(0,0,0,.5)}
@@ -423,19 +424,18 @@ function resolveOrigin(){
     return Promise.resolve();
   }
   return new Promise(function(resolve){
-    var fallback = function(reason){
-      // 未授权定位：不计算距离（不再回退到北京）
-      el('originSel').value = '';
-      applyOrigin(null, '不计算距离', reason + '，不计算距离');
+    var fallback = function(){
+      // 定位失败：保留「目前所在地」选项，只把距离置空（不再把下拉切到不计算距离）
+      applyOrigin(null, '目前所在地', '未获取到定位，暂不计算直线距离');
       resolve();
     };
-    if(typeof navigator === 'undefined' || !navigator.geolocation){ fallback('浏览器不支持定位'); return; }
+    if(typeof navigator === 'undefined' || !navigator.geolocation){ fallback(); return; }
     navigator.geolocation.getCurrentPosition(function(pos){
       var o = { lat: pos.coords.latitude, lon: pos.coords.longitude };
       saveOrigin(o);
       applyOrigin(o, '目前所在地', '');
       resolve();
-    }, function(){ fallback('未获取到定位'); }, { timeout: 6000, maximumAge: 600000, enableHighAccuracy: false });
+    }, function(){ fallback(); }, { timeout: 6000, maximumAge: 600000, enableHighAccuracy: false });
   });
 }
 
@@ -541,6 +541,24 @@ function onRegionChange(){
   setMapBtn('');
 }
 
+/** 页面级兜底：任何未捕获异常都显示出来，而不是让内容消失 */
+function showFatal(message){
+  try {
+    var box = document.getElementById('fatal');
+    if(!box){
+      box = document.createElement('div');
+      box.id = 'fatal';
+      box.className = 'fatal';
+      document.body.insertBefore(box, document.body.firstChild);
+    }
+    box.textContent = '页面出错：' + (message || '未知错误') + '（可刷新重试）';
+  } catch (e) { /* 忽略 */ }
+}
+if (typeof window.addEventListener === 'function') {
+  window.addEventListener('error', function(e){ showFatal(e && e.message); });
+  window.addEventListener('unhandledrejection', function(e){ showFatal(e && e.reason && e.reason.message || e && e.reason); });
+}
+
 function openMap(){
   if(!window.__apMap){ alert('地图组件未加载'); return; }
   var box = el('mapModal');
@@ -579,13 +597,32 @@ function openMap(){
   }
 }
 
+/** 最近一次成功定位（localStorage 缓存，避免每次查询都等定位） */
+function readCachedHere(){
+  try {
+    var raw = localStorage.getItem('ap:here');
+    if(!raw) return null;
+    var o = JSON.parse(raw);
+    return (o && Number.isFinite(o.lat) && Number.isFinite(o.lon)) ? o : null;
+  } catch (e) { return null; }
+}
+function saveCachedHere(o){
+  try { localStorage.setItem('ap:here', JSON.stringify(o)); } catch (e) { /* 忽略 */ }
+}
+/** 后台定位：成功后写缓存，不阻塞查询 */
+function locateHereInBackground(){
+  resolveHerePoint().then(function(p){ if(p) saveCachedHere(p); });
+}
+
 /** 「目前所在地」：浏览器定位（6 秒超时），失败返回 null */
 function resolveHerePoint(){
   return new Promise(function(resolve){
     if(typeof navigator === 'undefined' || !navigator.geolocation){ resolve(null); return; }
     try {
       navigator.geolocation.getCurrentPosition(function(pos){
-        resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+        var o = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+        saveCachedHere(o);
+        resolve(o);
       }, function(){ resolve(null); }, { timeout: 6000, maximumAge: 600000, enableHighAccuracy: false });
     } catch (e) { resolve(null); }
   });
@@ -604,11 +641,14 @@ async function run(page){
     minAltitude: el('alt').value, maxBortle: el('bortle').value,
     page: String(p), pageSize: '20'
   });
-  // 目标地点=目前所在地：用浏览器定位坐标，不带省市
+  // 目标地点=目前所在地：优先用缓存坐标；没有缓存就静默回退「全部具体地点」，后台再定位
   var herePoint = null;
   if(!state.custom && el('site').value === '__here__'){
-    herePoint = await resolveHerePoint();
-    if(!herePoint) el('site').value = '';
+    herePoint = readCachedHere();
+    if(!herePoint){
+      el('site').value = '';
+      locateHereInBackground();
+    }
   }
   // 自定义点：只认坐标，忽略下拉里的 location/province/region（后端也是这个优先级）
   if(!state.custom && !herePoint){

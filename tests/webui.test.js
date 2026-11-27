@@ -455,3 +455,14 @@ test('未授权定位时不计算距离（不再回退北京）', async () => {
   assert.match(hint, /不计算距离/, '应说明不计算距离')
   assert.doesNotMatch(hint, /按北京计算/, '不应再按北京估算')
 })
+
+test('网页：默认目前所在地、画面模拟放大与全屏按钮、重置不查询', async () => {
+  const { page } = await import('../lib/webui.js')
+  const html = page()
+  assert.ok(html.includes("el('site').value = '__here__'"), '默认目标地点为目前所在地')
+  assert.ok(html.includes('function focusSim'), '应有放大切换')
+  assert.ok(html.includes('simfocus') && html.includes('退出全屏'), '应有全屏/退出全屏按钮')
+  assert.ok(html.includes('.note.focus .notegrid'), '放大后单列')
+  const reset = html.slice(html.indexOf('function reset()'), html.indexOf('function reset()') + 500)
+  assert.ok(!reset.includes('run('), '重置不应触发查询')
+})

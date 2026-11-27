@@ -1,5 +1,17 @@
 <view class="wrap">
-  <view wx:if="{{loading}}" class="loading">计划中… 已用 {{elapsed}} 秒</view>
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="loading-status">计划中… 已用 {{elapsed}} 秒</view>
+    <view wx:if="{{feedItem.text}}" class="feed {{fading ? 'fade-out' : 'fade-in'}}">
+      <view class="feed-bar {{feedItem.kind === 'hot' ? 'hot' : 'tip'}}"></view>
+      <view class="feed-body">
+        <view class="feed-title">{{feedItem.title}}</view>
+        <view class="feed-text">{{feedItem.text}}</view>
+      </view>
+      <view class="feed-dots">
+        <view wx:for="{{feed}}" wx:key="index" class="dot {{index === feedIndex ? 'on' : ''}}"></view>
+      </view>
+    </view>
+  </view>
 
   <view wx:elif="{{error}}" class="card">
     <view class="card-title warn">查询失败</view>

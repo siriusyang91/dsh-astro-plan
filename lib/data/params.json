@@ -39,10 +39,10 @@
       }
     },
     "apertureByType": {
-      "milkyway": "f/2.8",
+      "milkyway": "f/1.4",
       "deepsky": "f/4",
-      "meteor": "f/2.8",
-      "comet": "f/2.8",
+      "meteor": "f/1.4",
+      "comet": "f/1.8",
       "startrail": "f/4",
       "planet": "f/10",
       "solarEclipse": "f/8",

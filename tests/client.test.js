@@ -174,3 +174,11 @@ test('地图：确认按钮独立成行、首次打开自动选最近站点', ()
   assert.ok(view.includes("ctx.setLineDash([5, 5])"), '应有虚线连线')
   assert.ok(view.includes("ctx.setLineDash([5, 5])"), '应有虚线连线')
 })
+
+test('Tab：默认目前所在地、重置不查询', () => {
+  const src = readFileSync(join(ROOT, 'lib', 'client.js'), 'utf8')
+  assert.match(src, /site: '__here__'/u, '默认目标地点为目前所在地')
+  const block = src.slice(src.indexOf('function reset() {', src.indexOf('function reset() {') + 1))
+  const used = block.slice(0, block.indexOf('resolveOrigin(f.origin)') + 40)
+  assert.ok(!used.includes('run(f'), 'Tab 重置不应查询')
+})

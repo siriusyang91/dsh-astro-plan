@@ -145,7 +145,7 @@ test('sim v3：结构、帧数、相机、扩展时段与整圈地景', () => {
   assert.equal(sim.targets.length, 1)
   assert.ok(sim.camera.yaw >= 0 && sim.camera.yaw < 360)
   assert.ok(sim.camera.pitch >= 0 && sim.camera.pitch <= 90)
-  assert.equal(sim.camera.tracker, true)
+  assert.equal(sim.camera.tracker, false, '画面模拟默认跟踪关')
   assert.ok(sim.camera.fovH > 0 && sim.camera.fovV > 0)
   // 地形剪影：整圈 360 点（1° 步长），方位 0…359 单调；高度来自实测高程剖面，每点带类型码
   assert.equal(sim.ridge.length, 360)

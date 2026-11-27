@@ -1,9 +1,14 @@
 const api = require('../../utils/api')
+const { buildFeed } = require('../../utils/tips')
 const { weatherText, km } = require('../../utils/format')
 
 Page({
   data: {
     loading: true,
+    feed: [],
+    feedIndex: 0,
+    feedItem: {},
+    fading: false,
     error: '',
     items: [],
     page: 1,
@@ -14,7 +19,27 @@ Page({
     elapsed: 0,
   },
 
+  startFeed() {
+    const meta = (getApp().globalData || {}).meta
+    const feed = buildFeed(meta)
+    if (!feed.length) return
+    this.setData({ feed, feedIndex: 0, feedItem: feed[0] })
+    clearInterval(this.feedTimer)
+    this.feedTimer = setInterval(() => this.nextFeed(), 10000)
+  },
+
+  nextFeed() {
+    if (!this.data.feed.length) return
+    this.setData({ fading: true })
+    clearTimeout(this.fadeTimer)
+    this.fadeTimer = setTimeout(() => {
+      const next = (this.data.feedIndex + 1) % this.data.feed.length
+      this.setData({ feedIndex: next, feedItem: this.data.feed[next], fading: false })
+    }, 200)
+  },
+
   onLoad() {
+    this.startFeed()
     const query = getApp().globalData.query
     if (!query) {
       this.setData({ loading: false, error: '没有查询条件，请先回到查询页设置' })
@@ -25,13 +50,15 @@ Page({
     this.pageCache = new Map()
     const app = getApp()
     if (!app.globalData.meta) {
-      api.meta().then((meta) => { app.globalData.meta = meta }).catch(() => {})
+      api.meta().then((meta) => { app.globalData.meta = meta; this.startFeed() }).catch(() => {})
     }
     this.load(1)
   },
 
   onUnload() {
     if (this.timer) { clearInterval(this.timer); this.timer = null }
+    clearInterval(this.feedTimer)
+    clearTimeout(this.fadeTimer)
   },
 
   onPullDownRefresh() {

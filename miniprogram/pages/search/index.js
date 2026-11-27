@@ -22,7 +22,7 @@ Page({
     provinces: [{ name: '', label: '全部省份' }],
     provinceIndex: 0,
     sites: siteOptions([]),
-    siteIndex: 0,
+    siteIndex: 1,
     d1: today(0),
     d2: today(6),
     minAlt: 0,
@@ -87,6 +87,7 @@ Page({
         const origins = [{ name: '', label: '不计算距离' }, { name: HERE, label: '目前所在地' }]
           .concat((meta.cities || []).map((c) => ({ name: c.name, label: c.name })))
         this.meta = meta
+        getApp().globalData.meta = meta
         const allTypes = meta.eventTypes || []
         const groupDefs = meta.eventTypeGroups || []
         const targetGroups = [{
@@ -107,13 +108,13 @@ Page({
           regions,
           origins,
         })
-        this.applyRegion(0)
+        this.applyRegion(0, true)
       })
       .catch((error) => this.setData({ loading: false, error: error.message }))
   },
 
   /** 地区 → 省份列表；选地区后省份/地点清零 */
-  applyRegion(regionIndex) {
+  applyRegion(regionIndex, keepSite) {
     const region = this.data.regions[regionIndex]
     const provinces = (this.meta.provinces || [])
       .filter((p) => !region || region === '全国' || p.region === region)
@@ -211,7 +212,8 @@ Page({
     const id = this.data.sites[index].id
     if (id === '__here__') {
       this.setData({ siteIndex: index, custom: null, customLabel: '', regionIndex: 0, provinceIndex: 0 })
-      if (this.meta) this.applyRegion(0)
+      if (this.meta) this.applyRegion(0, true)
+      this.setData({ siteIndex: index })
       return
     }
     const site = id ? (this.meta.sites || []).find((s) => s.id === id) : null

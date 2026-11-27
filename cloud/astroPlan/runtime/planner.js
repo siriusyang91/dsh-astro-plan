@@ -18,6 +18,7 @@ import * as comets from './comets.js'
 import * as database from './database.js'
 import * as skyview from './skyview.js'
 import { VERSION } from './version.js'
+import { hotEvents, hotWeekKey } from './hot.js'
 import { nightWeather, dayWeather, weatherAvailable, weatherCoverage, primeWeather, resetWeatherBreaker, weatherSourceName, weatherConsensus } from './weather.js'
 
 export const EVENT_TYPES = [
@@ -2039,6 +2040,8 @@ export function meta() {
   const db = database.databaseStatus()
   return {
     version: VERSION,
+    hotEvents: hotEvents(new Date()),
+    hotWeek: hotWeekKey(db.updatedAt),
     eventTypes: EVENT_TYPES.map((id) => ({ id, label: TYPE_LABEL[id], group: TYPE_GROUP_OF[id] ?? null })),
     eventTypeGroups: EVENT_TYPE_GROUPS.map((g) => ({ id: g.id, label: g.label })),
     regions: catalog.REGIONS,

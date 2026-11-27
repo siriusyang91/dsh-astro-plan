@@ -17,7 +17,7 @@ window.__ModuleLoader__.load({
     var exports = module.exports
 
     // 插件版本（发布时由 tools/release-core.mjs 的 syncVersionFile 同步）
-    var PLUGIN_VERSION = '0.4.8'
+    var PLUGIN_VERSION = '0.4.9'
 
     var React = require('react')
     var h = React.createElement
@@ -95,6 +95,9 @@ window.__ModuleLoader__.load({
       '.ap-notegrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(440px,46%);gap:11px;align-items:start}',
       '.ap-noteleft{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:9px}',
       '.ap-noteright{position:sticky;top:0}',
+      '.ap-note.focus .ap-notegrid{grid-template-columns:1fr}',
+      '.ap-note.focus .ap-noteleft{display:none}',
+      '.ap-note.focus .ap-noteright{position:static}',
       '.ap-nsec.wide{grid-column:span 2}',
             '@media (max-width:1100px){.ap-notegrid{grid-template-columns:1fr}.ap-noteright{order:-1;position:static;max-width:880px}.ap-nsec.wide{grid-column:1/-1}}',
       '.ap-actions{display:flex;gap:9px;padding-top:8px}',
@@ -2001,6 +2004,8 @@ window.__ModuleLoader__.load({
      *  默认暂停在最佳时段开始；滚轮缩放、拖动转视角、点击放大到浮层。 */
     function SkySim(props) {
       var sim = props.sim
+      var focus = Boolean(props.focus)
+      var toggleFocus = props.onToggleFocus || function () {}
       var sky = props.sky || { stars: [], lines: [], ecliptic: [] }
       var canvasRef = React.useRef ? React.useRef(null) : { current: null }
       var dragRef = React.useRef ? React.useRef(null) : { current: null }
@@ -2159,16 +2164,17 @@ window.__ModuleLoader__.load({
             h('button', { type: 'button', className: 'ap-simbtn', onClick: function () { zoomBy(1.3) } }, '−'),
             h('span', { className: 'ap-hint' }, Math.round(camera.fov) + '°'),
             h('button', { type: 'button', className: 'ap-simbtn', onClick: function () { zoomBy(1 / 1.3) } }, '＋'),
-            h('button', { type: 'button', className: 'ap-simbtn', onClick: resetView }, '重置')),
+            h('button', { type: 'button', className: 'ap-simbtn', onClick: resetView }, '重置'),
+            h('button', { type: 'button', className: 'ap-simbtn', onClick: toggleFocus }, focus ? '退出全屏' : '全屏')),
         ]
       }
 
       return h('div', { className: 'ap-simwrap' },
         h('canvas', {
           ref: canvasRef, className: 'ap-simcanvas', width: 960, height: 540,
-          title: '滚轮缩放 · 拖动转视角',
+          title: '双击放大 · 滚轮缩放 · 拖动转视角',
           onMouseDown: onDown, onMouseMove: onMove, onMouseUp: onUp, onMouseLeave: onUp,
-          onDoubleClick: resetView,
+          onDoubleClick: toggleFocus,
         }),
         controlRows(),
         h('div', { className: 'ap-hint ap-simcap' }, sim.caption + ' · 最佳时段 '
@@ -2177,7 +2183,7 @@ window.__ModuleLoader__.load({
 
     var DEFAULT_FORM = function () {
       return {
-        eventType: 'any', region: '', province: '', site: '',
+        eventType: 'any', region: '', province: '', site: '__here__',
         d1: today(), d2: addDays(today(), 6), minAlt: 0, bortle: 6,
         format: 'ff', tracker: false, origin: HERE,
       }
@@ -2185,6 +2191,7 @@ window.__ModuleLoader__.load({
 
     function View() {
       var [meta, setMeta] = React.useState(null)
+      var [simFocus, setSimFocus] = React.useState(false)
       var [data, setData] = React.useState(null)
       var [busy, setBusy] = React.useState(false)
     var [elapsed, setElapsed] = React.useState(0)
@@ -2411,7 +2418,8 @@ window.__ModuleLoader__.load({
       function reset() {
         var f = DEFAULT_FORM()
         setForm(f)
-        resolveOrigin(f.origin).then(function (o) { run(f, null, o) })
+        setData(null); setErr(''); setOpen(-1); setClosing(-1); setPage(1); setPageInput('1')
+        resolveOrigin(f.origin)
       }
 
       if (!meta) return h('div', { className: 'ap-wrap' }, h('div', { className: 'ap-hint' }, err || '加载站点库…'))
@@ -2570,7 +2578,7 @@ window.__ModuleLoader__.load({
       var fgLevel = (fg.irreplaceability || 0) >= 70 ? '高' : ((fg.irreplaceability || 0) >= 40 ? '中' : '低')
 
       // 分区顺序固定：左侧 7 个便签；右侧整列画面模拟（推荐度明细占两列宽）
-      return h('div', { className: 'ap-note' }, h('div', { className: 'ap-notegrid' },
+      return h('div', { className: 'ap-note' + (simFocus ? ' focus' : '') }, h('div', { className: 'ap-notegrid' },
         h('div', { className: 'ap-noteleft', key: 'left' },
           nsec('目标', [kv('名称', x.target.name), kv('类型', x.target.typeLabel), kv('最低波特尔', x.target.minBortle)]
             .concat(x.target.separation != null ? [kv('角距', x.target.separation + '°')] : [])
@@ -2598,7 +2606,7 @@ window.__ModuleLoader__.load({
               ? '，按 ' + x.breakdown.participating + ' 个维度换算为百分制' : '')
             + '）', gradeRows(x), false, 'wide')),
         h('div', { className: 'ap-noteright', key: 'right' },
-          nsec('画面模拟（最佳时段）', [h(SkySim, { key: 'sim', sim: x.sim, sky: sky })]))))
+          nsec('画面模拟（最佳时段）', [h(SkySim, { key: 'sim', sim: x.sim, sky: sky, focus: simFocus, onToggleFocus: function () { setSimFocus(function (v) { return !v }) } })]))))
     }
 
     /** 五个评分维度；日食会忽略「光污染」「月相」（breakdown.ignored）。 */

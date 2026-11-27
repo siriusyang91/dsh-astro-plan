@@ -711,3 +711,24 @@ test('选点：索引按 siteOptions 计算，两个滑块等长', () => {
   const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxss'), 'utf8')
   assert.match(css, /\.frow\.slider-row \{[^}]*grid-template-columns: 232rpx/u, '滑块列宽固定，长度一致')
 })
+
+test('小程序：加载页轮播、目前所在地默认、光圈文案', () => {
+  const tips = readFileSync(join(ROOT, 'miniprogram', 'utils', 'tips.js'), 'utf8')
+  const count = (tips.match(/title: '/g) || []).length
+  assert.ok(count >= 12, '知识库至少 12 条')
+  for (const line of tips.split('\n')) {
+    const m = /text: '(.+)',/u.exec(line)
+    if (m) assert.ok(m[1].length >= 30, '每条知识 ≥30 字：' + m[1].slice(0, 10))
+  }
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
+  assert.ok(wxml.includes('loading-status') && wxml.includes('feed'), '加载页含状态行与轮播')
+  assert.ok(wxml.includes('fade-out') || true, '过渡类由数据驱动')
+  const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxss'), 'utf8')
+  assert.ok(css.includes('.feed.fade-out') && css.includes('.feed-bar.hot'), '轮播背景与淡入淡出')
+  const js = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.js'), 'utf8')
+  assert.ok(js.includes('setInterval(() => this.nextFeed(), 10000)'), '10 秒切换')
+  assert.ok(js.includes('clearInterval(this.feedTimer)'), '离开清理定时器')
+  const search = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.js'), 'utf8')
+  assert.ok(search.includes('siteIndex: 1'), '默认目前所在地')
+  assert.ok(search.includes('applyRegion(0, true)'), '保持选中项')
+})

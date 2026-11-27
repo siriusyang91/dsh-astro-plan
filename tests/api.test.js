@@ -426,3 +426,14 @@ test('不限类型：包含合 / 冲日 / 大距', async () => {
   const client = readFileSync(new URL('../lib/client.js', import.meta.url), 'utf8')
   assert.ok(client.includes('width:110px'), '地图坐标输入框应更短')
 })
+
+test('热门天象与光圈：meta.hotEvents、银河 f/1.4', async () => {
+  const { meta, search } = await import('../lib/planner.js')
+  const m = meta()
+  assert.ok(Array.isArray(m.hotEvents) && m.hotEvents.length > 0, 'meta 应含热门天象')
+  assert.ok(m.hotEvents.every((x) => x.text && x.date), '每条都有文案与日期')
+  assert.ok(m.hotWeek, '应有周键')
+  const r = await search({ eventType: 'milkyway', dateStart: '2027-07-10', dateEnd: '2027-07-10', pageSize: 1, siteLimit: 2, maxBortle: 9 })
+  const ap = r.ranked[0].params.aperture
+  assert.match(ap, /f\/1\.4/u, '银河光圈应为 f/1.4，实际 ' + ap)
+})

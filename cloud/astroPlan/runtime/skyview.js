@@ -423,7 +423,7 @@ export function buildSim({ item, target, site, params }) {
     targets: targetsMeta,
     bodyNames: BODY_LIST.map(([cn]) => cn),
     camera: {
-      yaw, pitch, fov: camFov, tracker: Boolean(params?.trackerNeeded),
+      yaw, pitch, fov: camFov, tracker: false,
       focal: Math.round(focal), fovH: r1(fovH), fovV: r1(fovV),
     },
     frames,

@@ -452,7 +452,6 @@ test('未授权定位时不计算距离（不再回退北京）', async () => {
   // 沙箱里的 navigator 没有 geolocation → 走「未获取到定位」分支
   assert.equal(ctx.doc.getElementById('originSel').value, '@here', '出发地下拉应保留「目前所在地」')
   const hint = ctx.doc.getElementById('hint').textContent
-  assert.match(hint, /不计算|暂不计算/, '应说明暂不计算距离')
   assert.doesNotMatch(hint, /按北京计算/, '不应再按北京估算')
 })
 
@@ -479,6 +478,15 @@ test('网页：焦段只出现一个 mm', async () => {
 test('网页：定位异常不炸页面，详情渲染失败有提示', async () => {
   const { page } = await import('../lib/webui.js')
   const html = page()
-  assert.ok(html.includes('} catch (e) { resolve(null); }'), '定位调用要兜底')
+  assert.ok(html.includes('function safeGeolocate') && html.includes('catch (e) { clearTimeout(timer); finish(null); }'), '定位调用要兜底为 null')
   assert.ok(html.includes('详情渲染失败'), '便签渲染失败要提示而不是空白')
+})
+
+test('网页：启动与查询都不依赖定位', async () => {
+  const { page } = await import('../lib/webui.js')
+  const html = page()
+  assert.ok(!html.includes('await resolveOrigin()'), '启动不再 await 定位')
+  assert.ok(html.includes('function safeGeolocate'), '定位走安全封装')
+  const run = html.slice(html.indexOf('async function run('), html.indexOf('async function run(') + 2000)
+  assert.ok(!run.includes('resolveHerePoint()'), '查询流程不主动定位')
 })

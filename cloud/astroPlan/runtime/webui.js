@@ -325,7 +325,12 @@ function onTypeKey(e){
   if(e && e.key === 'Escape') hideTypeMenu();
 }
 
-async function boot(){
+/** 启动失败也能看到错误（不中断页面） */
+function boot(){
+  return bootInner().catch(function(e){ showFatal(e && e.message); });
+}
+
+async function bootInner(){
   var r = await fetch('/astro-plan/api/meta');
   var m = await r.json();
   state.meta = m;
@@ -365,7 +370,7 @@ async function boot(){
     + ' · 彗星 '+m.comets.count+' 颗（视星等 ≤ '+m.comets.maxMag+' 才推荐）';
   el('hint').textContent = state.baseHint;
   bindNoteModal();
-  await resolveOrigin();
+  // 启动不解析出发地：定位放到用户显式选择时（对齐小程序 onLoad）
   // 启动时不自动检索：先让用户确认/调整条件，再点「查询」
   el('list').innerHTML = '<div class="meta">设置查询条件后点击「查询」开始检索（默认最低高度角 0°，地平线以上即可参与评估）</div>';
   // 便于分享/自测：/astro-plan/?map=1 直接打开地图选点
@@ -489,6 +494,8 @@ function selectSite(id){
   if (id === '__here__') {
     state.custom = null; setMapBtn('');
     el('region').value = ''; fillProvinces();
+    // 用户主动选择「目前所在地」：此时才请求一次定位并缓存（失败静默）
+    resolveHerePoint();
     return;
   }
   var site = siteById(id);
@@ -518,6 +525,12 @@ function onProvinceChange(){
 /* 地点变化：自动带出地区 + 省份 */
 function onSiteChange(){
   var id = el('site').value;
+  if(id === '__here__'){
+    // 显式选择目前所在地：定位一次并缓存（失败静默）
+    resolveHerePoint();
+    state.custom = null; setMapBtn('');
+    return;
+  }
   if(id){
     var site = siteById(id);
     if(site){
@@ -614,17 +627,28 @@ function locateHereInBackground(){
   resolveHerePoint().then(function(p){ if(p) saveCachedHere(p); });
 }
 
-/** 「目前所在地」：浏览器定位（6 秒超时），失败返回 null */
-function resolveHerePoint(){
+/** 定位的「安全版本」：内部 try/catch + 超时，任何异常都当作失败（对齐 wx.getLocation 的 fail 回调） */
+function safeGeolocate(){
   return new Promise(function(resolve){
     if(typeof navigator === 'undefined' || !navigator.geolocation){ resolve(null); return; }
+    var done = false;
+    var finish = function(v){ if(done) return; done = true; resolve(v); };
+    var timer = setTimeout(function(){ finish(null); }, 7000);
     try {
       navigator.geolocation.getCurrentPosition(function(pos){
-        var o = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-        saveCachedHere(o);
-        resolve(o);
-      }, function(){ resolve(null); }, { timeout: 6000, maximumAge: 600000, enableHighAccuracy: false });
-    } catch (e) { resolve(null); }
+        clearTimeout(timer);
+        if(pos && pos.coords) finish({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+        else finish(null);
+      }, function(){ clearTimeout(timer); finish(null); }, { timeout: 6000, maximumAge: 600000, enableHighAccuracy: false });
+    } catch (e) { clearTimeout(timer); finish(null); }
+  });
+}
+
+/** 「目前所在地」：浏览器定位（6 秒超时），失败返回 null */
+function resolveHerePoint(){
+  return safeGeolocate().then(function(o){
+    if(o) saveCachedHere(o);
+    return o;
   });
 }
 
@@ -646,8 +670,8 @@ async function run(page){
   if(!state.custom && el('site').value === '__here__'){
     herePoint = readCachedHere();
     if(!herePoint){
+      // 无缓存：静默按全部具体地点查询，本次不触发定位
       el('site').value = '';
-      locateHereInBackground();
     }
   }
   // 自定义点：只认坐标，忽略下拉里的 location/province/region（后端也是这个优先级）

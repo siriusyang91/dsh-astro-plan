@@ -109,12 +109,12 @@ Component({
       })()
       const dec = tp ? Number(tp[1]) : null
       const hud = {
-        time: `时间 ${f.d ? f.d + ' ' : ''}${f.t || ''}`,
+        time: `${f.d ? f.d + ' ' : ''}${f.t || ''}`,
         modeLabel: this.data.mode === 'eq' ? '赤道坐标' : '地平坐标',
-        fov: `视角 视野角度 ${Math.round(this.camera.fov)}°`,
+        fov: `${Math.round(this.camera.fov)}°`,
         // 按当前坐标系只显示对应的一行
-        altaz: this.data.mode === 'eq' ? '' : (tp ? `地平系坐标 高度角 ${Number(tp[2]).toFixed(0)}° · 方位角 ${Number(tp[3]).toFixed(0)}°` : '地平系坐标 —'),
-        radec: this.data.mode === 'eq' ? (tp ? `赤道系坐标 赤经 ${raText} · 赤纬 ${dec >= 0 ? '+' : ''}${dec.toFixed(1)}°` : '赤道系坐标 —') : '',
+        altaz: this.data.mode === 'eq' ? '' : (tp ? `高度角 ${Number(tp[2]).toFixed(0)}° · 方位角 ${Number(tp[3]).toFixed(0)}°` : '—'),
+        radec: this.data.mode === 'eq' ? (tp ? `赤经 ${raText} · 赤纬 ${dec >= 0 ? '+' : ''}${dec.toFixed(1)}°` : '—') : '',
         window: sim.window ? `最佳时段 ${sim.window.start} – ${sim.window.end}` : '',
       }
       this.setData({ hud, fovText: hud.fov })

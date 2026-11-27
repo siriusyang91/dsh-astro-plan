@@ -16,6 +16,13 @@ function km(value) {
   return n >= 100 ? `${Math.round(n)} km` : `${n.toFixed(0)} km`
 }
 
+/** 焦段：已带 mm 不再重复追加 */
+function withMm(value) {
+  const s = String(value || '').trim()
+  if (!s) return '—'
+  return /mm$/iu.test(s) ? s : s + ' mm'
+}
+
 function deg(value, digits = 0) {
   if (value === null || value === undefined) return '—'
   return `${Number(value).toFixed(digits)}°`
@@ -91,8 +98,8 @@ function buildSections(item) {
     {
       title: '拍摄参数',
       rows: [
-        ['全画幅焦段', params.ffFocal ? `${params.ffFocal} mm` : '—'],
-        ['APS-C 焦段', params.apsFocal ? `${params.apsFocal} mm` : '—'],
+        ['全画幅焦段', withMm(params.ffFocal)],
+        ['APS-C 焦段', withMm(params.apsFocal)],
         ['光圈', params.aperture || '—'],
         ['曝光', exposureText(params)],
         ['赤道仪', params.trackerRequired ? '必须使用' : (params.trackerNeeded ? '需要' : '可用可不用')],
@@ -148,4 +155,4 @@ function buildGrades(item) {
   }))
 }
 
-module.exports = { today, km, deg, exposureText, weatherText, buildSections, buildGrades }
+module.exports = { today, km, deg, exposureText, weatherText, buildSections, buildGrades, withMm }

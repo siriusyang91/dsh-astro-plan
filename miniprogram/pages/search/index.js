@@ -109,6 +109,7 @@ Page({
           origins,
         })
         this.applyRegion(0, true)
+        this.setData({ siteIndex: 1 })
       })
       .catch((error) => this.setData({ loading: false, error: error.message }))
   },

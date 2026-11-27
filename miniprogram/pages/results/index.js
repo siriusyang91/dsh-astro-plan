@@ -1,5 +1,5 @@
 const api = require('../../utils/api')
-const { buildFeed } = require('../../utils/tips')
+const { buildFeed, shuffle } = require('../../utils/tips')
 const { weatherText, km } = require('../../utils/format')
 
 Page({
@@ -21,7 +21,7 @@ Page({
 
   startFeed() {
     const meta = (getApp().globalData || {}).meta
-    const feed = buildFeed(meta)
+    const feed = shuffle(buildFeed(meta))
     if (!feed.length) return
     this.setData({ feed, feedIndex: 0, feedItem: feed[0] })
     clearInterval(this.feedTimer)

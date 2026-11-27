@@ -34,28 +34,28 @@ export function hotEvents(now = new Date(), limit = 8) {
 
   for (const e of events.solarEclipsesBetween(iso(from), iso(to))) {
     push(1, e.peakUtc, 'solarEclipse', events.SOLAR_LABEL[e.kind] || '日食',
-      `${e.label}（${localDate(e.peakUtc)}）· 提前踩点，备巴德膜/长焦`)
+      `${e.label}（${localDate(e.peakUtc)}）· 提前踩点选开阔地，太阳滤镜/巴德膜与长焦都要备好，全食阶段记得摘滤镜拍日冕`)
   }
   for (const e of events.lunarEclipsesBetween(iso(from), iso(to))) {
     push(1, e.peakUtc, 'lunarEclipse', events.LUNAR_LABEL[e.kind] || '月食',
-      `${e.label}（${localDate(e.peakUtc)}）· 长焦记录红月与亮度变化`)
+      `${e.label}（${localDate(e.peakUtc)}）· 长焦记录红月与亮度变化，提前找好东向低空，月食全过程可做延时`)
   }
   for (const p of catalog.EVENTS.meteors || []) {
     if (Number(p.zhr) < 40) continue
     const md = String(p.peakUtc).slice(5, 10)
     for (const y of [now.getUTCFullYear(), now.getUTCFullYear() + 1]) {
       const peak = `${y}-${md}`
-      push(2, peak, 'meteor', p.name, `${p.name} 极大 ${peak.slice(5)} · ZHR ${p.zhr}，选辐射点高的夜晚`)
+      push(2, peak, 'meteor', p.name, `${p.name} 极大 ${peak.slice(5)} · ZHR ${p.zhr}，挑辐射点升高的后半夜，广角大光圈连拍再叠加，避开月光`)
     }
   }
   for (const e of events.planetEventsBetween(iso(from), iso(to))) {
     const planet = events.PLANET_CN[e.body] || e.body || ''
     if (e.type === 'opposition') {
-      push(3, e.utc, 'opposition', planet + '冲日', `${planet}冲日 ${localDate(e.utc)} · 整夜可见，长焦拍细节`)
+      push(3, e.utc, 'opposition', planet + '冲日', `${planet}冲日 ${localDate(e.utc)} · 整夜可见、视直径最大，长焦加增倍镜拍表面细节，记得做视频抽帧`)
     } else if (e.type === 'elongation') {
-      push(4, e.utc, 'elongation', planet + '大距', `${planet}大距 ${localDate(e.utc)} · 晨昏低空，抓住窗口`)
+      push(4, e.utc, 'elongation', planet + '大距', `${planet}大距 ${localDate(e.utc)} · 离太阳最远、晨昏低空最亮，找西向或东向开阔地，长焦抓最佳窗口`)
     } else if (e.type === 'conjunction') {
-      push(String(e.label || '').includes('月') ? 6 : 5, e.utc, 'conjunction', (e.label || '合'), `${e.label || '合'}（${localDate(e.utc)}）· 同框构图，按角距选焦段`)
+      push(String(e.label || '').includes('月') ? 6 : 5, e.utc, 'conjunction', (e.label || '合'), `${e.label || '合'}（${localDate(e.utc)}）· 两颗天体同框，按角距选焦段，长焦端建议上赤道仪，注意画面里月球的亮度`)
     }
   }
   out.sort((a, b) => a.priority - b.priority || a.date.localeCompare(b.date))

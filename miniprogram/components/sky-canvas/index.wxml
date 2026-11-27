@@ -11,11 +11,11 @@
 
   <!-- 全屏：底部信息区（高度角 / 赤经赤纬 / 地点 / 最佳时段） -->
   <view wx:if="{{fullscreen}}" class="fs-info-bottom">
-    <text class="fs-line">{{hud.time}}</text>
-    <text class="fs-line">{{hud.window}}</text>
-    <text class="fs-line" wx:if="{{hud.altaz}}">{{hud.altaz}}</text>
-    <text class="fs-line" wx:if="{{hud.radec}}">{{hud.radec}}</text>
-    <text class="fs-line">{{hud.fov}}</text>
+    <view class="fs-line"><text class="fs-key">时间</text><text>{{hud.time}}</text></view>
+    <view class="fs-line"><text class="fs-key">最佳时段</text><text>{{hud.window}}</text></view>
+    <view class="fs-line" wx:if="{{hud.altaz}}"><text class="fs-key">地平系坐标</text><text>{{hud.altaz}}</text></view>
+    <view class="fs-line" wx:if="{{hud.radec}}"><text class="fs-key">赤道系坐标</text><text>{{hud.radec}}</text></view>
+    <view class="fs-line"><text class="fs-key">视野角度</text><text>{{hud.fov}}</text></view>
   </view>
 
   <!-- 全屏：底部操作栏（播放 + 进度条） -->

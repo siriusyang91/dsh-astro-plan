@@ -17,7 +17,7 @@ window.__ModuleLoader__.load({
     var exports = module.exports
 
     // 插件版本（发布时由 tools/release-core.mjs 的 syncVersionFile 同步）
-    var PLUGIN_VERSION = '0.4.9'
+    var PLUGIN_VERSION = '0.4.10'
 
     var React = require('react')
     var h = React.createElement
@@ -2594,7 +2594,7 @@ window.__ModuleLoader__.load({
           nsec('方位与构图', [kv('方向', x.geometry.direction), kv('方位角', x.geometry.azStart + '° → ' + x.geometry.azEnd + '°'),
             kv('最高高度', altMaxText(x.geometry)), kv('地景', (fg.name || '自选前景') + (fg.azimuthIgnored ? '（不按方位评分）' : '')),
             kv('不可替代性', fg.name ? fgLevel + '（全国 ' + (fg.sharedBy || 1) + ' 站）' : '低')]),
-          nsec('拍摄参数', [kv('全画幅焦段', x.params.ffFocal), kv('APS-C 焦段', x.params.apsFocal),
+          nsec('拍摄参数', [kv('全画幅焦段', focalText(x.params.ffFocal)), kv('APS-C 焦段', focalText(x.params.apsFocal)),
             kv('光圈', x.params.aperture), kv('曝光', exposureTextOf(x.params)),
             kv('ISO', x.params.iso), kv('赤道仪', x.params.trackerRequired ? '必须使用' : (x.params.trackerNeeded ? '建议使用' : '可不用'))]
             .concat(exposureHint(x.params)
@@ -2607,6 +2607,13 @@ window.__ModuleLoader__.load({
             + '）', gradeRows(x), false, 'wide')),
         h('div', { className: 'ap-noteright', key: 'right' },
           nsec('画面模拟（最佳时段）', [h(SkySim, { key: 'sim', sim: x.sim, sky: sky, focus: simFocus, onToggleFocus: function () { setSimFocus(function (v) { return !v }) } })]))))
+    }
+
+    /** 焦段显示：保证只出现一个 mm */
+    function focalText(v) {
+      var s = String(v == null ? '' : v).trim()
+      if (!s) return '—'
+      return /mm$/i.test(s) ? s : s + ' mm'
     }
 
     /** 五个评分维度；日食会忽略「光污染」「月相」（breakdown.ignored）。 */

@@ -583,9 +583,11 @@ function openMap(){
 function resolveHerePoint(){
   return new Promise(function(resolve){
     if(typeof navigator === 'undefined' || !navigator.geolocation){ resolve(null); return; }
-    navigator.geolocation.getCurrentPosition(function(pos){
-      resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude });
-    }, function(){ resolve(null); }, { timeout: 6000, maximumAge: 600000, enableHighAccuracy: false });
+    try {
+      navigator.geolocation.getCurrentPosition(function(pos){
+        resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude });
+      }, function(){ resolve(null); }, { timeout: 6000, maximumAge: 600000, enableHighAccuracy: false });
+    } catch (e) { resolve(null); }
   });
 }
 
@@ -742,6 +744,13 @@ function gradeRow(name, score, text){
 }
 
 /* 便签分区的固定顺序：目标、时间与月相、地点、距离与行程、方位与构图、画面模拟、拍摄参数、天气、推荐度明细与推荐理由 */
+/** 焦段显示：保证只出现一个 mm */
+function focalText(v){
+  var s = String(v == null ? '' : v).trim();
+  if(!s) return '—';
+  return /mm$/i.test(s) ? s : s + ' mm';
+}
+
 function note(x, i){
   var w = x.weather || {status:'none'};
   var rd = x.reasonDetail || {};
@@ -778,7 +787,7 @@ function note(x, i){
       + kv('最高高度', altMaxText(x.geometry))
       + kv('地景', (fg.name||'自选前景')+(fg.azimuthIgnored?'（不按方位评分）':''))+kv('不可替代性', fg.name ? fgLevel+'（全国 '+(fg.sharedBy||1)+' 站）' : '低')+'</div>'
     + '<div class="sec"><h5>拍摄参数</h5>'
-      + kv('全画幅焦段', x.params.ffFocal)+kv('APS-C 焦段', x.params.apsFocal)+kv('光圈', x.params.aperture)
+      + kv('全画幅焦段', focalText(x.params.ffFocal))+kv('APS-C 焦段', focalText(x.params.apsFocal))+kv('光圈', x.params.aperture)
       + kv('曝光', exposureTextOf(x.params))+kv('ISO', x.params.iso)
       + kv('赤道仪', x.params.trackerRequired ? '必须使用' : (x.params.trackerNeeded?'建议使用':'可不用'))
       + (exposureHint(x.params) ? '<div class="dim" style="font-size:11px;margin-top:4px">'+esc(exposureHint(x.params))+'</div>' : '')+'</div>'
@@ -1091,7 +1100,13 @@ function toggle(i){
   var x = state.data && state.data.ranked ? state.data.ranked[i] : null;
   if(!x){ state.open = -1; return; }
   var host = el('noteHost');
-  host.innerHTML = note(x, i);
+  try {
+    host.innerHTML = note(x, i);
+  } catch (e) {
+    host.innerHTML = '<div class="err">详情渲染失败：' + esc(e && e.message || e) + '</div>';
+    el('noteModal').hidden = false;
+    return;
+  }
   var box = el('noteModal');
   box.hidden = false;
   var row = el('row'+i);

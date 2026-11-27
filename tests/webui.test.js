@@ -466,3 +466,19 @@ test('网页：默认目前所在地、画面模拟放大与全屏按钮、重�
   const reset = html.slice(html.indexOf('function reset()'), html.indexOf('function reset()') + 500)
   assert.ok(!reset.includes('run('), '重置不应触发查询')
 })
+
+test('网页：焦段只出现一个 mm', async () => {
+  const { page } = await import('../lib/webui.js')
+  const html = page()
+  assert.ok(html.includes('function focalText'), '应有 focalText')
+  assert.ok(html.includes("kv('全画幅焦段', focalText(x.params.ffFocal))"), '焦段走 focalText')
+  const client = readFileSync(join(ROOT, 'lib', 'client.js'), 'utf8')
+  assert.ok(client.includes('function focalText'), 'Tab 同样')
+})
+
+test('网页：定位异常不炸页面，详情渲染失败有提示', async () => {
+  const { page } = await import('../lib/webui.js')
+  const html = page()
+  assert.ok(html.includes('} catch (e) { resolve(null); }'), '定位调用要兜底')
+  assert.ok(html.includes('详情渲染失败'), '便签渲染失败要提示而不是空白')
+})

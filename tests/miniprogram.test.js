@@ -681,7 +681,7 @@ test('列表：前三名奖牌 + 目前所在地 + 包版本移除', () => {
   const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxss'), 'utf8')
   assert.match(css, /\.frow \{[^}]*grid-template-columns: max-content/u, '标签列应贴合文字')
   const canvas = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.js'), 'utf8')
-  assert.ok(canvas.includes('视角 视野角度'), '视野行应加视角前缀')
+  assert.ok(!canvas.includes('视角 视野角度'), '视野行不应再有视角前缀')
 })
 
 test('目标地点：目前所在地在四处列表都保留', () => {
@@ -721,14 +721,37 @@ test('小程序：加载页轮播、目前所在地默认、光圈文案', () =>
     if (m) assert.ok(m[1].length >= 30, '每条知识 ≥30 字：' + m[1].slice(0, 10))
   }
   const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
-  assert.ok(wxml.includes('loading-status') && wxml.includes('feed'), '加载页含状态行与轮播')
-  assert.ok(wxml.includes('fade-out') || true, '过渡类由数据驱动')
+  assert.ok(wxml.includes('class="loading">计划中') && wxml.includes('feed'), '加载页含单行状态与轮播')
+  assert.ok(wxml.includes('fade-in'), '过渡类由数据驱动')
   const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxss'), 'utf8')
   assert.ok(css.includes('.feed.fade-out') && css.includes('.feed-bar.hot'), '轮播背景与淡入淡出')
+  assert.ok(!wxml.includes('feed-dots'), '不应有进度点')
   const js = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.js'), 'utf8')
   assert.ok(js.includes('setInterval(() => this.nextFeed(), 10000)'), '10 秒切换')
   assert.ok(js.includes('clearInterval(this.feedTimer)'), '离开清理定时器')
   const search = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.js'), 'utf8')
   assert.ok(search.includes('siteIndex: 1'), '默认目前所在地')
   assert.ok(search.includes('applyRegion(0, true)'), '保持选中项')
+})
+
+test('加载页与焦距显示：随机轮播、单 mm、HUD 黄色标签', () => {
+  const tips = readFileSync(join(ROOT, 'miniprogram', 'utils', 'tips.js'), 'utf8')
+  assert.ok(tips.includes('function shuffle'), '轮播应随机')
+  const results = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.js'), 'utf8')
+  assert.ok(results.includes('shuffle(buildFeed(meta))'), '构建后洗牌')
+
+  const fmt = readFileSync(join(ROOT, 'miniprogram', 'utils', 'format.js'), 'utf8')
+  assert.ok(fmt.includes('function withMm'), '应有 withMm')
+  assert.ok(!/\$\{params\.ffFocal\} mm/.test(fmt), '不应再直接拼 mm')
+  const mm = /function withMm\(value\) \{([\s\S]*?)\n\}/.exec(fmt)
+  assert.ok(mm && /\/mm\$\/[a-z]*\.test\(s\)/u.test(mm[1]), '已带 mm 不再追加')
+
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
+  assert.ok(wxml.includes('class="loading">计划中'), '状态行恢复单行')
+  assert.ok(!wxml.includes('feed-dots'), '无进度点')
+
+  const hud = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.wxml'), 'utf8')
+  assert.ok((hud.match(/fs-key/g) || []).length >= 5, '五行标签都用 fs-key')
+  const css = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.wxss'), 'utf8')
+  assert.ok(css.includes('.fs-key { color: #ffd479'), '标签为黄色')
 })

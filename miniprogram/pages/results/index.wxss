@@ -25,23 +25,13 @@
   50% { opacity: 1; }
 }
 
-.loading-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 16rpx;
-}
-.loading-status {
-  font-size: 30rpx;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: 1rpx;
-}
+.loading { margin-bottom: 14rpx; }
 .feed {
   position: relative;
   display: flex;
   align-items: stretch;
   gap: 14rpx;
-  padding: 18rpx 18rpx 22rpx;
+  padding: 26rpx 24rpx 30rpx;
   border-radius: 16rpx;
   border: 1rpx solid #1d3350;
   background: linear-gradient(135deg, #0b1424 0%, #101b2e 60%, #0d1830 100%);
@@ -67,8 +57,5 @@
 .feed-bar.tip { background: linear-gradient(180deg, #4f8fe8, #2f66c9); }
 .feed-bar.hot { background: linear-gradient(180deg, #ffd479, #c98a2f); }
 .feed-body { flex: 1; min-width: 0; }
-.feed-title { font-size: 26rpx; font-weight: 700; color: var(--gold); margin-bottom: 8rpx; }
-.feed-text { font-size: 26rpx; line-height: 1.55; color: #cfe0f7; }
-.feed-dots { position: absolute; left: 18rpx; bottom: 8rpx; display: flex; gap: 6rpx; }
-.feed-dots .dot { width: 8rpx; height: 8rpx; border-radius: 50%; background: rgba(160,190,230,.28); }
-.feed-dots .dot.on { background: #ffd479; }
+.feed-title { font-size: 28rpx; font-weight: 700; color: var(--gold); margin-bottom: 8rpx; }
+.feed-text { font-size: 28rpx; line-height: 1.55; color: #cfe0f7; }

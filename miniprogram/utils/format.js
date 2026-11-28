@@ -123,17 +123,6 @@ function buildSections(item) {
       }
       return { title: '天气', rows }
     })(),
-    {
-      title: '推荐度明细',
-      rows: [
-        ['天象', item.breakdown && item.breakdown.sky !== null ? `${item.breakdown.sky} 分` : '—'],
-        ['光污染', item.breakdown && item.breakdown.pollution !== null ? `${item.breakdown.pollution} 分` : '—'],
-        ['月相', item.breakdown && item.breakdown.moon !== null ? `${item.breakdown.moon} 分` : '—'],
-        ['天气', item.breakdown && item.breakdown.weather !== null ? `${item.breakdown.weather} 分` : '—'],
-        ['地景', item.breakdown && item.breakdown.foreground !== null ? `${item.breakdown.foreground} 分` : '—'],
-        ['总分', `${item.score} 分`],
-      ],
-    },
   ]
 }
 

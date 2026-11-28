@@ -770,7 +770,7 @@ test('小程序：轮播合并新闻、HUD 两列左对齐', () => {
 
 test('小程序：加载页固定位置与字号', () => {
   const app = readFileSync(join(ROOT, 'miniprogram', 'app.js'), 'utf8')
-  assert.ok(app.includes("miniVersion: '1.1.17'"), '包版本 1.1.17')
+  assert.ok(app.includes("miniVersion: '1.1.18'"), '包版本 1.1.18')
   const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
   assert.ok(wxml.includes('loading-wrap'), '加载块容器')
   const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxss'), 'utf8')
@@ -789,4 +789,13 @@ test('小程序：目标类型标签、加载页固定位置与天文动态', ()
   const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxss'), 'utf8')
   assert.match(css, /\.loading \{[^}]*position: absolute[^}]*top: 26%/u, '计划中固定在中上')
   assert.match(css, /\.feed-block \{[^}]*top: 52%/u, '轮播固定在下半页')
+})
+
+test('小程序：推荐度明细去重且含总分', () => {
+  const fmt = readFileSync(join(ROOT, 'miniprogram', 'utils', 'format.js'), 'utf8')
+  assert.equal((fmt.match(/title: '推荐度明细'/g) || []).length, 0, '分节里不再重复推荐度明细')
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'note', 'index.wxml'), 'utf8')
+  assert.equal((wxml.match(/推荐度明细/g) || []).length, 1, '只保留一个推荐度明细')
+  assert.ok(wxml.includes('总分 {{score}} 分'), '标题带总分')
+  assert.ok(wxml.includes('grade-bar'), '仍是评分条版本')
 })

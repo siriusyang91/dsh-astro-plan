@@ -33,7 +33,7 @@
   </view>
 
   <view wx:if="{{grades.length}}" class="card">
-    <view class="card-title">推荐度明细</view>
+    <view class="card-title">推荐度明细 · 总分 {{score}} 分</view>
     <view wx:for="{{grades}}" wx:key="name" class="grade-row">
       <text class="grade-name">{{item.name}}</text>
       <view class="grade-bar"><view class="grade-fill" style="width:{{item.score == null ? 0 : item.score}}%"></view></view>

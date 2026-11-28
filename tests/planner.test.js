@@ -1007,3 +1007,20 @@ test('行星类：天象分随观测难度（视星等）下降', async () => {
   const minor = rows.find((x) => x.target.mag != null && /谷神|灶神|智神|婚神|冥王|阋神|鸟神|妊神/.test(x.target.name))
   if (minor) assert.match(minor.reasonDetail.sky, /观测难度/)
 })
+
+test('日食：全站点评估，能选中全食带站点', async () => {
+  const r = await search({ eventType: 'solarEclipse', dateStart: '2035-09-01', dateEnd: '2035-09-03', pageSize: 100 })
+  assert.ok(r.ok, r.message)
+  const total = r.ranked.filter((x) => /日全食/.test(x.target.name))
+  assert.ok(total.length >= 3, '应至少 3 个全食站点，实际 ' + total.length)
+  assert.ok(r.pagination.total > 100, '应评估全部站点（结果数 ' + r.pagination.total + '）')
+  for (const x of r.ranked) {
+    assert.equal(x.foreground.azimuthIgnored, true, '日食地景不按方位评分')
+  }
+})
+
+test('月食：地景同样不按方位评分', async () => {
+  const r = await search({ eventType: 'lunarEclipse', dateStart: '2032-01-01', dateEnd: '2036-12-31', pageSize: 40 })
+  assert.ok(r.ok, r.message)
+  for (const x of r.ranked) assert.equal(x.foreground.azimuthIgnored, true)
+})

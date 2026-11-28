@@ -49,7 +49,7 @@ function extractScript(html) {
   return html.slice(start, end)
 }
 
-async function runPage() {
+async function runPage(opts = {}) {
   const nodes = new Map()
   const doc = {
     head: { appendChild() {} },
@@ -64,6 +64,7 @@ async function runPage() {
     eventType: 'deepsky', dateStart: '2027-03-10', dateEnd: '2027-03-10', siteLimit: 2, pageSize: 3, withSim: true,
   })
   const store = new Map()
+  const fetchUrls = []
   const sandbox = {
     document: doc,
     window: {},
@@ -71,10 +72,11 @@ async function runPage() {
       getItem: (k) => (store.has(k) ? store.get(k) : null),
       setItem: (k, v) => store.set(k, v),
     },
-    navigator: {},
-    fetch: async (url) => ({
-      json: async () => (String(url).includes('/api/meta') ? metaData : searchData),
-    }),
+    navigator: opts.geolocation ? { geolocation: opts.geolocation } : {},
+    fetch: async (url) => {
+      fetchUrls.push(String(url))
+      return { json: async () => (String(url).includes('/api/meta') ? metaData : searchData) }
+    },
     console,
     setTimeout,
   }
@@ -94,7 +96,7 @@ async function runPage() {
   const fn = new Function(...Object.keys(sandbox), source)
   fn(...Object.values(sandbox))
   await waitFor(globalThis, '__bootPromise')
-  return { nodes, doc, searchData }
+  return { nodes, doc, searchData, fetchUrls }
 }
 
 async function waitFor(scope, key) {
@@ -489,4 +491,25 @@ test('网页：启动与查询都不依赖定位', async () => {
   assert.ok(html.includes('function safeGeolocate'), '定位走安全封装')
   const run = html.slice(html.indexOf('async function run('), html.indexOf('async function run(') + 2000)
   assert.ok(!run.includes('resolveHerePoint()'), '查询流程不主动定位')
+})
+
+test('0.4.12：定位抛错不影响启动与查询，且查询不触发定位', async () => {
+  let calls = 0
+  const ctx = await runPage({
+    geolocation: {
+      getCurrentPosition() {
+        calls += 1
+        throw new Error('SecurityError: geolocation blocked')
+      },
+    },
+  })
+  await globalThis.__bootPromise
+  assert.ok(ctx.nodes.get('region'), '筛选区应存在')
+  await globalThis.__runPageSearch(1)
+  assert.ok(ctx.nodes.get('list').innerHTML.includes('rrow'), '查询应渲染结果行')
+  assert.equal(calls, 0, '查询流程不应调用定位')
+  const searchUrls = ctx.fetchUrls.filter((u) => u.includes('/api/search'))
+  assert.ok(searchUrls.length >= 1, '应发出查询请求')
+  assert.ok(!/siteLat=/.test(searchUrls[0]), '无缓存时不应带 siteLat')
+  assert.ok(!/siteLon=/.test(searchUrls[0]), '无缓存时不应带 siteLon')
 })

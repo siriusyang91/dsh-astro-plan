@@ -25,7 +25,19 @@
   50% { opacity: 1; }
 }
 
-.loading { margin-bottom: 14rpx; }
+.loading-wrap {
+  min-height: 62vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16rpx;
+}
+.loading {
+  font-size: 34rpx;
+  font-weight: 700;
+  letter-spacing: 1rpx;
+  color: var(--text);
+}
 .feed {
   position: relative;
   display: flex;

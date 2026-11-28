@@ -17,7 +17,7 @@ window.__ModuleLoader__.load({
     var exports = module.exports
 
     // 插件版本（发布时由 tools/release-core.mjs 的 syncVersionFile 同步）
-    var PLUGIN_VERSION = '0.4.12'
+    var PLUGIN_VERSION = '0.4.13'
 
     var React = require('react')
     var h = React.createElement
@@ -2189,6 +2189,23 @@ window.__ModuleLoader__.load({
       }
     }
 
+    /** 错误边界：任何渲染异常只影响详情区，不再让整个 Tab 消失 */
+    var ApBoundary = React.Component ? class ApBoundary extends React.Component {
+      constructor(props) { super(props); this.state = { err: null } }
+      static getDerivedStateFromError(err) { return { err: err } }
+      componentDidCatch(err) {
+        if (typeof console !== 'undefined') console.error('[dsh-astro-plan] Tab 渲染失败：', err)
+      }
+      render() {
+        if (this.state.err) {
+          return h('div', { className: 'ap-wrap' },
+            h('div', { className: 'ap-hint' }, '详情渲染失败：' + (this.state.err.message || String(this.state.err))),
+            h('div', { className: 'ap-hint' }, '可点「关闭」后重试；把上面这句话反馈给插件作者即可定位。'))
+        }
+        return this.props.children
+      }
+    } : function (props) { return props.children }
+
     function View() {
       var [meta, setMeta] = React.useState(null)
       var [simFocus, setSimFocus] = React.useState(false)
@@ -2564,7 +2581,7 @@ window.__ModuleLoader__.load({
             h('div', { className: 'ap-note-head' },
               h('span', null, '目标详情'),
               h('button', { type: 'button', onClick: function () { toggleRow(open) } }, '关闭')),
-            h('div', { className: 'ap-note-host' }, noteBox(data.ranked[open], originLabel, meta && meta.sky))))
+            h('div', { className: 'ap-note-host' }, noteBox(data.ranked[open], originLabel, meta && meta.sky, simFocus, function () { setSimFocus(function (v) { return !v }) }))))
           : null)
     }
 
@@ -2587,7 +2604,7 @@ window.__ModuleLoader__.load({
       h('span', { style: { fontSize: '11.5px', color: 'var(--ap-note-kv-val)', whiteSpace: 'normal' } }, text || ''))
     }
 
-    function noteBox(x, originLabel, sky) {
+    function noteBox(x, originLabel, sky, simFocus, onToggleFocus) {
       var w = x.weather || { status: 'none' }
       var rd = x.reasonDetail || {}
       var wxNum = function (value, unit) { return value == null ? '—' : value + unit }
@@ -2634,7 +2651,7 @@ window.__ModuleLoader__.load({
               ? '，按 ' + x.breakdown.participating + ' 个维度换算为百分制' : '')
             + '）', gradeRows(x), false, 'wide')),
         h('div', { className: 'ap-noteright', key: 'right' },
-          nsec('画面模拟（最佳时段）', [h(SkySim, { key: 'sim', sim: x.sim, sky: sky, focus: simFocus, onToggleFocus: function () { setSimFocus(function (v) { return !v }) } })]))))
+          nsec('画面模拟（最佳时段）', [h(SkySim, { key: 'sim', sim: x.sim, sky: sky, focus: simFocus, onToggleFocus: onToggleFocus })]))))
     }
 
     /** 焦段显示：保证只出现一个 mm */
@@ -2661,7 +2678,7 @@ window.__ModuleLoader__.load({
         ctx.slots.inject('conversation.view', function () {
           return ctx.slots.register(
             { name: 'conversation.view', id: 'astro-plan', order: 85, label: function () { return '星野计划 v' + PLUGIN_VERSION } },
-            function (props) { return h(View, props) },
+            function (props) { return h(ApBoundary, null, h(View, props)) },
           )
         })
       } catch (error) {
@@ -2669,6 +2686,8 @@ window.__ModuleLoader__.load({
       }
     }
 
+    module.exports.__noteBox = noteBox
+    module.exports.__SkySim = SkySim
     module.exports.name = 'dsh-astro-plan'
     module.exports.inject = ['slots']
     module.exports.apply = apply

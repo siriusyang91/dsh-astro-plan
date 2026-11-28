@@ -182,3 +182,32 @@ test('Tab：默认目前所在地、重置不查询', () => {
   const used = block.slice(0, block.indexOf('resolveOrigin(f.origin)') + 40)
   assert.ok(!used.includes('run(f'), 'Tab 重置不应查询')
 })
+
+test('Tab 详情：noteBox 可安全渲染（不再引用 View 作用域变量）', async () => {
+  const reactStub = {
+    createElement: (tag, props, ...kids) => ({ tag, props: props || {}, kids }),
+    useState: (v) => [v, () => {}],
+    useEffect() {},
+  }
+  const mod = captured.factory(() => reactStub)
+  const { search, meta } = await import('../lib/planner.js')
+  const r = await search({ eventType: 'deepsky', dateStart: '2027-03-10', dateEnd: '2027-03-10', siteLimit: 2, pageSize: 1, withSim: true })
+  const item = r.ranked[0]
+  const tree = mod.__noteBox(item, '—', meta().sky, false, () => {})
+  const texts = []
+  const walk = (n) => {
+    if (!n) return
+    if (typeof n === 'string') texts.push(n)
+    if (Array.isArray(n.kids)) n.kids.forEach(walk)
+  }
+  walk(tree)
+  const all = texts.join('|')
+  assert.ok(all.includes('拍摄参数'), '详情应包含拍摄参数')
+  assert.ok(all.includes('画面模拟'), '详情应包含画面模拟')
+
+  const src = readFileSync(join(ROOT, 'lib', 'client.js'), 'utf8')
+  const start = src.indexOf('function noteBox(')
+  const end = src.indexOf('function gradeRow', start)
+  const body = src.slice(start, end)
+  assert.ok(!body.includes('setSimFocus'), 'noteBox 不应引用 View 内的 setSimFocus')
+})

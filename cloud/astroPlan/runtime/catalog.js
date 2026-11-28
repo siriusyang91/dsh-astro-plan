@@ -68,7 +68,68 @@ try {
 
 const builtinSites = sitesRaw.rows.map(expand)
 const userOverrideIds = new Set(userSites.map((s) => s.id))
-export const SITES = [...builtinSites.filter((s) => !userOverrideIds.has(s.id)), ...userSites]
+const builtin = (() => {
+  const deduped = dedupeSites([...builtinSites.filter((s) => !userOverrideIds.has(s.id)), ...userSites])
+  uniqueNames(deduped)
+  return deduped
+})()
+
+export const SITES = builtin
+
+/** 站点距离（km） */
+function siteKm(a, b) {
+  const dLat = (a.lat - b.lat) * 111
+  const dLon = (a.lon - b.lon) * 111 * Math.cos(a.lat * Math.PI / 180)
+  return Math.hypot(dLat, dLon)
+}
+function coordDigits(v) { const s = String(v); const i = s.indexOf('.'); return i < 0 ? 0 : s.length - i - 1 }
+function sitePrecision(s) { return coordDigits(s.lat) + coordDigits(s.lon) + (s.altM > 0 ? 1 : 0) + (s.bortle <= 4 ? 1 : 0) + (/^[a-z0-9]+$/.test(s.id) ? 5 : 0) }
+
+/** 两轮去重：同名近点、任意近点（<8 km）；保留坐标更精准者 */
+function dedupeSites(list) {
+  const pass1 = []
+  for (const s of list) {
+    const hit = pass1.find((k) => k.name === s.name && siteKm(k, s) < 25)
+    if (!hit) { pass1.push(s); continue }
+    if (sitePrecision(s) > sitePrecision(hit)) pass1[pass1.indexOf(hit)] = s
+  }
+  const pass2 = []
+  for (const s of pass1) {
+    const hit = pass2.find((k) => siteKm(k, s) < 8)
+    if (!hit) { pass2.push(s); continue }
+    if (sitePrecision(s) > sitePrecision(hit)) pass2[pass2.indexOf(hit)] = s
+  }
+  return pass2
+}
+
+/** 重名区分：加省份；同省仍重名按相对方位加东/西/南/北 */
+function uniqueNames(list) {
+  const groups = new Map()
+  for (const s of list) {
+    if (!groups.has(s.name)) groups.set(s.name, [])
+    groups.get(s.name).push(s)
+  }
+  for (const [name, arr] of groups) {
+    if (arr.length === 1) continue
+    const seen = new Map()
+    for (const s of arr) {
+      let label = name + '（' + s.province + '）'
+      if (seen.has(label)) {
+        const group = arr.filter((x) => x.province === s.province)
+        const avgLat = group.reduce((a, x) => a + x.lat, 0) / group.length
+        const avgLon = group.reduce((a, x) => a + x.lon, 0) / group.length
+        const ew = s.lon >= avgLon ? '东' : '西'
+        const ns = s.lat >= avgLat ? '北' : '南'
+        label = name + '（' + s.province + '·' + ew + ns + '）'
+      }
+      seen.set(label, true)
+      s.displayName = label
+      s.name = label
+    }
+    for (const s of arr) if (!s.displayName) { s.displayName = s.name }
+  }
+  for (const s of list) if (!s.displayName) s.displayName = s.name
+}
 
 export const TARGETS = targetsRaw
 export const EVENTS = eventsRaw

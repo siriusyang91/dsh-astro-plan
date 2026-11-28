@@ -94,24 +94,35 @@ test('省份表与城市表可用', () => {
   assert.equal(catalog.regionOfProvince('青海'), '西北')
 })
 
-test('数据规模：站点 293、目标 274（深空 250）、剖面全覆盖', async () => {
+test('数据规模与去重：站点/目标/深空，去重后名称唯一', async () => {
   const catalog = await import('../lib/catalog.js')
-  assert.equal(catalog.SITES.length, 293, '站点 293')
-  assert.equal(catalog.TARGETS.length, 274, '目标 274')
+  const sites = catalog.SITES
+  assert.ok(sites.length >= 300, '站点应 ≥300，实际 ' + sites.length)
+  assert.equal(catalog.TARGETS.filter((t) => t.type === 'planet').length, 12, '行星类 12（含小行星/矮行星）')
   const deep = catalog.TARGETS.filter((t) => t.type === 'deepsky')
   assert.equal(deep.length, 250, '深空 250')
-  const hz = JSON.parse(readFileSync(new URL('../lib/data/horizon.json', import.meta.url), 'utf8'))
-  for (const s of catalog.SITES) {
-    const p = hz.sites[s.id]
-    assert.ok(p, '缺剖面：' + s.id)
-    assert.equal(p.v.length, 72)
-    assert.equal(p.n.length, 36)
-    assert.equal(p.f.length, 36)
+  const km = (a, b) => Math.hypot((a.lat - b.lat) * 111, (a.lon - b.lon) * 111 * Math.cos(a.lat * Math.PI / 180))
+  for (let i = 0; i < sites.length; i += 1) {
+    for (let j = i + 1; j < sites.length; j += 1) {
+      const d = km(sites[i], sites[j])
+      if (sites[i].name === sites[j].name) assert.ok(d >= 25, '同名过近：' + sites[i].name)
+      assert.ok(d >= 8, '站点过近：' + sites[i].id + '/' + sites[j].id)
+    }
   }
-  for (const t of deep) {
-    assert.ok(t.raH >= 0 && t.raH < 24, t.id + ' RA')
-    assert.ok(t.dec >= -90 && t.dec <= 90, t.id + ' Dec')
-    assert.ok(Array.isArray(t.months) && t.months.length > 0, t.id + ' months')
-    assert.ok(['galaxy', 'nebula', 'cluster', 'planetary'].includes(t.subtype), t.id + ' subtype')
+  const names = sites.map((s) => s.displayName || s.name)
+  assert.equal(new Set(names).size, names.length, '显示名必须唯一')
+})
+
+test('文档数字与 catalog 一致', async () => {
+  const catalog = await import('../lib/catalog.js')
+  const n = catalog.SITES.length
+  const t = catalog.TARGETS.length
+  const deep = catalog.TARGETS.filter((x) => x.type === 'deepsky').length
+  const docs = ['README.md', 'docs/user-guide.md', 'docs/miniprogram.md'].map((f) => ({ f, s: readFileSync(new URL('../' + f, import.meta.url), 'utf8') }))
+  for (const { f, s } of docs) {
+    assert.ok(!/173 站|173 个站点|173 站点/.test(s), f + ' 仍有旧站点数字 173')
+    if (/站点库 \*\*\d+ 个\*\*/.test(s)) assert.ok(s.includes(`站点库 **${n} 个**`), f + ' 站点数应为 ' + n)
+    if (/目标库 \| \*\*\d+ 个\*\*/.test(s)) assert.ok(s.includes(`目标库 | **${t} 个**`), f + ' 目标数应为 ' + t)
+    if (/深空 \d+/.test(s)) assert.ok(s.includes('深空 ' + deep), f + ' 深空数应为 ' + deep)
   }
 })

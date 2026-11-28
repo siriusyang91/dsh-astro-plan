@@ -154,19 +154,20 @@ button:disabled{opacity:.5;cursor:default}
 .note.focus .notegrid{grid-template-columns:1fr}
 .note.focus .noteleft{display:none}
 .note.focus .noteright{position:static}
-.simwrap{position:relative}
+.simstage{position:relative;display:flex;align-items:center;justify-content:center}
 .simhud{position:absolute;left:10px;bottom:10px;display:grid;grid-template-columns:66px auto;gap:2px 10px;padding:6px 10px;border-radius:8px;background:rgba(8,12,20,.62);border:1px solid rgba(120,150,200,.25);font-size:12px;line-height:1.45;pointer-events:none;z-index:3}
 .simhud-row{display:contents}
 .simhud-k{color:#ffd479;text-align:left;white-space:nowrap}
 .simhud-v{color:#e8f0ff;text-align:left;white-space:nowrap}
-/* 全屏放大：一屏显示，不滚动；HUD 固定左下两列，字号与普通视图一致 */
+/* 全屏：一屏显示、不滚动；HUD 在画面内左下，控件在画面外下方 */
 .note.focus .ap-note-panel{height:min(92vh,1000px);overflow:hidden}
 .note.focus .ap-note-host{flex:1;min-height:0;overflow:hidden}
 .note.focus .notegrid{height:100%}
 .note.focus .noteright{height:100%;display:flex;flex-direction:column;min-height:0}
 .note.focus .noteright .sec{display:flex;flex-direction:column;flex:1;min-height:0}
-.note.focus .simwrap{flex:1;min-height:0;display:flex;flex-direction:column}
-.note.focus .simcanvas{max-height:calc(92vh - 250px);width:auto;max-width:100%;margin:0 auto}
+.note.focus .simwrap{flex:1;min-height:0;display:flex;flex-direction:column;gap:6px}
+.note.focus .simstage{flex:1;min-height:0}
+.note.focus .simcanvas{max-height:100%;max-width:100%;width:auto;height:auto}
 .note.focus .simctl{flex:0 0 auto}
 .note.focus .simcap{display:none}
 /* 窄屏：画面模拟置顶占满一行，其余便签排到它下面（DOM 顺序不变，只用 order） */
@@ -914,6 +915,7 @@ function drawCanvas(canvas, s, i){
   var focused = document.querySelector && document.querySelector('.note.focus');
   skyRender(ctx, {
     hideHud: Boolean(focused),
+    fontScale: focused ? (s.baseFontScale || 0) : 0,
     sim: s.sim,
     sky: simSky(),
     camera: { yaw: s.cam.yaw, pitch: s.cam.pitch, fov: s.cam.fov, tracker: s.track },
@@ -1027,6 +1029,8 @@ function openSim(i){
   };
   sims[i] = s;
   fitSimCanvas(i);
+  // 记录未全屏时的字号比例（fontScale），全屏时沿用，保证字号不变
+  s.baseFontScale = canvas.width ? Math.max(1, canvas.width / 480) : 1;
   // 滚轮缩放：必须非 passive 才能 preventDefault 阻止页面滚动
   if(canvas.addEventListener){
     canvas.addEventListener('wheel', function(e){ simWheel(e, i); }, { passive: false });
@@ -1046,6 +1050,24 @@ function fitSimCanvas(i){
   var w = Math.round(Math.min(1680, cssW * dpr));
   var h = Math.round(w * 9 / 16);
   if(c.width !== w || c.height !== h){ c.width = w; c.height = h; }
+}
+
+/** 全屏：把 canvas 限制在 stage 可用区域内，保证控件完整可见 */
+function fitFocusCanvas(i){
+  var stage = document.querySelector('.note.focus .simstage');
+  var c = el('sim'+i);
+  if(!stage || !c || typeof stage.getBoundingClientRect !== 'function') return;
+  var box = stage.getBoundingClientRect();
+  if(!box.width || !box.height) return;
+  var w = Math.floor(Math.min(box.width, box.height * 16 / 9));
+  var h = Math.floor(w * 9 / 16);
+  c.style.width = w + 'px';
+  c.style.height = h + 'px';
+  var dpr = Math.min(2, (window.devicePixelRatio || 1));
+  if(c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)){
+    c.width = Math.round(w * dpr);
+    c.height = Math.round(h * dpr);
+  }
 }
 function toggleSim(i){
   var s = sims[i];
@@ -1162,6 +1184,7 @@ function simBlock(sim, i){
   var first = sim.frames[0];
   var last = sim.frames[sim.frames.length-1];
   return '<div class="simwrap">'
+    + '<div class="simstage">'
     + '<canvas id="sim'+i+'" class="simcanvas" width="960" height="540"'
       + ' onmousedown="simDown(event,'+i+')" onmousemove="simMove(event,'+i+')"'
       + ' onmouseup="simUp(event,'+i+')" onmouseleave="simUp(event,'+i+')"'
@@ -1172,6 +1195,7 @@ function simBlock(sim, i){
       + '<div class="simhud-row" id="hudaltrow'+i+'"><span class="simhud-k">地平系坐标</span><span class="simhud-v" id="hudalt'+i+'">—</span></div>'
       + '<div class="simhud-row" id="hudeqrow'+i+'"><span class="simhud-k">赤道系坐标</span><span class="simhud-v" id="hudeq'+i+'">—</span></div>'
       + '<div class="simhud-row"><span class="simhud-k">视野角度</span><span class="simhud-v" id="hudfov'+i+'">—</span></div>'
+    + '</div>'
     + '</div>'
     + '<div class="simctl">'
       + '<button type="button" id="simbtn'+i+'" class="simopt" onclick="toggleSim('+i+')">播放</button>'
@@ -1210,8 +1234,8 @@ function focusSim(){
   var idx = state.open;
   if(idx >= 0){
     syncSimHud(idx);
+    if(on) fitFocusCanvas(idx); else { var cv = el('sim'+idx); if(cv){ cv.style.width=''; cv.style.height=''; } fitSimCanvas(idx); }
     drawSimAt(idx);
-    fitSimCanvas(idx);
   }
 }
 

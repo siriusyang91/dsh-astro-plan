@@ -12,6 +12,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { meta } from '../lib/planner.js'
+import * as catalog from '../lib/catalog.js'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(HERE, '..')
@@ -40,8 +41,7 @@ export function scoringWeights() {
 
 export function guideFacts() {
   const metaData = meta()
-  const sites = readJson('lib/data/sites-core.json').rows.map((row) =>
-    Object.fromEntries(SITE_FIELDS.map((field, index) => [field, row[index]])))
+  const sites = catalog.SITES
   const targets = readJson('lib/data/targets.json').targets
   const cometData = readJson('lib/data/comets.json')
   const sky = readJson('lib/data/sky.json')

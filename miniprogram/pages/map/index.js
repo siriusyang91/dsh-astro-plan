@@ -64,8 +64,8 @@ Page({
         id: index,
         latitude: s.lat,
         longitude: s.lon,
-        width: active ? 18 : 10,
-        height: active ? 18 : 10,
+        width: active ? 12 : 6,
+        height: active ? 12 : 6,
         ...(active
           ? {
             callout: {
@@ -153,8 +153,8 @@ Page({
         id: PICKED_ID,
         latitude: lat,
         longitude: lon,
-        width: 22,
-        height: 22,
+        width: 14,
+        height: 14,
         callout: {
           content: extra.siteId ? name : `${hemiText(lat, 'lat')}, ${hemiText(lon, 'lon')}`,
           display: 'ALWAYS',

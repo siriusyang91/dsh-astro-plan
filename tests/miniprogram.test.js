@@ -466,7 +466,8 @@ test('两级筛选：分组变化时类型列重建', () => {
 test('地图页：小标点、单选、连线与预设地点按钮', () => {
   const js = readFileSync(join(ROOT, 'miniprogram', 'pages', 'map', 'index.js'), 'utf8')
   const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'map', 'index.wxml'), 'utf8')
-  assert.ok(js.includes('width: active ? 18 : 10'), '预设点标点应小（10px）')
+  assert.ok(js.includes('width: active ? 12 : 6'), '预设点标点应小（6/12px）')
+  assert.ok(js.includes('width: 14'), '自定义点红标也应缩小（14px）')
   assert.ok(js.includes('bindmarkertap') || wxml.includes('bindmarkertap'), '需要 marker 点击事件')
   assert.ok(js.includes('buildMarkers(site.id)'), '选中时只保留一个高亮')
   assert.ok(js.includes('polyline') && wxml.includes('polyline="{{polyline}}"'), '需要有连线')
@@ -765,9 +766,9 @@ test('小程序：轮播合并新闻、HUD 两列左对齐', () => {
   assert.ok(hudCss.includes('width: 150rpx') && hudCss.includes('text-align: left'), 'HUD 标签列固定宽度并左对齐')
 })
 
-test('小程序 1.1.14：加载页居中、状态行更大', () => {
+test('小程序 1.1.15：加载页居中、状态行更大', () => {
   const app = readFileSync(join(ROOT, 'miniprogram', 'app.js'), 'utf8')
-  assert.ok(app.includes("miniVersion: '1.1.14'"), '包版本 1.1.14')
+  assert.ok(app.includes("miniVersion: '1.1.15'"), '包版本 1.1.15')
   const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
   assert.ok(wxml.includes('loading-wrap'), '加载块有居中容器')
   const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxss'), 'utf8')

@@ -113,7 +113,17 @@ function refreshNewsWeekly() {
   }
 }
 
+function syncDocNumbers() {
+  try {
+    execFileSync(process.execPath, [new URL('./sync-doc-numbers.mjs', import.meta.url).pathname], { stdio: 'inherit' })
+  } catch (e) {
+    console.warn('文档数字同步失败（忽略）：', e.message)
+  }
+}
+
+
 async function main() {
+  syncDocNumbers()
   syncVersionFile()
   refreshNewsWeekly()
   log(`星野计划 · 自动发布 ${dryRun ? '（dry-run）' : ''}`)

@@ -19,6 +19,8 @@ import * as database from './database.js'
 import * as skyview from './skyview.js'
 import { VERSION } from './version.js'
 import { hotEvents, hotWeekKey } from './hot.js'
+import * as minorbodies from './minorbodies.js'
+import * as terrain from './terrain.js'
 import { newsForWeek } from './news.js'
 import { nightWeather, dayWeather, weatherAvailable, weatherCoverage, primeWeather, resetWeatherBreaker, weatherSourceName, weatherConsensus } from './weather.js'
 
@@ -380,14 +382,43 @@ function starNightWindow(target, site, nc, minAltDeg, cache) {
   }
 }
 
+const terrainCache = new Map()
+
+/** 自定义点：现算真实高程剖面（同点缓存），失败才回退最近站点 */
+async function withTerrain(site) {
+  if (!site || !site.custom) return site
+  const key = site.lat.toFixed(4) + ',' + site.lon.toFixed(4)
+  let prof = terrainCache.get(key)
+  if (!prof) {
+    try { prof = await terrain.horizonFor(site.lat, site.lon, 0) } catch (e) { prof = null }
+    if (prof) terrainCache.set(key, prof)
+  }
+  if (prof) {
+    site.horizon = prof
+    site.horizonFrom = null
+    if (Number.isFinite(prof.altM)) site.altM = prof.altM
+    site.note = '天际线按当地真实高程生成（含曲率与折射）'
+  }
+  return site
+}
+
+/** 目标的地平坐标：小天体走轨道要素，其余走内建星历。 */
+function altAzOf(target, time, site) {
+  if (target.minorBody) {
+    const st = minorbodies.position(target.minorBody, time.date ?? time)
+    return astro.altAzFromHA(st.raDeg, st.decDeg, astro.lstHours(time, site.lon), site.lat)
+  }
+  return astro.targetAltAz(target, time, site)
+}
+
 /** 采样目标高度（行星类，30 分钟网格逐点算）。 */
 function altSampler(target, grid, site) {
-  const arr = grid.times.map((t) => astro.bodyAltAz(target.body, astro.makeTime(t), site).alt)
+  const arr = grid.times.map((t) => altAzOf(target, astro.makeTime(t), site).alt)
   return (i) => arr[i]
 }
 
 function azAt(target, grid, site, i) {
-  return astro.bodyAltAz(target.body, astro.makeTime(grid.times[i]), site).az
+  return altAzOf(target, astro.makeTime(grid.times[i]), site).az
 }
 
 /** 连续可见窗口（返回最长的一段，含首尾索引）。 */
@@ -417,7 +448,7 @@ function maxAltOf(dec, lat) {
 
 /** 目标是否在该月可拍（星表月份 + 当夜最高高度）。 */
 function seasonOk(target, month, site) {
-  if (target.body) return true
+  if (target.body || target.minorBody) return true
   // 彗星的位置逐日变化，没有固定赤纬，高度由逐夜网格判断
   if (target.type === 'comet') return true
   if (!catalog.inSeason(target, month)) return false
@@ -1186,7 +1217,7 @@ export async function search(raw = {}) {
 
   let resolved
   if (opts.siteLat !== null && opts.siteLon !== null) {
-    const custom = catalog.customSite({ lat: opts.siteLat, lon: opts.siteLon, bortle: opts.siteBortle, name: opts.siteName })
+    const custom = await withTerrain(catalog.customSite({ lat: opts.siteLat, lon: opts.siteLon, bortle: opts.siteBortle, name: opts.siteName }))
     resolved = { sites: [custom], notes: [custom.note] }
   } else {
     resolved = catalog.resolveLocation(opts.location, { region: opts.region, province: opts.province })
@@ -1194,7 +1225,7 @@ export async function search(raw = {}) {
       const places = await searchPlaces(opts.location, { sites: catalog.SITES, provinces: catalog.PROVINCES, cities: catalog.CITIES })
       const hit = places.find((place) => Number.isFinite(place.lat) && Number.isFinite(place.lon))
       if (hit) {
-        const custom = catalog.customSite({ lat: hit.lat, lon: hit.lon, name: hit.name })
+        const custom = await withTerrain(catalog.customSite({ lat: hit.lat, lon: hit.lon, name: hit.name }))
         resolved = { sites: [custom], notes: [`按地名搜索结果「${hit.name}」定位（${hit.sub}）`, custom.note] }
       }
     }
@@ -2002,7 +2033,7 @@ export function timeline(siteId, dateStr, raw = {}) {
     : 25
   const bestAt = (date) => {
     const time = astro.makeTime(date)
-    return targets.map((t) => ({ target: t, pos: astro.targetAltAz(t, time, site) }))
+    return targets.map((t) => ({ target: t, pos: altAzOf(t, time, site) }))
       .filter((x) => x.pos.alt >= threshold)
       .sort((a, b) => b.pos.alt - a.pos.alt)
       .slice(0, 3)

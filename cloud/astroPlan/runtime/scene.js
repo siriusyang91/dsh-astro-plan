@@ -69,13 +69,15 @@ function azSpanOf(fg) {
 
 /** 站点是否有实测高程剖面。 */
 export function hasHorizon(site) {
+  if (site?.horizon && Array.isArray(site.horizon.n) && site.horizon.n.length) return true
   const rec = HORIZON?.sites?.[site?.id]
   return Boolean(rec && Array.isArray(rec.n) && rec.n.length > 0)
 }
 
 /** 站点整圈剖面原始记录 { n: [...], f: [...] }（36 点，10° 步长）。 */
 export function horizonProfile(site) {
-  // 自定义点：借最近站点的实测剖面（site.horizonFrom 指向那个站点 id）
+  if (site?.horizon && Array.isArray(site.horizon.n) && site.horizon.n.length) return site.horizon
+  // 回退：借最近站点的实测剖面（site.horizonFrom 指向那个站点 id）
   if (site?.horizonFrom && HORIZON?.sites?.[site.horizonFrom]) return HORIZON.sites[site.horizonFrom]
   return hasHorizon(site) ? HORIZON.sites[site.id] : null
 }

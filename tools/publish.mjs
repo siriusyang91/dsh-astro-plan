@@ -24,7 +24,10 @@ const CACHE = join(ROOT, '.npm-cache')
 // 直接跑 npm-cli.js：Windows 上 npm 是 .cmd，走 shell 在沙箱里会 EPERM
 const NPM_CLI = join(dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js')
 
-// 发布前把 package.json 版本写进 lib/version.js，保证网页/小程序显示一致
+// 发布前：先同步文档数字，再把版本写进代码
+try {
+  spawnSync(process.execPath, [join(dirname(fileURLToPath(import.meta.url)), 'sync-doc-numbers.mjs')], { stdio: 'inherit' })
+} catch (e) { console.warn('文档数字同步失败（忽略）：', e.message) }
 syncVersionFile(ROOT)
 
 const args = process.argv.slice(2)

@@ -17,7 +17,7 @@ window.__ModuleLoader__.load({
     var exports = module.exports
 
     // 插件版本（发布时由 tools/release-core.mjs 的 syncVersionFile 同步）
-    var PLUGIN_VERSION = '0.4.14'
+    var PLUGIN_VERSION = '0.4.15'
 
     var React = require('react')
     var h = React.createElement
@@ -57,7 +57,7 @@ window.__ModuleLoader__.load({
       '.ap-arrow{opacity:.55;font-size:11px;line-height:1}',
       /* 画面模拟（Stellarium 风格天球） */
       '.ap-simwrap{margin-top:2px}',
-      '.ap-simwrap{position:relative}',
+      '.ap-simstage{position:relative;display:flex;align-items:center;justify-content:center}',
       '.ap-simhud{position:absolute;left:10px;bottom:10px;display:grid;grid-template-columns:66px auto;gap:2px 10px;padding:6px 10px;border-radius:8px;background:rgba(8,12,20,.62);border:1px solid rgba(120,150,200,.25);font-size:12px;line-height:1.45;pointer-events:none;z-index:3}',
       '.ap-simhud-row{display:contents}',
       '.ap-simhud-k{color:#ffd479;text-align:left;white-space:nowrap}',
@@ -66,9 +66,10 @@ window.__ModuleLoader__.load({
       '.ap-note.focus .ap-note-host{flex:1;min-height:0;overflow:hidden}',
       '.ap-note.focus .ap-notegrid{height:100%}',
       '.ap-note.focus .ap-noteright{height:100%;display:flex;flex-direction:column;min-height:0}',
-      '.ap-note.focus .ap-simwrap{flex:1;min-height:0;display:flex;flex-direction:column}',
-      '.ap-note.focus .ap-simcanvas{max-height:calc(92vh - 250px);width:auto;max-width:100%;margin:0 auto}',
-      '.ap-note.focus .ap-simcap{display:none}',
+      '.ap-note.focus .ap-simwrap{flex:1;min-height:0;display:flex;flex-direction:column;gap:6px}',
+      '.ap-note.focus .ap-simstage{flex:1;min-height:0}',
+      '.ap-note.focus .ap-simcanvas{max-height:100%;max-width:100%;width:auto;height:auto}',
+      '.ap-note.focus .ap-simcap{display:none}',,
       '.ap-simcanvas{display:block;width:100%;height:auto;border-radius:6px;border:1px solid rgba(120,95,40,.3);background:#03050a;cursor:grab;touch-action:none}',
       '.ap-simcanvas:active{cursor:grabbing}',
       '.ap-simctl{display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap}',
@@ -879,6 +880,7 @@ window.__ModuleLoader__.load({
       var f = sim.frames[k];
       if (!f) return;
       var S = W / 480;
+      var FS = (view && view.fontScale > 0) ? view.fontScale : Math.max(1, S);
       var fov = Math.max(5, Math.min(180, camIn.fov || 100));
       // 赤道仪跟踪时相机跟着目标走（目标恒在画面正中、地景掠过）；手动拖拽后按拖拽的视角
       var follow = !view.free
@@ -914,7 +916,8 @@ window.__ModuleLoader__.load({
       var night = sunAlt < -18;
       var dark = sunAlt < -3;
       var pxDeg = B.k * 0.5 * SKY_D2R;
-      function font(px) { return Math.round(px * Math.max(1, S)) + 'px sans-serif'; }
+      // fontScale：让全屏放大时字号保持与普通视图一致（几何仍用 S）
+      function font(px) { return Math.round(px * FS) + 'px sans-serif'; }
 
       function mixHex(a, b, t) {
         if (!a || !b || a[0] !== '#') return b || a;
@@ -2020,6 +2023,7 @@ window.__ModuleLoader__.load({
       var toggleFocus = props.onToggleFocus || function () {}
       var sky = props.sky || { stars: [], lines: [], ecliptic: [] }
       var canvasRef = React.useRef ? React.useRef(null) : { current: null }
+      var baseScaleRef = React.useRef ? React.useRef(0) : { current: 0 }
       var dragRef = React.useRef ? React.useRef(null) : { current: null }
       var [k, setK] = React.useState(0)
       var [playing, setPlaying] = React.useState(false)
@@ -2061,6 +2065,7 @@ window.__ModuleLoader__.load({
         var w = Math.round(Math.min(1680, cssW * dpr))
         var h = Math.round((w * 9) / 16)
         if (c.width !== w || c.height !== h) { c.width = w; c.height = h }
+        if (!baseScaleRef.current) baseScaleRef.current = Math.max(1, w / 480)
       }
 
       React.useEffect(function () {
@@ -2071,6 +2076,7 @@ window.__ModuleLoader__.load({
         fitCanvas()
         skyRender(ctx, {
           hideHud: Boolean(focus),
+          fontScale: focus ? (baseScaleRef.current || 0) : 0,
           sim: sim, sky: sky,
           camera: { yaw: camera.yaw, pitch: camera.pitch, fov: camera.fov, tracker: tracker },
           free: Boolean(camera.free),
@@ -2192,6 +2198,7 @@ window.__ModuleLoader__.load({
         ['视野角度', Math.round(camera.fov) + '°'],
       ]
       return h('div', { className: 'ap-simwrap' },
+        h('div', { className: 'ap-simstage' },
         h('canvas', {
           ref: canvasRef, className: 'ap-simcanvas', width: 960, height: 540,
           title: '双击放大 · 滚轮缩放 · 拖动转视角',
@@ -2203,7 +2210,7 @@ window.__ModuleLoader__.load({
           return hide ? null : h('div', { key: row[0], className: 'ap-simhud-row' },
             h('span', { className: 'ap-simhud-k' }, row[0]),
             h('span', { className: 'ap-simhud-v' }, row[1]))
-        })) : null,
+        })) : null),
         controlRows(),
         h('div', { className: 'ap-hint ap-simcap' }, sim.caption + ' · 最佳时段 '
           + (sim.window ? sim.window.start + '–' : '') + (sim.window ? sim.window.end : '') + ' · 滚轮缩放 · 拖动转视角'))

@@ -15,7 +15,7 @@ miniprogram/
   app.js / app.json / app.wxss
   pages/search       查询条件（类型 / 日期 / 地区三级联动 / 出发地 / 高度角 / 波特尔）
   pages/results      结果卡片列表 + 分页 + 便签弹层
-  pages/map          原生地图选点（173 站点标注、点击取经纬度、角分秒输入）
+  pages/map          原生地图选点（305 站点标注、点击取经纬度、角分秒输入）
   components/note-sheet  便签半屏弹层（分区 + 推荐理由）
   utils/             api（云函数调用）/ coord（经纬度解析）/ format（展示格式化）
 ```
@@ -38,7 +38,7 @@ miniprogram/
    `-504003 FUNCTIONS_TIME_LIMIT_EXCEEDED（Invoking task timed out after 3 seconds）`。
    云开发控制台 → 云函数 → `astroPlan` → 配置 → **超时时间 60 秒** → 保存。
    （`cloud/astroPlan/config.json` 里也写了 `timeout: 60`，但以控制台为准。）
-8. **编译预览**：查询页应显示「173 个站点」；点查询进入结果页。真机预览点「预览」扫码。
+8. **编译预览**：查询页应显示「305 个站点」；点查询进入结果页。真机预览点「预览」扫码。
 
 ## 界面与交互
 

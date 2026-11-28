@@ -59,7 +59,7 @@ test('检索：siteLat/siteLon 返回自定义点，非法坐标报 bad_coords',
   assert.equal(ok.ok, true)
   assert.ok(ok.ranked.length > 0)
   assert.equal(ok.ranked[0].site.custom, true)
-  assert.ok(ok.notes.some((note) => note.includes('近似')), '应说明近似口径')
+  assert.ok(ok.notes.some((note) => /真实高程|近似/.test(note)), '应说明天际线来源')
   const bad = await search({ eventType: 'any', siteLat: 999, siteLon: 0, dateStart: '2026-11-15', dateEnd: '2026-11-16' })
   assert.equal(bad.ok, false)
   assert.equal(bad.error, 'bad_coords')

@@ -7,7 +7,7 @@
 App({
   globalData: {
     cloudEnv: 'astroplan-d5gg67qu6533ce03c',
-    miniVersion: '1.1.16',
+    miniVersion: '1.1.17',
     meta: null,
     /** 从地图页带回来的自定义点 */
     pickedPoint: null,

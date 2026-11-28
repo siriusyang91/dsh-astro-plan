@@ -48,8 +48,9 @@
 }
 .feed-tag {
   display: inline-block;
-  font-size: 22rpx;
-  padding: 4rpx 14rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  padding: 6rpx 18rpx;
   border-radius: 999rpx;
   margin-bottom: 10rpx;
   color: #cfe0f7;

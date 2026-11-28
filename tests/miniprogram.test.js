@@ -316,7 +316,7 @@ test('小程序：筛选页三组齐全且顺序为 目标/日期/地点', () =>
   const iTarget = wxml.indexOf('拍摄目标')
   const iDate = wxml.indexOf('拍摄日期')
   const iWhere = wxml.indexOf('目的地及出发地')
-  assert.ok(iTarget >= 0 && iDate > iTarget && iWhere > iDate, '顺序应为 拍摄目标 → 拍摄日期 → 目的地及出发地')
+  assert.ok(iDate >= 0 && iWhere > iDate && iTarget > iWhere, '顺序应为 拍摄日期 → 目的地及出发地 → 拍摄目标')
 })
 
 test('文案：仓库里不再出现「18 类」，统一为「16 类拍摄目标」', () => {
@@ -541,7 +541,9 @@ test('查询页：去掉清除按钮、文案与按钮尺寸调整、自定义�
   assert.ok(wxml.indexOf('reset-btn') < wxml.indexOf('search-btn'), '重置应在左、查询在右')
 
   const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxss'), 'utf8')
-  assert.match(css, /\.reset-btn \{[^}]*flex: 0 0 150rpx/u, '重置按钮应更窄')
+  assert.match(css, /\.reset-btn \{[^}]*flex: 0 0 180rpx/u, '重置按钮窄一些')
+  assert.match(css, /\.reset-btn \{[^}]*font-size: 28rpx/u, '重置字号')
+  assert.match(css, /\.search-btn \{[^}]*font-size: 28rpx/u, '开始计划字号与重置一致')
   assert.match(css, /\.search-btn \{[^}]*flex: 1/u, '查询按钮应更宽')
 
   const js = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.js'), 'utf8')
@@ -759,7 +761,7 @@ test('加载页与焦距显示：随机轮播、单 mm、HUD 黄色标签', () =
 
 test('小程序：轮播合并新闻、HUD 两列左对齐', () => {
   const tips = readFileSync(join(ROOT, 'miniprogram', 'utils', 'tips.js'), 'utf8')
-  assert.ok(tips.includes("kind: 'news'") && tips.includes("天文动态 ·"), '新闻进入轮播')
+  assert.ok(tips.includes("kind: 'news'") && tips.includes("tag: '天文动态'"), '新闻进入轮播且标签独立')
   const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxss'), 'utf8')
   assert.ok(css.includes('.feed-bar.news'), '新闻类型条颜色')
   const hudCss = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.wxss'), 'utf8')
@@ -768,7 +770,7 @@ test('小程序：轮播合并新闻、HUD 两列左对齐', () => {
 
 test('小程序：加载页固定位置与字号', () => {
   const app = readFileSync(join(ROOT, 'miniprogram', 'app.js'), 'utf8')
-  assert.ok(app.includes("miniVersion: '1.1.16'"), '包版本 1.1.16')
+  assert.ok(app.includes("miniVersion: '1.1.17'"), '包版本 1.1.17')
   const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
   assert.ok(wxml.includes('loading-wrap'), '加载块容器')
   const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxss'), 'utf8')
@@ -781,7 +783,7 @@ test('小程序：目标类型标签、加载页固定位置与天文动态', ()
   const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
   assert.ok(wxml.includes('<text class="flabel">目标类型</text>'), '首页标签应为目标类型')
   const tips = readFileSync(join(ROOT, 'miniprogram', 'utils', 'tips.js'), 'utf8')
-  assert.ok(tips.includes('天文动态 · ') && !tips.includes('航天新闻'), '新闻标签改为天文动态')
+  assert.ok(tips.includes("tag: '天文动态'") && !tips.includes('航天新闻'), '新闻标签改为天文动态')
   const results = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
   assert.ok(results.includes('feed-tag') && results.includes('feed-block'), '轮播类型标签独立显示')
   const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxss'), 'utf8')

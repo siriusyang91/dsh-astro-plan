@@ -159,6 +159,9 @@ button:disabled{opacity:.5;cursor:default}
 .simhud-row{display:contents}
 .simhud-k{color:#ffd479;text-align:left;white-space:nowrap}
 .simhud-v{color:#e8f0ff;text-align:left;white-space:nowrap}
+/* 全屏：modal 固定高度、host 不滚动（滚动条来自 ap-note-host，必须从 modal 层压住） */
+.ap-note-modal.focus .ap-note-panel{height:min(92vh,1000px);max-height:min(92vh,1000px);overflow:hidden}
+.ap-note-modal.focus .ap-note-host{overflow:hidden;padding:8px 12px 10px}
 /* 全屏：一屏显示、不滚动；HUD 在画面内左下，控件在画面外下方 */
 .note.focus .ap-note-panel{height:min(92vh,1000px);overflow:hidden}
 .note.focus .ap-note-host{flex:1;min-height:0;overflow:hidden}
@@ -1231,6 +1234,8 @@ function focusSim(){
   for(var i=0;i<btns.length;i+=1) btns[i].textContent = on ? '退出全屏' : '全屏';
   var huds = note.querySelectorAll('.simhud');
   for(var j=0;j<huds.length;j+=1) huds[j].hidden = !on;
+  var modal = document.getElementById('noteModal');
+  if(modal && modal.classList) modal.classList.toggle('focus', on);
   var idx = state.open;
   if(idx >= 0){
     syncSimHud(idx);
@@ -1240,6 +1245,8 @@ function focusSim(){
 }
 
 function closeNote(){
+  var modalEl = document.getElementById('noteModal');
+  if(modalEl && modalEl.classList) modalEl.classList.remove('focus');
   if(state.open>=0){
     var row = el('row'+state.open);
     if(row) row.classList.remove('open');

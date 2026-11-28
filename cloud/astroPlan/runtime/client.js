@@ -17,7 +17,7 @@ window.__ModuleLoader__.load({
     var exports = module.exports
 
     // 插件版本（发布时由 tools/release-core.mjs 的 syncVersionFile 同步）
-    var PLUGIN_VERSION = '0.4.16'
+    var PLUGIN_VERSION = '0.4.17'
 
     var React = require('react')
     var h = React.createElement
@@ -62,6 +62,8 @@ window.__ModuleLoader__.load({
       '.ap-simhud-row{display:contents}',
       '.ap-simhud-k{color:#ffd479;text-align:left;white-space:nowrap}',
       '.ap-simhud-v{color:#e8f0ff;text-align:left;white-space:nowrap}',
+      '.ap-note-modal.focus .ap-note-panel{height:min(92vh,1000px);max-height:min(92vh,1000px);overflow:hidden}',
+      '.ap-note-modal.focus .ap-note-host{overflow:hidden;padding:8px 12px 10px}',
       '.ap-note.focus .ap-note-panel{height:min(92vh,1000px);overflow:hidden}',
       '.ap-note.focus .ap-note-host{flex:1;min-height:0;overflow:hidden}',
       '.ap-note.focus .ap-notegrid{height:100%}',
@@ -2610,7 +2612,7 @@ window.__ModuleLoader__.load({
         // 便签浮窗：与地图同层，点遮罩/Esc/关闭 收起
         open >= 0 && data && data.ok && data.ranked[open]
           ? h('div', {
-            className: 'ap-note-modal',
+            className: 'ap-note-modal' + (simFocus ? ' focus' : ''),
             onClick: function (e) { if (e.target === e.currentTarget) toggleRow(open) },
           }, h('div', { className: 'ap-note-panel', role: 'dialog', 'aria-modal': 'true', 'aria-label': '目标详情' },
             h('div', { className: 'ap-note-head' },

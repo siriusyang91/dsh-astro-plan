@@ -15,28 +15,7 @@
       </view>
     </view>
 
-    <!-- 1. 拍摄目标（置顶） -->
-    <view class="card card-target">
-      <view class="card-title">拍摄目标</view>
-
-      <view class="frow target">
-        <text class="flabel">目标类型</text>
-        <picker mode="multiSelector" range="{{targetColumns}}" value="{{targetIndex}}" bindcolumnchange="onTargetColumnChange" bindchange="onTargetChange">
-          <view class="fv fv-lg">{{targetLabel}}</view>
-        </picker>
-      </view>
-
-      <view class="frow slider-row">
-        <text class="flabel">拍摄目标高度角≥{{minAlt}}°</text>
-        <slider class="sl" min="0" max="60" step="5" value="{{minAlt}}" block-size="14" show-value="{{false}}" bindchanging="onAltChanging" bindchange="onAlt" activeColor="#2f66c9" />
-      </view>
-      <view class="frow slider-row">
-        <text class="flabel">光污染波特尔指数≤B{{bortle}}</text>
-        <slider class="sl" min="1" max="9" step="1" value="{{bortle}}" block-size="14" show-value="{{false}}" bindchanging="onBortleChanging" bindchange="onBortle" activeColor="#2f66c9" />
-      </view>
-    </view>
-
-    <!-- 2. 拍摄日期 -->
+    <!-- 1. 拍摄日期 -->
     <view class="card card-date">
       <view class="card-title">拍摄日期</view>
       <view class="grid2">
@@ -56,7 +35,7 @@
       <view class="hint tiny">跨度上限 5 年</view>
     </view>
 
-    <!-- 3. 目的地及出发地 -->
+    <!-- 2. 目的地及出发地 -->
     <view class="card card-place">
       <view class="card-title">目的地及出发地</view>
 
@@ -93,9 +72,30 @@
       </view>
     </view>
 
+    <!-- 3. 拍摄目标 -->
+    <view class="card card-target">
+      <view class="card-title">拍摄目标</view>
+
+      <view class="frow target">
+        <text class="flabel">目标类型</text>
+        <picker mode="multiSelector" range="{{targetColumns}}" value="{{targetIndex}}" bindcolumnchange="onTargetColumnChange" bindchange="onTargetChange">
+          <view class="fv fv-lg">{{targetLabel}}</view>
+        </picker>
+      </view>
+
+      <view class="frow slider-row">
+        <text class="flabel">拍摄目标高度角≥{{minAlt}}°</text>
+        <slider class="sl" min="0" max="60" step="5" value="{{minAlt}}" block-size="14" show-value="{{false}}" bindchanging="onAltChanging" bindchange="onAlt" activeColor="#2f66c9" />
+      </view>
+      <view class="frow slider-row">
+        <text class="flabel">光污染波特尔指数≤B{{bortle}}</text>
+        <slider class="sl" min="1" max="9" step="1" value="{{bortle}}" block-size="14" show-value="{{false}}" bindchanging="onBortleChanging" bindchange="onBortle" activeColor="#2f66c9" />
+      </view>
+    </view>
+
     <view class="actions">
       <button class="btn btn-ghost reset-btn" bindtap="onReset">重置</button>
-      <button class="btn search-btn" bindtap="onSearch">查询</button>
+      <button class="btn search-btn" bindtap="onSearch">开始计划</button>
     </view>
   </block>
 </view>

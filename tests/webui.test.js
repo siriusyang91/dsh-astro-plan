@@ -523,3 +523,11 @@ test('网页全屏：一屏显示、左下两列 HUD、字号一致', async () =
   assert.ok(html.includes('.simhud{') && html.includes('font-size:12px'), 'HUD 字号 12px')
   assert.ok(html.includes('hideHud: Boolean(focused)'), '全屏隐藏画布内置 HUD')
 })
+
+test('全屏：modal 固定、host 不滚动', async () => {
+  const { page } = await import('../lib/webui.js')
+  const html = page()
+  assert.ok(html.includes('.ap-note-modal.focus .ap-note-host{overflow:hidden'), 'host 应隐藏溢出')
+  assert.ok(html.includes('.ap-note-modal.focus .ap-note-panel{height:min(92vh,1000px)'), '面板固定高度')
+  assert.ok(html.includes("modal.classList.toggle('focus', on)"), '切换时给 modal 加 focus')
+})

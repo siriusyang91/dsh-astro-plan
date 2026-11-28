@@ -992,3 +992,18 @@ test('分页：最多 100 页（page 夹到 100，超出部分不再翻）', asy
   const far = await search({ eventType: 'deepsky', dateStart: '2027-03-10', dateEnd: '2027-03-10', pageSize: 1, page: 999, siteLimit: 3, maxBortle: 9 })
   assert.ok(far.pagination.page <= 100)
 })
+
+test('行星类：天象分随观测难度（视星等）下降', async () => {
+  const r = await search({ eventType: 'planet', dateStart: '2027-01-10', dateEnd: '2027-01-12', siteLimit: 6, pageSize: 40 })
+  assert.ok(r.ok)
+  const rows = r.ranked.filter((x) => Number.isFinite(x.target.mag) && Number.isFinite(x.breakdown.event))
+  assert.ok(rows.length >= 3, '应有带视星等的行星结果')
+  const bright = rows.reduce((a, b) => (b.target.mag < a.target.mag ? b : a))
+  const faint = rows.reduce((a, b) => (b.target.mag > a.target.mag ? b : a))
+  if (bright.target.mag < faint.target.mag) {
+    assert.ok(bright.breakdown.event > faint.breakdown.event, `亮者(${bright.target.mag}) 应高于暗者(${faint.target.mag})：${bright.breakdown.event} vs ${faint.breakdown.event}`)
+  }
+  // 小行星的星等应出现在便签理由里
+  const minor = rows.find((x) => x.target.mag != null && /谷神|灶神|智神|婚神|冥王|阋神|鸟神|妊神/.test(x.target.name))
+  if (minor) assert.match(minor.reasonDetail.sky, /观测难度/)
+})

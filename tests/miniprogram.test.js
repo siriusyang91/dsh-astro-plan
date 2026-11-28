@@ -759,19 +759,32 @@ test('加载页与焦距显示：随机轮播、单 mm、HUD 黄色标签', () =
 
 test('小程序：轮播合并新闻、HUD 两列左对齐', () => {
   const tips = readFileSync(join(ROOT, 'miniprogram', 'utils', 'tips.js'), 'utf8')
-  assert.ok(tips.includes("kind: 'news'") && tips.includes("航天新闻 ·"), '新闻进入轮播')
+  assert.ok(tips.includes("kind: 'news'") && tips.includes("天文动态 ·"), '新闻进入轮播')
   const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxss'), 'utf8')
   assert.ok(css.includes('.feed-bar.news'), '新闻类型条颜色')
   const hudCss = readFileSync(join(ROOT, 'miniprogram', 'components', 'sky-canvas', 'index.wxss'), 'utf8')
   assert.ok(hudCss.includes('width: 150rpx') && hudCss.includes('text-align: left'), 'HUD 标签列固定宽度并左对齐')
 })
 
-test('小程序 1.1.15：加载页居中、状态行更大', () => {
+test('小程序：加载页固定位置与字号', () => {
   const app = readFileSync(join(ROOT, 'miniprogram', 'app.js'), 'utf8')
-  assert.ok(app.includes("miniVersion: '1.1.15'"), '包版本 1.1.15')
+  assert.ok(app.includes("miniVersion: '1.1.16'"), '包版本 1.1.16')
   const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
-  assert.ok(wxml.includes('loading-wrap'), '加载块有居中容器')
+  assert.ok(wxml.includes('loading-wrap'), '加载块容器')
   const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxss'), 'utf8')
-  assert.ok(css.includes('min-height: 62vh') && css.includes('justify-content: center'), '整体垂直居中')
+  assert.match(css, /\.loading \{[^}]*position: absolute[^}]*top: 26%/u, '计划中固定在中上')
+  assert.match(css, /\.feed-block \{[^}]*top: 52%/u, '轮播固定在下半页')
   assert.ok(css.includes('font-size: 34rpx'), '计划中字号更大')
+})
+
+test('小程序：目标类型标签、加载页固定位置与天文动态', () => {
+  const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'search', 'index.wxml'), 'utf8')
+  assert.ok(wxml.includes('<text class="flabel">目标类型</text>'), '首页标签应为目标类型')
+  const tips = readFileSync(join(ROOT, 'miniprogram', 'utils', 'tips.js'), 'utf8')
+  assert.ok(tips.includes('天文动态 · ') && !tips.includes('航天新闻'), '新闻标签改为天文动态')
+  const results = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
+  assert.ok(results.includes('feed-tag') && results.includes('feed-block'), '轮播类型标签独立显示')
+  const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxss'), 'utf8')
+  assert.match(css, /\.loading \{[^}]*position: absolute[^}]*top: 26%/u, '计划中固定在中上')
+  assert.match(css, /\.feed-block \{[^}]*top: 52%/u, '轮播固定在下半页')
 })

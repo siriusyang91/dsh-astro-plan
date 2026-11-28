@@ -1,3 +1,8 @@
+function tagOf(item) {
+  if (!item) return '摄影知识'
+  return item.kind === 'hot' ? '近期天象' : (item.kind === 'news' ? '天文动态' : '摄影知识')
+}
+
 const api = require('../../utils/api')
 const { buildFeed, shuffle } = require('../../utils/tips')
 const { weatherText, km } = require('../../utils/format')
@@ -8,6 +13,7 @@ Page({
     feed: [],
     feedIndex: 0,
     feedItem: {},
+    feedTag: '',
     fading: false,
     error: '',
     items: [],
@@ -23,7 +29,7 @@ Page({
     const meta = (getApp().globalData || {}).meta
     const feed = shuffle(buildFeed(meta))
     if (!feed.length) return
-    this.setData({ feed, feedIndex: 0, feedItem: feed[0] })
+    this.setData({ feed, feedIndex: 0, feedItem: feed[0], feedTag: tagOf(feed[0]) })
     clearInterval(this.feedTimer)
     this.feedTimer = setInterval(() => this.nextFeed(), 10000)
   },
@@ -34,7 +40,7 @@ Page({
     clearTimeout(this.fadeTimer)
     this.fadeTimer = setTimeout(() => {
       const next = (this.data.feedIndex + 1) % this.data.feed.length
-      this.setData({ feedIndex: next, feedItem: this.data.feed[next], fading: false })
+      this.setData({ feedIndex: next, feedItem: this.data.feed[next], feedTag: tagOf(this.data.feed[next]), fading: false })
     }, 200)
   },
 

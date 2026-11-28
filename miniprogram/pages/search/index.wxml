@@ -20,7 +20,7 @@
       <view class="card-title">拍摄目标</view>
 
       <view class="frow target">
-        <text class="flabel">目标</text>
+        <text class="flabel">目标类型</text>
         <picker mode="multiSelector" range="{{targetColumns}}" value="{{targetIndex}}" bindcolumnchange="onTargetColumnChange" bindchange="onTargetChange">
           <view class="fv fv-lg">{{targetLabel}}</view>
         </picker>

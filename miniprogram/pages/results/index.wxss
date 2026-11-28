@@ -26,18 +26,38 @@
 }
 
 .loading-wrap {
-  min-height: 62vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 16rpx;
+  position: relative;
+  height: calc(100vh - 240rpx);
 }
 .loading {
+  position: absolute;
+  top: 26%;
+  left: 0;
+  right: 0;
+  text-align: center;
   font-size: 34rpx;
   font-weight: 700;
   letter-spacing: 1rpx;
   color: var(--text);
 }
+.feed-block {
+  position: absolute;
+  top: 52%;
+  left: 12rpx;
+  right: 12rpx;
+}
+.feed-tag {
+  display: inline-block;
+  font-size: 22rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 999rpx;
+  margin-bottom: 10rpx;
+  color: #cfe0f7;
+  background: rgba(47, 102, 201, .22);
+  border: 1rpx solid rgba(90, 140, 220, .45);
+}
+.feed-tag.hot { color: #ffd479; background: rgba(201, 138, 47, .18); border-color: rgba(255, 212, 121, .45); }
+.feed-tag.news { color: #7ff0e2; background: rgba(47, 156, 156, .2); border-color: rgba(95, 224, 208, .45); }
 .feed {
   position: relative;
   display: flex;

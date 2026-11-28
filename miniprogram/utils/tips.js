@@ -32,7 +32,7 @@ function buildFeed(meta) {
   for (let i = 0; i < max; i += 1) {
     if (KNOWLEDGE[i]) feed.push({ kind: 'tip', title: '摄影知识 · ' + KNOWLEDGE[i].title, text: KNOWLEDGE[i].text })
     if (hot[i]) feed.push({ kind: 'hot', title: '近期天象 · ' + hot[i].title, text: hot[i].text })
-    if (news[i]) feed.push({ kind: 'news', title: '航天新闻 · ' + news[i].title, text: news[i].text })
+    if (news[i]) feed.push({ kind: 'news', title: '天文动态 · ' + news[i].title, text: news[i].text })
   }
   return feed.slice(0, 24)
 }

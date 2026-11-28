@@ -874,6 +874,30 @@ function pollutionScore(bortle) {
 }
 
 /** 行星越亮，得分越高：-4.5 等（最亮的金星）→ 1，+8 等（海王星）→ 0。 */
+/** 行星类目标的视星等（含小行星/矮行星与合） */
+function planetMagOf(target, nightDate) {
+  if (target.minorBody) {
+    try { return minorbodies.position(target.minorBody, new Date(nightDate + 'T16:00:00Z')).mag } catch (e) { return null }
+  }
+  if (target.type === 'conjunction') {
+    const objects = target.event?.objects ?? [target.body]
+    const mags = objects.filter((o) => o && o !== 'Moon')
+      .map((o) => events.apparentMagnitude(o, target.event?.utc))
+      .filter((m) => m !== null && Number.isFinite(m))
+    return mags.length ? Math.min(...mags) : null
+  }
+  if (target.body) return events.apparentMagnitude(target.body, target.event?.utc ?? nightDate + 'T16:00:00Z')
+  return null
+}
+
+/** 视星等 → 观测难度描述 */
+function difficultyText(mag) {
+  if (mag === null || mag === undefined || !Number.isFinite(mag)) return '未知'
+  if (mag <= 2) return '低'
+  if (mag <= 5) return '中'
+  return '高'
+}
+
 function brightnessFactor(mag) {
   if (mag === null || mag === undefined || !Number.isFinite(mag)) return 0.35
   return clamp((8 - mag) / 12, 0, 1)
@@ -938,23 +962,23 @@ function eventScore(target, nightDate, eventSet, grid, site, radiantAlt, detail 
     }
   }
   if (target.type === 'opposition') {
-    const mag = events.apparentMagnitude(target.body, target.event?.utc)
+    const mag = planetMagOf(target, nightDate)
     const bodyCn = events.PLANET_CN[target.body] ?? target.body
     return {
-      score: Math.round(55 + 45 * brightnessFactor(mag)),
+      score: Math.round(40 + 55 * brightnessFactor(mag)),
       reason: mag === null
         ? (target.eventNote ?? null)
-        : `${bodyCn}冲日，视星等 ${mag.toFixed(1)}（越亮越高分）`,
+        : `${bodyCn}冲日，视星等 ${mag.toFixed(1)}，观测难度：${difficultyText(mag)}`,
     }
   }
   if (target.type === 'elongation') {
-    const mag = events.apparentMagnitude(target.body, target.event?.utc)
+    const mag = planetMagOf(target, nightDate)
     const bodyCn = events.PLANET_CN[target.body] ?? target.body
     const elong = Number(target.event?.sepDeg) || 0
-    const score = 45 + 30 * brightnessFactor(mag) + 25 * clamp(elong / 45, 0, 1)
+    const score = 32 + 33 * brightnessFactor(mag) + 25 * clamp(elong / 45, 0, 1)
     return {
       score: Math.round(score),
-      reason: `${bodyCn}大距，距日 ${elong.toFixed(1)}°，视星等 ${mag === null ? '—' : mag.toFixed(1)}`,
+      reason: `${bodyCn}大距，距日 ${elong.toFixed(1)}°，视星等 ${mag === null ? '—' : mag.toFixed(1)}，观测难度：${difficultyText(mag)}`,
     }
   }
   if (target.type === 'conjunction') {
@@ -966,19 +990,21 @@ function eventScore(target, nightDate, eventSet, grid, site, radiantAlt, detail 
     const mag = mags.length > 0 ? Math.min(...mags) : null
     const sep = Number(target.event?.sepDeg) || 5
     // 角距越小越容易同框
-    const score = 45 + 30 * brightnessFactor(mag) + 25 * clamp((5 - sep) / 5, 0, 1)
+    const score = 35 + 35 * brightnessFactor(mag) + 25 * clamp((5 - sep) / 5, 0, 1)
     return {
       score: Math.round(score),
       reason: mag === null
         ? (target.eventNote ?? null)
-        : `${target.eventNote ?? ''}，亮者视星等 ${mag.toFixed(1)}`,
+        : `${target.eventNote ?? ''}，亮者视星等 ${mag.toFixed(1)}，观测难度：${difficultyText(mag)}`,
     }
   }
   if (target.type === 'planet') {
     const hit = eventSet.planets.find((p) => within(p.utc, 2) && p.objects.includes(target.body))
-    const mag = events.apparentMagnitude(target.body, target.event?.utc ?? `${nightDate}T16:00:00Z`)
-    const score = hit ? 60 + 40 * brightnessFactor(mag) : 45 + 10 * brightnessFactor(mag)
-    return { score: Math.round(score), reason: hit ? hit.note : null }
+    const mag = planetMagOf(target, nightDate)
+    const score = 28 + 47 * brightnessFactor(mag)
+    const diff = difficultyText(mag)
+    const reason = (hit ? hit.note : '') + `（视星等 ${Number.isFinite(mag) ? mag.toFixed(1) : '—'}，观测难度：${diff}）`
+    return { score: Math.round(score), reason: reason.trim() }
   }
   if (target.type === 'milkyway' || target.type === 'deepsky') {
     const shower = nearestShower(nightDate, eventSet.meteors, 1)
@@ -1514,8 +1540,8 @@ export async function search(raw = {}) {
         cometInfo = { mag: st.mag, elongation: st.elongation, delta: st.delta, r: st.r }
         eventDetail = { mag: st.mag, elong: st.elongation }
         label = `${target.name}（${st.mag.toFixed(1)} 等）`
-      } else if (target.body) {
-        // 其他天体（太阳/月亮/行星）：30 分钟采样
+      } else if (target.body || target.minorBody) {
+        // 其他天体（太阳/月亮/行星/小行星/矮行星）：30 分钟采样
         // 大距目标贴着太阳，只能趁民用暮光看：网格改用太阳 -6° 的时段
         let grid
         if (target.type === 'elongation') {
@@ -1572,6 +1598,7 @@ export async function search(raw = {}) {
         site, date, nc, target, label,
         altMax, azMax, hours, azStart, azEnd, start, end,
         moonScore, vis, pol, fg, evt, sky, cometInfo, ignored,
+        planetMag: (target.type === 'planet' || target.type === 'opposition' || target.type === 'elongation' || target.type === 'conjunction') ? planetMagOf(target, date) : null,
         // 月食：本站可见的等效食分（0–1），曝光按它压暗；其他题材为 null
         obscuration: eventDetail.exposureObscuration ?? null,
       }
@@ -1955,7 +1982,7 @@ function shapeRanked(item, rank, opts) {
       // 合：两颗天体的角距（焦段就是按它算的）
       separation: target.type === 'conjunction' ? (Number(target.event?.sepDeg) || null) : null,
       // 彗星：视星等 / 距日角 / 距地与日心距，供详情便签直读
-      mag: item.cometInfo ? Math.round(item.cometInfo.mag * 10) / 10 : null,
+      mag: item.cometInfo ? Math.round(item.cometInfo.mag * 10) / 10 : (item.planetMag != null && Number.isFinite(item.planetMag) ? Math.round(item.planetMag * 10) / 10 : null),
       elongation: item.cometInfo ? Math.round(item.cometInfo.elongation) : null,
       deltaAu: item.cometInfo ? Math.round(item.cometInfo.delta * 100) / 100 : null,
       rAu: item.cometInfo ? Math.round(item.cometInfo.r * 100) / 100 : null,

@@ -154,6 +154,21 @@ button:disabled{opacity:.5;cursor:default}
 .note.focus .notegrid{grid-template-columns:1fr}
 .note.focus .noteleft{display:none}
 .note.focus .noteright{position:static}
+.simwrap{position:relative}
+.simhud{position:absolute;left:10px;bottom:10px;display:grid;grid-template-columns:66px auto;gap:2px 10px;padding:6px 10px;border-radius:8px;background:rgba(8,12,20,.62);border:1px solid rgba(120,150,200,.25);font-size:12px;line-height:1.45;pointer-events:none;z-index:3}
+.simhud-row{display:contents}
+.simhud-k{color:#ffd479;text-align:left;white-space:nowrap}
+.simhud-v{color:#e8f0ff;text-align:left;white-space:nowrap}
+/* 全屏放大：一屏显示，不滚动；HUD 固定左下两列，字号与普通视图一致 */
+.note.focus .ap-note-panel{height:min(92vh,1000px);overflow:hidden}
+.note.focus .ap-note-host{flex:1;min-height:0;overflow:hidden}
+.note.focus .notegrid{height:100%}
+.note.focus .noteright{height:100%;display:flex;flex-direction:column;min-height:0}
+.note.focus .noteright .sec{display:flex;flex-direction:column;flex:1;min-height:0}
+.note.focus .simwrap{flex:1;min-height:0;display:flex;flex-direction:column}
+.note.focus .simcanvas{max-height:calc(92vh - 250px);width:auto;max-width:100%;margin:0 auto}
+.note.focus .simctl{flex:0 0 auto}
+.note.focus .simcap{display:none}
 /* 窄屏：画面模拟置顶占满一行，其余便签排到它下面（DOM 顺序不变，只用 order） */
 @media (max-width:1100px){
   .note .notegrid{grid-template-columns:1fr}
@@ -893,10 +908,12 @@ function stopSim(i){
 function stopAllSims(){
   Object.keys(sims).forEach(function(k){ stopSim(Number(k)); });
 }
-function drawCanvas(canvas, s){
+function drawCanvas(canvas, s, i){
   if(!canvas || !canvas.getContext) return;
   var ctx = canvas.getContext('2d');
+  var focused = document.querySelector && document.querySelector('.note.focus');
   skyRender(ctx, {
+    hideHud: Boolean(focused),
     sim: s.sim,
     sky: simSky(),
     camera: { yaw: s.cam.yaw, pitch: s.cam.pitch, fov: s.cam.fov, tracker: s.track },
@@ -909,7 +926,43 @@ function drawCanvas(canvas, s){
 function drawSimAt(i){
   var s = sims[i];
   if(!s) return;
-  drawCanvas(el('sim'+i), s);
+  drawCanvas(el('sim'+i), s, i);
+  syncSimHud(i);
+}
+
+/** 全屏左下 HUD：五行两列（时间/最佳时段/地平系/赤道系/视野），跟随当前帧与坐标系 */
+function syncSimHud(i){
+  var s = sims[i];
+  if(!s) return;
+  var rows = {
+    time: document.getElementById('hudtime' + i),
+    win: document.getElementById('hudwin' + i),
+    alt: document.getElementById('hudalt' + i),
+    eq: document.getElementById('hudeq' + i),
+    fov: document.getElementById('hudfov' + i),
+    altRow: document.getElementById('hudaltrow' + i),
+    eqRow: document.getElementById('hudeqrow' + i),
+  };
+  var f = s.sim.frames[s.k] || {};
+  var tp = f.tp && f.tp[0];
+  if(rows.time) rows.time.textContent = (f.d ? f.d + ' ' : '') + (f.t || '—');
+  var win = s.sim.window;
+  if(rows.win) rows.win.textContent = win ? (win.start + ' – ' + win.end) : '—';
+  var isEq = s.mode === 'eq';
+  if(rows.altRow) rows.altRow.style.display = isEq ? 'none' : '';
+  if(rows.eqRow) rows.eqRow.style.display = isEq ? '' : 'none';
+  if(rows.alt) rows.alt.textContent = tp ? ('高度 ' + Number(tp[2]).toFixed(0) + '° · 方位 ' + Number(tp[3]).toFixed(0) + '°') : '—';
+  if(rows.eq) rows.eq.textContent = tp ? ('赤经 ' + fmtRa(tp[0]) + ' · 赤纬 ' + (tp[1] >= 0 ? '+' : '') + Number(tp[1]).toFixed(1) + '°') : '—';
+  if(rows.fov) rows.fov.textContent = Math.round(s.cam.fov) + '°';
+}
+
+function fmtRa(raDeg){
+  var h = ((Number(raDeg) % 360) + 360) % 360 / 15;
+  var hh = Math.floor(h);
+  var mm = Math.round((h - hh) * 60);
+  if(hh < 10) hh = '0' + hh;
+  if(mm < 10) mm = '0' + mm;
+  return hh + 'h' + mm + 'm';
 }
 function setText(id, text){
   var node = el(id);
@@ -1113,6 +1166,13 @@ function simBlock(sim, i){
       + ' onmousedown="simDown(event,'+i+')" onmousemove="simMove(event,'+i+')"'
       + ' onmouseup="simUp(event,'+i+')" onmouseleave="simUp(event,'+i+')"'
       + ' ondblclick="focusSim()" title="双击放大 · 滚轮缩放 · 拖动转视角"></canvas>'
+    + '<div class="simhud" id="simhud'+i+'" hidden>'
+      + '<div class="simhud-row"><span class="simhud-k">时间</span><span class="simhud-v" id="hudtime'+i+'">—</span></div>'
+      + '<div class="simhud-row"><span class="simhud-k">最佳时段</span><span class="simhud-v" id="hudwin'+i+'">—</span></div>'
+      + '<div class="simhud-row" id="hudaltrow'+i+'"><span class="simhud-k">地平系坐标</span><span class="simhud-v" id="hudalt'+i+'">—</span></div>'
+      + '<div class="simhud-row" id="hudeqrow'+i+'"><span class="simhud-k">赤道系坐标</span><span class="simhud-v" id="hudeq'+i+'">—</span></div>'
+      + '<div class="simhud-row"><span class="simhud-k">视野角度</span><span class="simhud-v" id="hudfov'+i+'">—</span></div>'
+    + '</div>'
     + '<div class="simctl">'
       + '<button type="button" id="simbtn'+i+'" class="simopt" onclick="toggleSim('+i+')">播放</button>'
       + '<input id="simrange'+i+'" class="simrange" type="range" min="0" max="'+(sim.frames.length-1)+'" value="'+(sim.startIndex||0)+'"'
@@ -1145,6 +1205,14 @@ function focusSim(){
   note.classList.toggle('focus', on);
   var btns = note.querySelectorAll('.simfocus');
   for(var i=0;i<btns.length;i+=1) btns[i].textContent = on ? '退出全屏' : '全屏';
+  var huds = note.querySelectorAll('.simhud');
+  for(var j=0;j<huds.length;j+=1) huds[j].hidden = !on;
+  var idx = state.open;
+  if(idx >= 0){
+    syncSimHud(idx);
+    drawSimAt(idx);
+    fitSimCanvas(idx);
+  }
 }
 
 function closeNote(){

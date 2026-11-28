@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
@@ -91,4 +92,26 @@ test('省份表与城市表可用', () => {
   assert.equal(Object.keys(catalog.PROVINCES).length, 34)
   assert.ok(catalog.CITIES['北京'])
   assert.equal(catalog.regionOfProvince('青海'), '西北')
+})
+
+test('数据规模：站点 293、目标 274（深空 250）、剖面全覆盖', async () => {
+  const catalog = await import('../lib/catalog.js')
+  assert.equal(catalog.SITES.length, 293, '站点 293')
+  assert.equal(catalog.TARGETS.length, 274, '目标 274')
+  const deep = catalog.TARGETS.filter((t) => t.type === 'deepsky')
+  assert.equal(deep.length, 250, '深空 250')
+  const hz = JSON.parse(readFileSync(new URL('../lib/data/horizon.json', import.meta.url), 'utf8'))
+  for (const s of catalog.SITES) {
+    const p = hz.sites[s.id]
+    assert.ok(p, '缺剖面：' + s.id)
+    assert.equal(p.v.length, 72)
+    assert.equal(p.n.length, 36)
+    assert.equal(p.f.length, 36)
+  }
+  for (const t of deep) {
+    assert.ok(t.raH >= 0 && t.raH < 24, t.id + ' RA')
+    assert.ok(t.dec >= -90 && t.dec <= 90, t.id + ' Dec')
+    assert.ok(Array.isArray(t.months) && t.months.length > 0, t.id + ' months')
+    assert.ok(['galaxy', 'nebula', 'cluster', 'planetary'].includes(t.subtype), t.id + ' subtype')
+  }
 })

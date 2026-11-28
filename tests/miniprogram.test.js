@@ -765,9 +765,9 @@ test('小程序：轮播合并新闻、HUD 两列左对齐', () => {
   assert.ok(hudCss.includes('width: 150rpx') && hudCss.includes('text-align: left'), 'HUD 标签列固定宽度并左对齐')
 })
 
-test('小程序 1.1.13：加载页居中、状态行更大', () => {
+test('小程序 1.1.14：加载页居中、状态行更大', () => {
   const app = readFileSync(join(ROOT, 'miniprogram', 'app.js'), 'utf8')
-  assert.ok(app.includes("miniVersion: '1.1.13'"), '包版本 1.1.13')
+  assert.ok(app.includes("miniVersion: '1.1.14'"), '包版本 1.1.14')
   const wxml = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxml'), 'utf8')
   assert.ok(wxml.includes('loading-wrap'), '加载块有居中容器')
   const css = readFileSync(join(ROOT, 'miniprogram', 'pages', 'results', 'index.wxss'), 'utf8')

@@ -1,1536 +1,7147 @@
 {
- "targets": [
-  {
-   "id": "m31",
-   "name": "M31 仙女座大星系",
-   "en": "Andromeda Galaxy",
-   "type": "deepsky",
-   "raH": 0.712,
-   "dec": 41.27,
-   "sizeDeg": 3,
-   "minBortle": 4,
-   "months": [
-    8,
-    1
-   ],
-   "focalFF": [
-    135,
-    300
-   ],
-   "tracker": false,
-   "fg": "低山脊线或树线",
-   "tips": "21:00 前后中天，长曝需赤道仪",
-   "subtype": "galaxy"
-  },
-  {
-   "id": "m33",
-   "name": "M33 三角座星系",
-   "en": "Triangulum Galaxy",
-   "type": "deepsky",
-   "raH": 1.564,
-   "dec": 30.66,
-   "sizeDeg": 1.2,
-   "minBortle": 2,
-   "months": [
-    8,
-    1
-   ],
-   "focalFF": [
-    200,
-    400
-   ],
-   "tracker": true,
-   "fg": "开阔北天",
-   "tips": "表面亮度低，必须暗夜",
-   "subtype": "galaxy"
-  },
-  {
-   "id": "m42",
-   "name": "M42 猎户座大星云",
-   "en": "Orion Nebula",
-   "type": "deepsky",
-   "raH": 5.588,
-   "dec": -5.39,
-   "sizeDeg": 1.5,
-   "minBortle": 3,
-   "months": [
-    10,
-    3
-   ],
-   "focalFF": [
-    135,
-    200
-   ],
-   "tracker": false,
-   "fg": "树线与山脊",
-   "tips": "核心与外围分开曝光做 HDR",
-   "subtype": "nebula"
-  },
-  {
-   "id": "ic434",
-   "name": "IC434 马头星云",
-   "en": "Horsehead Nebula",
-   "type": "deepsky",
-   "raH": 5.683,
-   "dec": -2.46,
-   "sizeDeg": 0.6,
-   "minBortle": 2,
-   "months": [
-    11,
-    2
-   ],
-   "focalFF": [
-    200,
-    300
-   ],
-   "tracker": true,
-   "fg": "猎户腰带方向",
-   "tips": "需 Hα 或长总曝光",
-   "subtype": "nebula"
-  },
-  {
-   "id": "barnard",
-   "name": "巴纳德环",
-   "en": "Barnard's Loop",
-   "type": "deepsky",
-   "raH": 5.53,
-   "dec": -3,
-   "sizeDeg": 10,
-   "minBortle": 2,
-   "months": [
-    11,
-    2
-   ],
-   "focalFF": [
-    50,
-    85
-   ],
-   "tracker": true,
-   "fg": "猎户全景",
-   "tips": "广域 + Hα 最佳",
-   "subtype": "nebula"
-  },
-  {
-   "id": "m45",
-   "name": "M45 昴星团",
-   "en": "Pleiades",
-   "type": "deepsky",
-   "raH": 3.783,
-   "dec": 24.12,
-   "sizeDeg": 2,
-   "minBortle": 4,
-   "months": [
-    9,
-    3
-   ],
-   "focalFF": [
-    135,
-    300
-   ],
-   "tracker": false,
-   "fg": "树线剪影",
-   "tips": "总曝光 ≥30 分钟出反射星云",
-   "subtype": "cluster"
-  },
-  {
-   "id": "ngc7000",
-   "name": "NGC7000 北美洲星云",
-   "en": "North America Nebula",
-   "type": "deepsky",
-   "raH": 20.983,
-   "dec": 44.53,
-   "sizeDeg": 3,
-   "minBortle": 3,
-   "months": [
-    6,
-    10
-   ],
-   "focalFF": [
-    85,
-    135
-   ],
-   "tracker": true,
-   "fg": "天鹅座方向",
-   "tips": "蓝调时段拍最稳",
-   "subtype": "nebula"
-  },
-  {
-   "id": "ic5070",
-   "name": "IC5070 鹈鹕星云",
-   "en": "Pelican Nebula",
-   "type": "deepsky",
-   "raH": 20.85,
-   "dec": 44.35,
-   "sizeDeg": 1.5,
-   "minBortle": 3,
-   "months": [
-    6,
-    10
-   ],
-   "focalFF": [
-    135,
-    200
-   ],
-   "tracker": true,
-   "fg": "天鹅座方向",
-   "tips": "与北美洲同场",
-   "subtype": "nebula"
-  },
-  {
-   "id": "ngc1499",
-   "name": "NGC1499 加州星云",
-   "en": "California Nebula",
-   "type": "deepsky",
-   "raH": 4,
-   "dec": 36.37,
-   "sizeDeg": 2.5,
-   "minBortle": 2,
-   "months": [
-    10,
-    2
-   ],
-   "focalFF": [
-    135,
-    200
-   ],
-   "tracker": true,
-   "fg": "低山脊",
-   "tips": "Hα 滤镜显著提升",
-   "subtype": "nebula"
-  },
-  {
-   "id": "ic1396",
-   "name": "IC1396 象鼻星云",
-   "en": "Elephant's Trunk",
-   "type": "deepsky",
-   "raH": 21.633,
-   "dec": 57.5,
-   "sizeDeg": 3,
-   "minBortle": 2,
-   "months": [
-    7,
-    11
-   ],
-   "focalFF": [
-    135,
-    300
-   ],
-   "tracker": true,
-   "fg": "仙王座方向",
-   "tips": "前半夜目标",
-   "subtype": "nebula"
-  },
-  {
-   "id": "ngc869",
-   "name": "NGC869/884 英仙双星团",
-   "en": "Double Cluster",
-   "type": "deepsky",
-   "raH": 2.316,
-   "dec": 57.13,
-   "sizeDeg": 1,
-   "minBortle": 4,
-   "months": [
-    8,
-    2
-   ],
-   "focalFF": [
-    135,
-    200
-   ],
-   "tracker": false,
-   "fg": "松林剪影",
-   "tips": "流星间隙的稳妥目标",
-   "subtype": "cluster"
-  },
-  {
-   "id": "ngc2237",
-   "name": "NGC2237 玫瑰星云",
-   "en": "Rosette Nebula",
-   "type": "deepsky",
-   "raH": 6.533,
-   "dec": 4.95,
-   "sizeDeg": 1.5,
-   "minBortle": 2,
-   "months": [
-    11,
-    3
-   ],
-   "focalFF": [
-    200,
-    400
-   ],
-   "tracker": true,
-   "fg": "麒麟座方向",
-   "tips": "需要长总曝光",
-   "subtype": "nebula"
-  },
-  {
-   "id": "ngc6960",
-   "name": "NGC6960 面纱星云",
-   "en": "Veil Nebula",
-   "type": "deepsky",
-   "raH": 20.76,
-   "dec": 30.72,
-   "sizeDeg": 3,
-   "minBortle": 2,
-   "months": [
-    7,
-    11
-   ],
-   "focalFF": [
-    135,
-    300
-   ],
-   "tracker": true,
-   "fg": "天鹅座方向",
-   "tips": "OIII 滤镜效果好",
-   "subtype": "nebula"
-  },
-  {
-   "id": "m13",
-   "name": "M13 武仙座球团",
-   "en": "Hercules Cluster",
-   "type": "deepsky",
-   "raH": 16.695,
-   "dec": 36.46,
-   "sizeDeg": 0.3,
-   "minBortle": 4,
-   "months": [
-    4,
-    9
-   ],
-   "focalFF": [
-    300,
-    800
-   ],
-   "tracker": true,
-   "fg": "开阔北天",
-   "tips": "小目标，需要长焦",
-   "subtype": "cluster"
-  },
-  {
-   "id": "m27",
-   "name": "M27 哑铃星云",
-   "en": "Dumbbell Nebula",
-   "type": "deepsky",
-   "raH": 19.993,
-   "dec": 22.72,
-   "sizeDeg": 0.15,
-   "minBortle": 4,
-   "months": [
-    6,
-    10
-   ],
-   "focalFF": [
-    400,
-    1000
-   ],
-   "tracker": true,
-   "fg": "狐狸座方向",
-   "tips": "行星状星云，需要长焦",
-   "subtype": "planetary"
-  },
-  {
-   "id": "m81",
-   "name": "M81/M82 星系对",
-   "en": "Bode's Galaxies",
-   "type": "deepsky",
-   "raH": 9.93,
-   "dec": 69.07,
-   "sizeDeg": 0.5,
-   "minBortle": 3,
-   "months": [
-    1,
-    6
-   ],
-   "focalFF": [
-    300,
-    600
-   ],
-   "tracker": true,
-   "fg": "大熊座方向",
-   "tips": "高纬目标，整夜可见",
-   "subtype": "galaxy"
-  },
-  {
-   "id": "sgrA",
-   "name": "SgrA* 银心",
-   "en": "Galactic Center",
-   "type": "milkyway",
-   "raH": 17.761,
-   "dec": -29.01,
-   "sizeDeg": 10,
-   "minBortle": 3,
-   "months": [
-    3,
-    9
-   ],
-   "focalFF": [
-    14,
-    24
-   ],
-   "tracker": false,
-   "fg": "南向低地平线",
-   "tips": "11 月已落到地平线下，不可拍"
-  },
-  {
-   "id": "wintermw",
-   "name": "冬季银河拱桥",
-   "en": "Winter Milky Way Arch",
-   "type": "milkyway",
-   "raH": 5.5,
-   "dec": 20,
-   "sizeDeg": 60,
-   "minBortle": 4,
-   "months": [
-    10,
-    2
-   ],
-   "focalFF": [
-    14,
-    24
-   ],
-   "tracker": false,
-   "fg": "低地平线群山或草原",
-   "tips": "天鹅—仙后—英仙—御夫—猎户连拱"
-  },
-  {
-   "id": "summermw",
-   "name": "夏季银河（银心区）",
-   "en": "Summer Milky Way",
-   "type": "milkyway",
-   "raH": 18,
-   "dec": -10,
-   "sizeDeg": 40,
-   "minBortle": 3,
-   "months": [
-    5,
-    9
-   ],
-   "focalFF": [
-    14,
-    24
-   ],
-   "tracker": false,
-   "fg": "南向地景",
-   "tips": "夏季核心题材"
-  },
-  {
-   "id": "zodiacal-spring",
-   "name": "春季黄道光",
-   "en": "Zodiacal Light (Spring)",
-   "type": "zodiacal",
-   "raH": 0.5,
-   "dec": 10,
-   "sizeDeg": 40,
-   "minBortle": 1,
-   "months": [
-    2,
-    4
-   ],
-   "focalFF": [
-    14,
-    24
-   ],
-   "tracker": false,
-   "fg": "西向开阔地平线",
-   "tips": "黄昏后西方低空锥形光，晚霞散尽 1–2 小时内，需无月极暗"
-  },
-  {
-   "id": "zodiacal-autumn",
-   "name": "秋季黄道光",
-   "en": "Zodiacal Light (Autumn)",
-   "type": "zodiacal",
-   "raH": 10.5,
-   "dec": 8,
-   "sizeDeg": 40,
-   "minBortle": 1,
-   "months": [
-    9,
-    11
-   ],
-   "focalFF": [
-    14,
-    24
-   ],
-   "tracker": false,
-   "fg": "东向开阔地平线",
-   "tips": "黎明前东方低空锥形光，天文晨光开始前 1–2 小时，需无月极暗"
-  },
-  {
-   "id": "startrail",
-   "name": "星轨",
-   "en": "Star Trails",
-   "type": "startrail",
-   "raH": 2,
-   "dec": 89,
-   "sizeDeg": 90,
-   "minBortle": 8,
-   "months": [
-    1,
-    12
-   ],
-   "focalFF": [
-    16,
-    35
-   ],
-   "tracker": false,
-   "fg": "北天极地景或南天弧线",
-   "tips": "30s×120 张堆栈"
-  },
-  {
-   "id": "aurora",
-   "name": "极光",
-   "en": "Aurora",
-   "type": "aurora",
-   "raH": 0,
-   "dec": 70,
-   "sizeDeg": 90,
-   "minBortle": 3,
-   "months": [
-    9,
-    4
-   ],
-   "focalFF": [
-    14,
-    35
-   ],
-   "tracker": false,
-   "fg": "北向开阔地平线",
-   "tips": "仅北纬 42° 以上站点有意义，需 Kp≥7 地磁暴，按空间天气预报确认"
-  },
-  {
-   "id": "tauN",
-   "name": "金牛座北流星雨",
-   "en": "Northern Taurids",
-   "type": "meteor",
-   "raH": 3.83,
-   "dec": 22,
-   "sizeDeg": 90,
-   "minBortle": 4,
-   "months": [
-    10,
-    12
-   ],
-   "focalFF": [
-    14,
-    20
-   ],
-   "tracker": false,
-   "fg": "任意低地平线",
-   "tips": "ZHR 低但火流星多"
-  },
-  {
-   "id": "tauS",
-   "name": "金牛座南流星雨",
-   "en": "Southern Taurids",
-   "type": "meteor",
-   "raH": 3.5,
-   "dec": 13,
-   "sizeDeg": 90,
-   "minBortle": 4,
-   "months": [
-    9,
-    12
-   ],
-   "focalFF": [
-    14,
-    20
-   ],
-   "tracker": false,
-   "fg": "任意低地平线",
-   "tips": "与北金牛叠加，活跃期长"
-  },
-  {
-   "id": "leonids",
-   "name": "狮子座流星雨",
-   "en": "Leonids",
-   "type": "meteor",
-   "raH": 10.17,
-   "dec": 22,
-   "sizeDeg": 90,
-   "minBortle": 5,
-   "months": [
-    11,
-    11
-   ],
-   "focalFF": [
-    14,
-    20
-   ],
-   "tracker": false,
-   "fg": "任意低地平线",
-   "tips": "午夜后辐射点升高"
-  },
-  {
-   "id": "geminids",
-   "name": "双子座流星雨",
-   "en": "Geminids",
-   "type": "meteor",
-   "raH": 7.47,
-   "dec": 32,
-   "sizeDeg": 90,
-   "minBortle": 4,
-   "months": [
-    12,
-    12
-   ],
-   "focalFF": [
-    14,
-    20
-   ],
-   "tracker": false,
-   "fg": "任意低地平线",
-   "tips": "全年最强，ZHR 120"
-  },
-  {
-   "id": "perseids",
-   "name": "英仙座流星雨",
-   "en": "Perseids",
-   "type": "meteor",
-   "raH": 3.13,
-   "dec": 58,
-   "sizeDeg": 90,
-   "minBortle": 4,
-   "months": [
-    7,
-    8
-   ],
-   "focalFF": [
-    14,
-    20
-   ],
-   "tracker": false,
-   "fg": "任意低地平线",
-   "tips": "夏季经典，月相决定成败"
-  },
-  {
-   "id": "quadrantids",
-   "name": "象限仪流星雨",
-   "en": "Quadrantids",
-   "type": "meteor",
-   "raH": 15.33,
-   "dec": 49,
-   "sizeDeg": 90,
-   "minBortle": 4,
-   "months": [
-    12,
-    1
-   ],
-   "focalFF": [
-    14,
-    20
-   ],
-   "tracker": false,
-   "fg": "北向低地平线",
-   "tips": "极大期短，需卡点"
-  },
-  {
-   "id": "draconids",
-   "name": "天龙座流星雨",
-   "en": "Draconids",
-   "type": "meteor",
-   "raH": 17.47,
-   "dec": 54,
-   "sizeDeg": 90,
-   "minBortle": 4,
-   "months": [
-    10,
-    10
-   ],
-   "focalFF": [
-    14,
-    20
-   ],
-   "tracker": false,
-   "fg": "北向低地平线",
-   "tips": "偶发爆发型，ZHR 通常 10，爆发年可达数百"
-  },
-  {
-   "id": "orionids",
-   "name": "猎户座流星雨",
-   "en": "Orionids",
-   "type": "meteor",
-   "raH": 6.35,
-   "dec": 16,
-   "sizeDeg": 90,
-   "minBortle": 4,
-   "months": [
-    10,
-    11
-   ],
-   "focalFF": [
-    14,
-    20
-   ],
-   "tracker": false,
-   "fg": "任意低地平线",
-   "tips": "哈雷彗星母体，快速流星，黎明前最佳"
-  },
-  {
-   "id": "ursids",
-   "name": "小熊座流星雨",
-   "en": "Ursids",
-   "type": "meteor",
-   "raH": 14.47,
-   "dec": 75,
-   "sizeDeg": 90,
-   "minBortle": 4,
-   "months": [
-    12,
-    12
-   ],
-   "focalFF": [
-    14,
-    20
-   ],
-   "tracker": false,
-   "fg": "北向低地平线",
-   "tips": "北天小流量，整夜可见"
-  },
-  {
-   "id": "lyrids",
-   "name": "天琴座流星雨",
-   "en": "Lyrids",
-   "type": "meteor",
-   "raH": 18.17,
-   "dec": 34,
-   "sizeDeg": 90,
-   "minBortle": 4,
-   "months": [
-    4,
-    4
-   ],
-   "focalFF": [
-    14,
-    20
-   ],
-   "tracker": false,
-   "fg": "任意低地平线",
-   "tips": "撒切尔彗星母体，后半夜辐射点高"
-  },
-  {
-   "id": "etaAquariids",
-   "name": "宝瓶座η流星雨",
-   "en": "Eta Aquariids",
-   "type": "meteor",
-   "raH": 22.5,
-   "dec": -1,
-   "sizeDeg": 90,
-   "minBortle": 4,
-   "months": [
-    4,
-    5
-   ],
-   "focalFF": [
-    14,
-    20
-   ],
-   "tracker": false,
-   "fg": "东向低地平线",
-   "tips": "哈雷彗星母体，黎明前 1–2 小时最佳"
-  },
-  {
-   "id": "jupiter",
-   "name": "木星",
-   "en": "Jupiter",
-   "type": "planet",
-   "body": "Jupiter",
-   "sizeDeg": 0.011,
-   "minBortle": 7,
-   "months": [
-    1,
-    12
-   ],
-   "focalFF": [
-    300,
-    2000
-   ],
-   "tracker": false,
-   "fg": "任意地景（长焦）",
-   "tips": "400mm 可见小圆面，1200mm+ 见云带"
-  },
-  {
-   "id": "mars",
-   "name": "火星",
-   "en": "Mars",
-   "type": "planet",
-   "body": "Mars",
-   "sizeDeg": 0.006,
-   "minBortle": 7,
-   "months": [
-    1,
-    12
-   ],
-   "focalFF": [
-    300,
-    2000
-   ],
-   "tracker": false,
-   "fg": "与木星同框",
-   "tips": "视直径小，需要长焦"
-  },
-  {
-   "id": "saturn",
-   "name": "土星",
-   "en": "Saturn",
-   "type": "planet",
-   "body": "Saturn",
-   "sizeDeg": 0.009,
-   "minBortle": 7,
-   "months": [
-    1,
-    12
-   ],
-   "focalFF": [
-    600,
-    2000
-   ],
-   "tracker": false,
-   "fg": "任意地景（长焦）",
-   "tips": "环倾角小，需要口径"
-  },
-  {
-   "id": "venus",
-   "name": "金星",
-   "en": "Venus",
-   "type": "planet",
-   "body": "Venus",
-   "sizeDeg": 0.011,
-   "minBortle": 7,
-   "months": [
-    1,
-    12
-   ],
-   "focalFF": [
-    300,
-    800
-   ],
-   "tracker": false,
-   "fg": "晨昏低空地景",
-   "tips": "相位随距角变化"
-  },
-  {
-   "id": "lunareclipse",
-   "name": "月食",
-   "en": "Lunar Eclipse",
-   "type": "lunarEclipse",
-   "body": "Moon",
-   "sizeDeg": 0.5,
-   "minBortle": 8,
-   "months": [
-    1,
-    12
-   ],
-   "focalFF": [
-    200,
-    800
-   ],
-   "tracker": false,
-   "fg": "地景同框",
-   "tips": "按事件表日期，全食阶段可拍红月"
-  },
-  {
-   "id": "solareclipse",
-   "name": "日食",
-   "en": "Solar Eclipse",
-   "type": "solarEclipse",
-   "body": "Sun",
-   "sizeDeg": 0.5,
-   "minBortle": 9,
-   "months": [
-    1,
-    12
-   ],
-   "focalFF": [
-    200,
-    800
-   ],
-   "tracker": false,
-   "fg": "西向/东向开阔地平线",
-   "tips": "镜头前必须加巴德膜或 ND5 减光，包围曝光，切勿肉眼直视"
-  },
-  {
-   "id": "m51",
-   "name": "M51 涡状星系",
-   "en": "Whirlpool Galaxy",
-   "type": "deepsky",
-   "subtype": "galaxy",
-   "raH": 13.498,
-   "dec": 47.2,
-   "sizeDeg": 0.2,
-   "minBortle": 3,
-   "months": [
-    3,
-    9
-   ],
-   "focalFF": [
-    200,
-    400
-   ],
-   "tracker": true,
-   "fg": "大熊座方向",
-   "tips": "与伴星系 NGC5195 同框，需暗夜与长总曝光"
-  },
-  {
-   "id": "m101",
-   "name": "M101 风车星系",
-   "en": "Pinwheel Galaxy",
-   "type": "deepsky",
-   "subtype": "galaxy",
-   "raH": 14.053,
-   "dec": 54.35,
-   "sizeDeg": 0.4,
-   "minBortle": 2,
-   "months": [
-    3,
-    9
-   ],
-   "focalFF": [
-    200,
-    400
-   ],
-   "tracker": true,
-   "fg": "大熊座方向",
-   "tips": "表面亮度极低，Bortle 3 以上基本拍不出旋臂"
-  },
-  {
-   "id": "m44",
-   "name": "M44 蜂巢星团",
-   "en": "Beehive Cluster",
-   "type": "deepsky",
-   "subtype": "cluster",
-   "raH": 8.673,
-   "dec": 19.98,
-   "sizeDeg": 1.6,
-   "minBortle": 5,
-   "months": [
-    12,
-    4
-   ],
-   "focalFF": [
-    135,
-    300
-   ],
-   "tracker": false,
-   "fg": "巨蟹座方向",
-   "tips": "肉眼可见，广角短曝即可出片"
-  },
-  {
-   "id": "m11",
-   "name": "M11 野鸭星团",
-   "en": "Wild Duck Cluster",
-   "type": "deepsky",
-   "subtype": "cluster",
-   "raH": 18.852,
-   "dec": -6.27,
-   "sizeDeg": 0.25,
-   "minBortle": 3,
-   "months": [
-    6,
-    9
-   ],
-   "focalFF": [
-    300,
-    800
-   ],
-   "tracker": true,
-   "fg": "盾牌座方向（南向低空）",
-   "tips": "南向低空，务必避开城市光害方向"
-  },
-  {
-   "id": "m57",
-   "name": "M57 环状星云",
-   "en": "Ring Nebula",
-   "type": "deepsky",
-   "subtype": "planetary",
-   "raH": 18.893,
-   "dec": 33.03,
-   "sizeDeg": 0.02,
-   "minBortle": 3,
-   "months": [
-    5,
-    10
-   ],
-   "focalFF": [
-    600,
-    1500
-   ],
-   "tracker": true,
-   "fg": "天琴座方向",
-   "tips": "行星状星云，长焦 + 高倍才能分辨环结构"
-  },
-  {
-   "id": "ngc2392",
-   "name": "NGC2392 爱斯基摩星云",
-   "en": "Eskimo Nebula",
-   "type": "deepsky",
-   "subtype": "planetary",
-   "raH": 7.486,
-   "dec": 20.91,
-   "sizeDeg": 0.02,
-   "minBortle": 4,
-   "months": [
-    12,
-    3
-   ],
-   "focalFF": [
-    600,
-    1500
-   ],
-   "tracker": true,
-   "fg": "双子座方向",
-   "tips": "小行星状星云，中心星与外围壳层分开曝光"
-  },
-  {
-   "id": "m104",
-   "name": "M104 草帽星系",
-   "en": "Sombrero Galaxy",
-   "type": "deepsky",
-   "subtype": "galaxy",
-   "raH": 12.6667,
-   "dec": -11.62,
-   "sizeDeg": 0.15,
-   "minBortle": 3,
-   "months": [
-    2,
-    7
-   ],
-   "focalFF": [
-    400,
-    1200
-   ],
-   "tracker": true,
-   "fg": "室女座方向",
-   "tips": "侧向星系，尘埃带细，需长焦 + 暗夜"
-  },
-  {
-   "id": "m106",
-   "name": "M106 猎犬座星系",
-   "en": "M106",
-   "type": "deepsky",
-   "subtype": "galaxy",
-   "raH": 12.3167,
-   "dec": 47.3,
-   "sizeDeg": 0.3,
-   "minBortle": 2,
-   "months": [
-    2,
-    8
-   ],
-   "focalFF": [
-    300,
-    800
-   ],
-   "tracker": true,
-   "fg": "猎犬座方向",
-   "tips": "旋臂弱，靠总曝光而非单张"
-  },
-  {
-   "id": "ngc4565",
-   "name": "NGC4565 针状星系",
-   "en": "Needle Galaxy",
-   "type": "deepsky",
-   "subtype": "galaxy",
-   "raH": 12.6067,
-   "dec": 25.99,
-   "sizeDeg": 0.5,
-   "minBortle": 2,
-   "months": [
-    3,
-    8
-   ],
-   "focalFF": [
-    300,
-    800
-   ],
-   "tracker": true,
-   "fg": "后发座方向",
-   "tips": "细长侧向星系，长焦端最出效果"
-  },
-  {
-   "id": "m63",
-   "name": "M63 向日葵星系",
-   "en": "Sunflower Galaxy",
-   "type": "deepsky",
-   "subtype": "galaxy",
-   "raH": 13.2642,
-   "dec": 42.03,
-   "sizeDeg": 0.2,
-   "minBortle": 2,
-   "months": [
-    3,
-    9
-   ],
-   "focalFF": [
-    400,
-    1000
-   ],
-   "tracker": true,
-   "fg": "猎犬座方向",
-   "tips": "旋臂细节靠叠加，单张不宜过曝"
-  },
-  {
-   "id": "m64",
-   "name": "M64 黑眼星系",
-   "en": "Black Eye Galaxy",
-   "type": "deepsky",
-   "subtype": "galaxy",
-   "raH": 12.945,
-   "dec": 21.68,
-   "sizeDeg": 0.15,
-   "minBortle": 3,
-   "months": [
-    3,
-    8
-   ],
-   "focalFF": [
-    400,
-    1000
-   ],
-   "tracker": true,
-   "fg": "后发座方向",
-   "tips": "暗尘带是主体，Bortle 4 以上会糊"
-  },
-  {
-   "id": "ngc253",
-   "name": "NGC253 银币星系",
-   "en": "Sculptor Galaxy",
-   "type": "deepsky",
-   "subtype": "galaxy",
-   "raH": 0.7925,
-   "dec": -25.29,
-   "sizeDeg": 0.5,
-   "minBortle": 2,
-   "months": [
-    8,
-    12
-   ],
-   "focalFF": [
-    300,
-    800
-   ],
-   "tracker": true,
-   "fg": "玉夫座方向（南向低空）",
-   "tips": "南向低空，务必找无遮挡机位"
-  },
-  {
-   "id": "ngc891",
-   "name": "NGC891 侧向星系",
-   "en": "NGC 891",
-   "type": "deepsky",
-   "subtype": "galaxy",
-   "raH": 2.375,
-   "dec": 42.35,
-   "sizeDeg": 0.4,
-   "minBortle": 2,
-   "months": [
-    9,
-    2
-   ],
-   "focalFF": [
-    300,
-    800
-   ],
-   "tracker": true,
-   "fg": "仙女座方向",
-   "tips": "尘埃带清晰，适合练长焦叠加"
-  },
-  {
-   "id": "m8",
-   "name": "M8 礁湖星云",
-   "en": "Lagoon Nebula",
-   "type": "deepsky",
-   "subtype": "nebula",
-   "raH": 18.06,
-   "dec": -24.38,
-   "sizeDeg": 1.5,
-   "minBortle": 3,
-   "months": [
-    6,
-    9
-   ],
-   "focalFF": [
-    135,
-    300
-   ],
-   "tracker": false,
-   "fg": "人马座方向（南向低空）",
-   "tips": "夏季银河核心区，广角 + 短曝也出彩"
-  },
-  {
-   "id": "m16",
-   "name": "M16 老鹰星云",
-   "en": "Eagle Nebula",
-   "type": "deepsky",
-   "subtype": "nebula",
-   "raH": 18.313,
-   "dec": -13.78,
-   "sizeDeg": 0.5,
-   "minBortle": 3,
-   "months": [
-    6,
-    9
-   ],
-   "focalFF": [
-    300,
-    800
-   ],
-   "tracker": true,
-   "fg": "巨蛇座方向",
-   "tips": "创生之柱需要长焦 + Hα"
-  },
-  {
-   "id": "m17",
-   "name": "M17 天鹅星云",
-   "en": "Omega Nebula",
-   "type": "deepsky",
-   "subtype": "nebula",
-   "raH": 18.346,
-   "dec": -16.17,
-   "sizeDeg": 0.6,
-   "minBortle": 3,
-   "months": [
-    6,
-    9
-   ],
-   "focalFF": [
-    300,
-    800
-   ],
-   "tracker": true,
-   "fg": "人马座方向",
-   "tips": "表面亮度高，城市边缘也能拍"
-  },
-  {
-   "id": "m20",
-   "name": "M20 三叶星云",
-   "en": "Trifid Nebula",
-   "type": "deepsky",
-   "subtype": "nebula",
-   "raH": 18.045,
-   "dec": -23.03,
-   "sizeDeg": 0.5,
-   "minBortle": 3,
-   "months": [
-    6,
-    9
-   ],
-   "focalFF": [
-    300,
-    800
-   ],
-   "tracker": true,
-   "fg": "人马座方向",
-   "tips": "与 M8 同场，一晚上两个目标"
-  },
-  {
-   "id": "ic1805",
-   "name": "IC1805 心脏星云",
-   "en": "Heart Nebula",
-   "type": "deepsky",
-   "subtype": "nebula",
-   "raH": 2.545,
-   "dec": 61.45,
-   "sizeDeg": 2.5,
-   "minBortle": 2,
-   "months": [
-    8,
-    1
-   ],
-   "focalFF": [
-    85,
-    200
-   ],
-   "tracker": true,
-   "fg": "仙后座方向",
-   "tips": "广域 + Hα 最省事，冬季整夜可见"
-  },
-  {
-   "id": "ic1848",
-   "name": "IC1848 灵魂星云",
-   "en": "Soul Nebula",
-   "type": "deepsky",
-   "subtype": "nebula",
-   "raH": 2.87,
-   "dec": 60.43,
-   "sizeDeg": 2,
-   "minBortle": 2,
-   "months": [
-    8,
-    1
-   ],
-   "focalFF": [
-    85,
-    200
-   ],
-   "tracker": true,
-   "fg": "仙后座方向",
-   "tips": "与心脏星云同框，可拼成双联"
-  },
-  {
-   "id": "ngc7023",
-   "name": "NGC7023 鸢尾花星云",
-   "en": "Iris Nebula",
-   "type": "deepsky",
-   "subtype": "nebula",
-   "raH": 21.02,
-   "dec": 68.16,
-   "sizeDeg": 0.2,
-   "minBortle": 2,
-   "months": [
-    6,
-    11
-   ],
-   "focalFF": [
-    400,
-    1000
-   ],
-   "tracker": true,
-   "fg": "仙王座方向",
-   "tips": "反射星云，蓝调最难，必须暗夜"
-  },
-  {
-   "id": "ngc7635",
-   "name": "NGC7635 气泡星云",
-   "en": "Bubble Nebula",
-   "type": "deepsky",
-   "subtype": "nebula",
-   "raH": 23.34,
-   "dec": 61.2,
-   "sizeDeg": 0.1,
-   "minBortle": 2,
-   "months": [
-    7,
-    11
-   ],
-   "focalFF": [
-    600,
-    1500
-   ],
-   "tracker": true,
-   "fg": "仙后座方向",
-   "tips": "小目标，需要长焦 + OIII"
-  },
-  {
-   "id": "ngc281",
-   "name": "NGC281 吃豆人星云",
-   "en": "Pacman Nebula",
-   "type": "deepsky",
-   "subtype": "nebula",
-   "raH": 0.878,
-   "dec": 56.62,
-   "sizeDeg": 0.6,
-   "minBortle": 2,
-   "months": [
-    8,
-    12
-   ],
-   "focalFF": [
-    300,
-    800
-   ],
-   "tracker": true,
-   "fg": "仙后座方向",
-   "tips": "形态讨巧，Hα 下结构最清楚"
-  },
-  {
-   "id": "m35",
-   "name": "M35 双子座疏散星团",
-   "en": "Messier 35",
-   "type": "deepsky",
-   "subtype": "cluster",
-   "raH": 6.15,
-   "dec": 24.33,
-   "sizeDeg": 0.5,
-   "minBortle": 4,
-   "months": [
-    11,
-    3
-   ],
-   "focalFF": [
-    300,
-    600
-   ],
-   "tracker": false,
-   "fg": "双子座方向",
-   "tips": "旁边还有 NGC2158，长焦可同框"
-  },
-  {
-   "id": "m37",
-   "name": "M37 御夫座疏散星团",
-   "en": "Messier 37",
-   "type": "deepsky",
-   "subtype": "cluster",
-   "raH": 5.88,
-   "dec": 32.55,
-   "sizeDeg": 0.4,
-   "minBortle": 4,
-   "months": [
-    10,
-    3
-   ],
-   "focalFF": [
-    300,
-    600
-   ],
-   "tracker": false,
-   "fg": "御夫座方向",
-   "tips": "与 M36/M38 同一片天区，可连拍"
-  },
-  {
-   "id": "m41",
-   "name": "M41 大犬座星团",
-   "en": "Messier 41",
-   "type": "deepsky",
-   "subtype": "cluster",
-   "raH": 6.77,
-   "dec": -20.73,
-   "sizeDeg": 0.6,
-   "minBortle": 4,
-   "months": [
-    12,
-    3
-   ],
-   "focalFF": [
-    200,
-    400
-   ],
-   "tracker": false,
-   "fg": "大犬座方向（南向低空）",
-   "tips": "天狼星旁，广角短曝即可"
-  },
-  {
-   "id": "ngc7789",
-   "name": "NGC7789 卡洛琳玫瑰",
-   "en": "Caroline's Rose",
-   "type": "deepsky",
-   "subtype": "cluster",
-   "raH": 23.95,
-   "dec": 56.72,
-   "sizeDeg": 0.3,
-   "minBortle": 3,
-   "months": [
-    8,
-    12
-   ],
-   "focalFF": [
-    400,
-    800
-   ],
-   "tracker": true,
-   "fg": "仙后座方向",
-   "tips": "密集星团，长焦 + 堆叠出层次"
-  },
-  {
-   "id": "ngc457",
-   "name": "NGC457 猫头鹰星团",
-   "en": "Owl Cluster",
-   "type": "deepsky",
-   "subtype": "cluster",
-   "raH": 1.32,
-   "dec": 58.29,
-   "sizeDeg": 0.2,
-   "minBortle": 3,
-   "months": [
-    8,
-    12
-   ],
-   "focalFF": [
-    400,
-    800
-   ],
-   "tracker": true,
-   "fg": "仙后座方向",
-   "tips": "形态像猫头鹰，适合拍「有趣」题材"
-  },
-  {
-   "id": "melotte111",
-   "name": "Melotte111 后发星团",
-   "en": "Coma Star Cluster",
-   "type": "deepsky",
-   "subtype": "cluster",
-   "raH": 12.37,
-   "dec": 26,
-   "sizeDeg": 4,
-   "minBortle": 4,
-   "months": [
-    2,
-    7
-   ],
-   "focalFF": [
-    85,
-    200
-   ],
-   "tracker": false,
-   "fg": "后发座方向",
-   "tips": "角直径 4°+，必须广角，肉眼可见"
-  },
-  {
-   "id": "ngc7293",
-   "name": "NGC7293 螺旋星云",
-   "en": "Helix Nebula",
-   "type": "deepsky",
-   "subtype": "planetary",
-   "raH": 22.49,
-   "dec": -20.83,
-   "sizeDeg": 0.25,
-   "minBortle": 3,
-   "months": [
-    7,
-    11
-   ],
-   "focalFF": [
-    400,
-    1000
-   ],
-   "tracker": true,
-   "fg": "宝瓶座方向（南向低空）",
-   "tips": "最大的行星状星云之一，OIII 明显"
-  },
-  {
-   "id": "ngc6543",
-   "name": "NGC6543 猫眼星云",
-   "en": "Cat's Eye Nebula",
-   "type": "deepsky",
-   "subtype": "planetary",
-   "raH": 17.976,
-   "dec": 66.63,
-   "sizeDeg": 0.02,
-   "minBortle": 3,
-   "months": [
-    6,
-    11
-   ],
-   "focalFF": [
-    800,
-    2000
-   ],
-   "tracker": true,
-   "fg": "天龙座方向",
-   "tips": "小且亮，高倍下才见内核结构"
-  },
-  {
-   "id": "ngc7009",
-   "name": "NGC7009 土星状星云",
-   "en": "Saturn Nebula",
-   "type": "deepsky",
-   "subtype": "planetary",
-   "raH": 21.07,
-   "dec": -11.36,
-   "sizeDeg": 0.1,
-   "minBortle": 3,
-   "months": [
-    8,
-    11
-   ],
-   "focalFF": [
-    800,
-    2000
-   ],
-   "tracker": true,
-   "fg": "宝瓶座方向",
-   "tips": "形状像土星，长焦 + 高倍"
-  }
- ]
+  "targets": [
+    {
+      "id": "m31",
+      "name": "M31 仙女座大星系",
+      "en": "Andromeda Galaxy",
+      "type": "deepsky",
+      "raH": 0.712,
+      "dec": 41.27,
+      "sizeDeg": 3,
+      "minBortle": 4,
+      "months": [
+        8,
+        1
+      ],
+      "focalFF": [
+        135,
+        300
+      ],
+      "tracker": false,
+      "fg": "低山脊线或树线",
+      "tips": "21:00 前后中天，长曝需赤道仪",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m33",
+      "name": "M33 三角座星系",
+      "en": "Triangulum Galaxy",
+      "type": "deepsky",
+      "raH": 1.564,
+      "dec": 30.66,
+      "sizeDeg": 1.2,
+      "minBortle": 2,
+      "months": [
+        8,
+        1
+      ],
+      "focalFF": [
+        200,
+        400
+      ],
+      "tracker": true,
+      "fg": "开阔北天",
+      "tips": "表面亮度低，必须暗夜",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m42",
+      "name": "M42 猎户座大星云",
+      "en": "Orion Nebula",
+      "type": "deepsky",
+      "raH": 5.588,
+      "dec": -5.39,
+      "sizeDeg": 1.5,
+      "minBortle": 3,
+      "months": [
+        10,
+        3
+      ],
+      "focalFF": [
+        135,
+        200
+      ],
+      "tracker": false,
+      "fg": "树线与山脊",
+      "tips": "核心与外围分开曝光做 HDR",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ic434",
+      "name": "IC434 马头星云",
+      "en": "Horsehead Nebula",
+      "type": "deepsky",
+      "raH": 5.683,
+      "dec": -2.46,
+      "sizeDeg": 0.6,
+      "minBortle": 2,
+      "months": [
+        11,
+        2
+      ],
+      "focalFF": [
+        200,
+        300
+      ],
+      "tracker": true,
+      "fg": "猎户腰带方向",
+      "tips": "需 Hα 或长总曝光",
+      "subtype": "nebula"
+    },
+    {
+      "id": "barnard",
+      "name": "巴纳德环",
+      "en": "Barnard's Loop",
+      "type": "deepsky",
+      "raH": 5.53,
+      "dec": -3,
+      "sizeDeg": 10,
+      "minBortle": 2,
+      "months": [
+        11,
+        2
+      ],
+      "focalFF": [
+        50,
+        85
+      ],
+      "tracker": true,
+      "fg": "猎户全景",
+      "tips": "广域 + Hα 最佳",
+      "subtype": "nebula"
+    },
+    {
+      "id": "m45",
+      "name": "M45 昴星团",
+      "en": "Pleiades",
+      "type": "deepsky",
+      "raH": 3.783,
+      "dec": 24.12,
+      "sizeDeg": 2,
+      "minBortle": 4,
+      "months": [
+        9,
+        3
+      ],
+      "focalFF": [
+        135,
+        300
+      ],
+      "tracker": false,
+      "fg": "树线剪影",
+      "tips": "总曝光 ≥30 分钟出反射星云",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc7000",
+      "name": "NGC7000 北美洲星云",
+      "en": "North America Nebula",
+      "type": "deepsky",
+      "raH": 20.983,
+      "dec": 44.53,
+      "sizeDeg": 3,
+      "minBortle": 3,
+      "months": [
+        6,
+        10
+      ],
+      "focalFF": [
+        85,
+        135
+      ],
+      "tracker": true,
+      "fg": "天鹅座方向",
+      "tips": "蓝调时段拍最稳",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ic5070",
+      "name": "IC5070 鹈鹕星云",
+      "en": "Pelican Nebula",
+      "type": "deepsky",
+      "raH": 20.85,
+      "dec": 44.35,
+      "sizeDeg": 1.5,
+      "minBortle": 3,
+      "months": [
+        6,
+        10
+      ],
+      "focalFF": [
+        135,
+        200
+      ],
+      "tracker": true,
+      "fg": "天鹅座方向",
+      "tips": "与北美洲同场",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc1499",
+      "name": "NGC1499 加州星云",
+      "en": "California Nebula",
+      "type": "deepsky",
+      "raH": 4,
+      "dec": 36.37,
+      "sizeDeg": 2.5,
+      "minBortle": 2,
+      "months": [
+        10,
+        2
+      ],
+      "focalFF": [
+        135,
+        200
+      ],
+      "tracker": true,
+      "fg": "低山脊",
+      "tips": "Hα 滤镜显著提升",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ic1396",
+      "name": "IC1396 象鼻星云",
+      "en": "Elephant's Trunk",
+      "type": "deepsky",
+      "raH": 21.633,
+      "dec": 57.5,
+      "sizeDeg": 3,
+      "minBortle": 2,
+      "months": [
+        7,
+        11
+      ],
+      "focalFF": [
+        135,
+        300
+      ],
+      "tracker": true,
+      "fg": "仙王座方向",
+      "tips": "前半夜目标",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc869",
+      "name": "NGC869/884 英仙双星团",
+      "en": "Double Cluster",
+      "type": "deepsky",
+      "raH": 2.316,
+      "dec": 57.13,
+      "sizeDeg": 1,
+      "minBortle": 4,
+      "months": [
+        8,
+        2
+      ],
+      "focalFF": [
+        135,
+        200
+      ],
+      "tracker": false,
+      "fg": "松林剪影",
+      "tips": "流星间隙的稳妥目标",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2237",
+      "name": "NGC2237 玫瑰星云",
+      "en": "Rosette Nebula",
+      "type": "deepsky",
+      "raH": 6.533,
+      "dec": 4.95,
+      "sizeDeg": 1.5,
+      "minBortle": 2,
+      "months": [
+        11,
+        3
+      ],
+      "focalFF": [
+        200,
+        400
+      ],
+      "tracker": true,
+      "fg": "麒麟座方向",
+      "tips": "需要长总曝光",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc6960",
+      "name": "NGC6960 面纱星云",
+      "en": "Veil Nebula",
+      "type": "deepsky",
+      "raH": 20.76,
+      "dec": 30.72,
+      "sizeDeg": 3,
+      "minBortle": 2,
+      "months": [
+        7,
+        11
+      ],
+      "focalFF": [
+        135,
+        300
+      ],
+      "tracker": true,
+      "fg": "天鹅座方向",
+      "tips": "OIII 滤镜效果好",
+      "subtype": "nebula"
+    },
+    {
+      "id": "m13",
+      "name": "M13 武仙座球团",
+      "en": "Hercules Cluster",
+      "type": "deepsky",
+      "raH": 16.695,
+      "dec": 36.46,
+      "sizeDeg": 0.3,
+      "minBortle": 4,
+      "months": [
+        4,
+        9
+      ],
+      "focalFF": [
+        300,
+        800
+      ],
+      "tracker": true,
+      "fg": "开阔北天",
+      "tips": "小目标，需要长焦",
+      "subtype": "cluster"
+    },
+    {
+      "id": "m27",
+      "name": "M27 哑铃星云",
+      "en": "Dumbbell Nebula",
+      "type": "deepsky",
+      "raH": 19.993,
+      "dec": 22.72,
+      "sizeDeg": 0.15,
+      "minBortle": 4,
+      "months": [
+        6,
+        10
+      ],
+      "focalFF": [
+        400,
+        1000
+      ],
+      "tracker": true,
+      "fg": "狐狸座方向",
+      "tips": "行星状星云，需要长焦",
+      "subtype": "planetary"
+    },
+    {
+      "id": "m81",
+      "name": "M81/M82 星系对",
+      "en": "Bode's Galaxies",
+      "type": "deepsky",
+      "raH": 9.93,
+      "dec": 69.07,
+      "sizeDeg": 0.5,
+      "minBortle": 3,
+      "months": [
+        1,
+        6
+      ],
+      "focalFF": [
+        300,
+        600
+      ],
+      "tracker": true,
+      "fg": "大熊座方向",
+      "tips": "高纬目标，整夜可见",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "sgrA",
+      "name": "SgrA* 银心",
+      "en": "Galactic Center",
+      "type": "milkyway",
+      "raH": 17.761,
+      "dec": -29.01,
+      "sizeDeg": 10,
+      "minBortle": 3,
+      "months": [
+        3,
+        9
+      ],
+      "focalFF": [
+        14,
+        24
+      ],
+      "tracker": false,
+      "fg": "南向低地平线",
+      "tips": "11 月已落到地平线下，不可拍"
+    },
+    {
+      "id": "wintermw",
+      "name": "冬季银河拱桥",
+      "en": "Winter Milky Way Arch",
+      "type": "milkyway",
+      "raH": 5.5,
+      "dec": 20,
+      "sizeDeg": 60,
+      "minBortle": 4,
+      "months": [
+        10,
+        2
+      ],
+      "focalFF": [
+        14,
+        24
+      ],
+      "tracker": false,
+      "fg": "低地平线群山或草原",
+      "tips": "天鹅—仙后—英仙—御夫—猎户连拱"
+    },
+    {
+      "id": "summermw",
+      "name": "夏季银河（银心区）",
+      "en": "Summer Milky Way",
+      "type": "milkyway",
+      "raH": 18,
+      "dec": -10,
+      "sizeDeg": 40,
+      "minBortle": 3,
+      "months": [
+        5,
+        9
+      ],
+      "focalFF": [
+        14,
+        24
+      ],
+      "tracker": false,
+      "fg": "南向地景",
+      "tips": "夏季核心题材"
+    },
+    {
+      "id": "zodiacal-spring",
+      "name": "春季黄道光",
+      "en": "Zodiacal Light (Spring)",
+      "type": "zodiacal",
+      "raH": 0.5,
+      "dec": 10,
+      "sizeDeg": 40,
+      "minBortle": 1,
+      "months": [
+        2,
+        4
+      ],
+      "focalFF": [
+        14,
+        24
+      ],
+      "tracker": false,
+      "fg": "西向开阔地平线",
+      "tips": "黄昏后西方低空锥形光，晚霞散尽 1–2 小时内，需无月极暗"
+    },
+    {
+      "id": "zodiacal-autumn",
+      "name": "秋季黄道光",
+      "en": "Zodiacal Light (Autumn)",
+      "type": "zodiacal",
+      "raH": 10.5,
+      "dec": 8,
+      "sizeDeg": 40,
+      "minBortle": 1,
+      "months": [
+        9,
+        11
+      ],
+      "focalFF": [
+        14,
+        24
+      ],
+      "tracker": false,
+      "fg": "东向开阔地平线",
+      "tips": "黎明前东方低空锥形光，天文晨光开始前 1–2 小时，需无月极暗"
+    },
+    {
+      "id": "startrail",
+      "name": "星轨",
+      "en": "Star Trails",
+      "type": "startrail",
+      "raH": 2,
+      "dec": 89,
+      "sizeDeg": 90,
+      "minBortle": 8,
+      "months": [
+        1,
+        12
+      ],
+      "focalFF": [
+        16,
+        35
+      ],
+      "tracker": false,
+      "fg": "北天极地景或南天弧线",
+      "tips": "30s×120 张堆栈"
+    },
+    {
+      "id": "aurora",
+      "name": "极光",
+      "en": "Aurora",
+      "type": "aurora",
+      "raH": 0,
+      "dec": 70,
+      "sizeDeg": 90,
+      "minBortle": 3,
+      "months": [
+        9,
+        4
+      ],
+      "focalFF": [
+        14,
+        35
+      ],
+      "tracker": false,
+      "fg": "北向开阔地平线",
+      "tips": "仅北纬 42° 以上站点有意义，需 Kp≥7 地磁暴，按空间天气预报确认"
+    },
+    {
+      "id": "tauN",
+      "name": "金牛座北流星雨",
+      "en": "Northern Taurids",
+      "type": "meteor",
+      "raH": 3.83,
+      "dec": 22,
+      "sizeDeg": 90,
+      "minBortle": 4,
+      "months": [
+        10,
+        12
+      ],
+      "focalFF": [
+        14,
+        20
+      ],
+      "tracker": false,
+      "fg": "任意低地平线",
+      "tips": "ZHR 低但火流星多"
+    },
+    {
+      "id": "tauS",
+      "name": "金牛座南流星雨",
+      "en": "Southern Taurids",
+      "type": "meteor",
+      "raH": 3.5,
+      "dec": 13,
+      "sizeDeg": 90,
+      "minBortle": 4,
+      "months": [
+        9,
+        12
+      ],
+      "focalFF": [
+        14,
+        20
+      ],
+      "tracker": false,
+      "fg": "任意低地平线",
+      "tips": "与北金牛叠加，活跃期长"
+    },
+    {
+      "id": "leonids",
+      "name": "狮子座流星雨",
+      "en": "Leonids",
+      "type": "meteor",
+      "raH": 10.17,
+      "dec": 22,
+      "sizeDeg": 90,
+      "minBortle": 5,
+      "months": [
+        11,
+        11
+      ],
+      "focalFF": [
+        14,
+        20
+      ],
+      "tracker": false,
+      "fg": "任意低地平线",
+      "tips": "午夜后辐射点升高"
+    },
+    {
+      "id": "geminids",
+      "name": "双子座流星雨",
+      "en": "Geminids",
+      "type": "meteor",
+      "raH": 7.47,
+      "dec": 32,
+      "sizeDeg": 90,
+      "minBortle": 4,
+      "months": [
+        12,
+        12
+      ],
+      "focalFF": [
+        14,
+        20
+      ],
+      "tracker": false,
+      "fg": "任意低地平线",
+      "tips": "全年最强，ZHR 120"
+    },
+    {
+      "id": "perseids",
+      "name": "英仙座流星雨",
+      "en": "Perseids",
+      "type": "meteor",
+      "raH": 3.13,
+      "dec": 58,
+      "sizeDeg": 90,
+      "minBortle": 4,
+      "months": [
+        7,
+        8
+      ],
+      "focalFF": [
+        14,
+        20
+      ],
+      "tracker": false,
+      "fg": "任意低地平线",
+      "tips": "夏季经典，月相决定成败"
+    },
+    {
+      "id": "quadrantids",
+      "name": "象限仪流星雨",
+      "en": "Quadrantids",
+      "type": "meteor",
+      "raH": 15.33,
+      "dec": 49,
+      "sizeDeg": 90,
+      "minBortle": 4,
+      "months": [
+        12,
+        1
+      ],
+      "focalFF": [
+        14,
+        20
+      ],
+      "tracker": false,
+      "fg": "北向低地平线",
+      "tips": "极大期短，需卡点"
+    },
+    {
+      "id": "draconids",
+      "name": "天龙座流星雨",
+      "en": "Draconids",
+      "type": "meteor",
+      "raH": 17.47,
+      "dec": 54,
+      "sizeDeg": 90,
+      "minBortle": 4,
+      "months": [
+        10,
+        10
+      ],
+      "focalFF": [
+        14,
+        20
+      ],
+      "tracker": false,
+      "fg": "北向低地平线",
+      "tips": "偶发爆发型，ZHR 通常 10，爆发年可达数百"
+    },
+    {
+      "id": "orionids",
+      "name": "猎户座流星雨",
+      "en": "Orionids",
+      "type": "meteor",
+      "raH": 6.35,
+      "dec": 16,
+      "sizeDeg": 90,
+      "minBortle": 4,
+      "months": [
+        10,
+        11
+      ],
+      "focalFF": [
+        14,
+        20
+      ],
+      "tracker": false,
+      "fg": "任意低地平线",
+      "tips": "哈雷彗星母体，快速流星，黎明前最佳"
+    },
+    {
+      "id": "ursids",
+      "name": "小熊座流星雨",
+      "en": "Ursids",
+      "type": "meteor",
+      "raH": 14.47,
+      "dec": 75,
+      "sizeDeg": 90,
+      "minBortle": 4,
+      "months": [
+        12,
+        12
+      ],
+      "focalFF": [
+        14,
+        20
+      ],
+      "tracker": false,
+      "fg": "北向低地平线",
+      "tips": "北天小流量，整夜可见"
+    },
+    {
+      "id": "lyrids",
+      "name": "天琴座流星雨",
+      "en": "Lyrids",
+      "type": "meteor",
+      "raH": 18.17,
+      "dec": 34,
+      "sizeDeg": 90,
+      "minBortle": 4,
+      "months": [
+        4,
+        4
+      ],
+      "focalFF": [
+        14,
+        20
+      ],
+      "tracker": false,
+      "fg": "任意低地平线",
+      "tips": "撒切尔彗星母体，后半夜辐射点高"
+    },
+    {
+      "id": "etaAquariids",
+      "name": "宝瓶座η流星雨",
+      "en": "Eta Aquariids",
+      "type": "meteor",
+      "raH": 22.5,
+      "dec": -1,
+      "sizeDeg": 90,
+      "minBortle": 4,
+      "months": [
+        4,
+        5
+      ],
+      "focalFF": [
+        14,
+        20
+      ],
+      "tracker": false,
+      "fg": "东向低地平线",
+      "tips": "哈雷彗星母体，黎明前 1–2 小时最佳"
+    },
+    {
+      "id": "jupiter",
+      "name": "木星",
+      "en": "Jupiter",
+      "type": "planet",
+      "body": "Jupiter",
+      "sizeDeg": 0.011,
+      "minBortle": 7,
+      "months": [
+        1,
+        12
+      ],
+      "focalFF": [
+        300,
+        2000
+      ],
+      "tracker": false,
+      "fg": "任意地景（长焦）",
+      "tips": "400mm 可见小圆面，1200mm+ 见云带"
+    },
+    {
+      "id": "mars",
+      "name": "火星",
+      "en": "Mars",
+      "type": "planet",
+      "body": "Mars",
+      "sizeDeg": 0.006,
+      "minBortle": 7,
+      "months": [
+        1,
+        12
+      ],
+      "focalFF": [
+        300,
+        2000
+      ],
+      "tracker": false,
+      "fg": "与木星同框",
+      "tips": "视直径小，需要长焦"
+    },
+    {
+      "id": "saturn",
+      "name": "土星",
+      "en": "Saturn",
+      "type": "planet",
+      "body": "Saturn",
+      "sizeDeg": 0.009,
+      "minBortle": 7,
+      "months": [
+        1,
+        12
+      ],
+      "focalFF": [
+        600,
+        2000
+      ],
+      "tracker": false,
+      "fg": "任意地景（长焦）",
+      "tips": "环倾角小，需要口径"
+    },
+    {
+      "id": "venus",
+      "name": "金星",
+      "en": "Venus",
+      "type": "planet",
+      "body": "Venus",
+      "sizeDeg": 0.011,
+      "minBortle": 7,
+      "months": [
+        1,
+        12
+      ],
+      "focalFF": [
+        300,
+        800
+      ],
+      "tracker": false,
+      "fg": "晨昏低空地景",
+      "tips": "相位随距角变化"
+    },
+    {
+      "id": "lunareclipse",
+      "name": "月食",
+      "en": "Lunar Eclipse",
+      "type": "lunarEclipse",
+      "body": "Moon",
+      "sizeDeg": 0.5,
+      "minBortle": 8,
+      "months": [
+        1,
+        12
+      ],
+      "focalFF": [
+        200,
+        800
+      ],
+      "tracker": false,
+      "fg": "地景同框",
+      "tips": "按事件表日期，全食阶段可拍红月"
+    },
+    {
+      "id": "solareclipse",
+      "name": "日食",
+      "en": "Solar Eclipse",
+      "type": "solarEclipse",
+      "body": "Sun",
+      "sizeDeg": 0.5,
+      "minBortle": 9,
+      "months": [
+        1,
+        12
+      ],
+      "focalFF": [
+        200,
+        800
+      ],
+      "tracker": false,
+      "fg": "西向/东向开阔地平线",
+      "tips": "镜头前必须加巴德膜或 ND5 减光，包围曝光，切勿肉眼直视"
+    },
+    {
+      "id": "m51",
+      "name": "M51 涡状星系",
+      "en": "Whirlpool Galaxy",
+      "type": "deepsky",
+      "subtype": "galaxy",
+      "raH": 13.498,
+      "dec": 47.2,
+      "sizeDeg": 0.2,
+      "minBortle": 3,
+      "months": [
+        3,
+        9
+      ],
+      "focalFF": [
+        200,
+        400
+      ],
+      "tracker": true,
+      "fg": "大熊座方向",
+      "tips": "与伴星系 NGC5195 同框，需暗夜与长总曝光"
+    },
+    {
+      "id": "m101",
+      "name": "M101 风车星系",
+      "en": "Pinwheel Galaxy",
+      "type": "deepsky",
+      "subtype": "galaxy",
+      "raH": 14.053,
+      "dec": 54.35,
+      "sizeDeg": 0.4,
+      "minBortle": 2,
+      "months": [
+        3,
+        9
+      ],
+      "focalFF": [
+        200,
+        400
+      ],
+      "tracker": true,
+      "fg": "大熊座方向",
+      "tips": "表面亮度极低，Bortle 3 以上基本拍不出旋臂"
+    },
+    {
+      "id": "m44",
+      "name": "M44 蜂巢星团",
+      "en": "Beehive Cluster",
+      "type": "deepsky",
+      "subtype": "cluster",
+      "raH": 8.673,
+      "dec": 19.98,
+      "sizeDeg": 1.6,
+      "minBortle": 5,
+      "months": [
+        12,
+        4
+      ],
+      "focalFF": [
+        135,
+        300
+      ],
+      "tracker": false,
+      "fg": "巨蟹座方向",
+      "tips": "肉眼可见，广角短曝即可出片"
+    },
+    {
+      "id": "m11",
+      "name": "M11 野鸭星团",
+      "en": "Wild Duck Cluster",
+      "type": "deepsky",
+      "subtype": "cluster",
+      "raH": 18.852,
+      "dec": -6.27,
+      "sizeDeg": 0.25,
+      "minBortle": 3,
+      "months": [
+        6,
+        9
+      ],
+      "focalFF": [
+        300,
+        800
+      ],
+      "tracker": true,
+      "fg": "盾牌座方向（南向低空）",
+      "tips": "南向低空，务必避开城市光害方向"
+    },
+    {
+      "id": "m57",
+      "name": "M57 环状星云",
+      "en": "Ring Nebula",
+      "type": "deepsky",
+      "subtype": "planetary",
+      "raH": 18.893,
+      "dec": 33.03,
+      "sizeDeg": 0.02,
+      "minBortle": 3,
+      "months": [
+        5,
+        10
+      ],
+      "focalFF": [
+        600,
+        1500
+      ],
+      "tracker": true,
+      "fg": "天琴座方向",
+      "tips": "行星状星云，长焦 + 高倍才能分辨环结构"
+    },
+    {
+      "id": "ngc2392",
+      "name": "NGC2392 爱斯基摩星云",
+      "en": "Eskimo Nebula",
+      "type": "deepsky",
+      "subtype": "planetary",
+      "raH": 7.486,
+      "dec": 20.91,
+      "sizeDeg": 0.02,
+      "minBortle": 4,
+      "months": [
+        12,
+        3
+      ],
+      "focalFF": [
+        600,
+        1500
+      ],
+      "tracker": true,
+      "fg": "双子座方向",
+      "tips": "小行星状星云，中心星与外围壳层分开曝光"
+    },
+    {
+      "id": "m104",
+      "name": "M104 草帽星系",
+      "en": "Sombrero Galaxy",
+      "type": "deepsky",
+      "subtype": "galaxy",
+      "raH": 12.6667,
+      "dec": -11.62,
+      "sizeDeg": 0.15,
+      "minBortle": 3,
+      "months": [
+        2,
+        7
+      ],
+      "focalFF": [
+        400,
+        1200
+      ],
+      "tracker": true,
+      "fg": "室女座方向",
+      "tips": "侧向星系，尘埃带细，需长焦 + 暗夜"
+    },
+    {
+      "id": "m106",
+      "name": "M106 猎犬座星系",
+      "en": "M106",
+      "type": "deepsky",
+      "subtype": "galaxy",
+      "raH": 12.3167,
+      "dec": 47.3,
+      "sizeDeg": 0.3,
+      "minBortle": 2,
+      "months": [
+        2,
+        8
+      ],
+      "focalFF": [
+        300,
+        800
+      ],
+      "tracker": true,
+      "fg": "猎犬座方向",
+      "tips": "旋臂弱，靠总曝光而非单张"
+    },
+    {
+      "id": "ngc4565",
+      "name": "NGC4565 针状星系",
+      "en": "Needle Galaxy",
+      "type": "deepsky",
+      "subtype": "galaxy",
+      "raH": 12.6067,
+      "dec": 25.99,
+      "sizeDeg": 0.5,
+      "minBortle": 2,
+      "months": [
+        3,
+        8
+      ],
+      "focalFF": [
+        300,
+        800
+      ],
+      "tracker": true,
+      "fg": "后发座方向",
+      "tips": "细长侧向星系，长焦端最出效果"
+    },
+    {
+      "id": "m63",
+      "name": "M63 向日葵星系",
+      "en": "Sunflower Galaxy",
+      "type": "deepsky",
+      "subtype": "galaxy",
+      "raH": 13.2642,
+      "dec": 42.03,
+      "sizeDeg": 0.2,
+      "minBortle": 2,
+      "months": [
+        3,
+        9
+      ],
+      "focalFF": [
+        400,
+        1000
+      ],
+      "tracker": true,
+      "fg": "猎犬座方向",
+      "tips": "旋臂细节靠叠加，单张不宜过曝"
+    },
+    {
+      "id": "m64",
+      "name": "M64 黑眼星系",
+      "en": "Black Eye Galaxy",
+      "type": "deepsky",
+      "subtype": "galaxy",
+      "raH": 12.945,
+      "dec": 21.68,
+      "sizeDeg": 0.15,
+      "minBortle": 3,
+      "months": [
+        3,
+        8
+      ],
+      "focalFF": [
+        400,
+        1000
+      ],
+      "tracker": true,
+      "fg": "后发座方向",
+      "tips": "暗尘带是主体，Bortle 4 以上会糊"
+    },
+    {
+      "id": "ngc253",
+      "name": "NGC253 银币星系",
+      "en": "Sculptor Galaxy",
+      "type": "deepsky",
+      "subtype": "galaxy",
+      "raH": 0.7925,
+      "dec": -25.29,
+      "sizeDeg": 0.5,
+      "minBortle": 2,
+      "months": [
+        8,
+        12
+      ],
+      "focalFF": [
+        300,
+        800
+      ],
+      "tracker": true,
+      "fg": "玉夫座方向（南向低空）",
+      "tips": "南向低空，务必找无遮挡机位"
+    },
+    {
+      "id": "ngc891",
+      "name": "NGC891 侧向星系",
+      "en": "NGC 891",
+      "type": "deepsky",
+      "subtype": "galaxy",
+      "raH": 2.375,
+      "dec": 42.35,
+      "sizeDeg": 0.4,
+      "minBortle": 2,
+      "months": [
+        9,
+        2
+      ],
+      "focalFF": [
+        300,
+        800
+      ],
+      "tracker": true,
+      "fg": "仙女座方向",
+      "tips": "尘埃带清晰，适合练长焦叠加"
+    },
+    {
+      "id": "m8",
+      "name": "M8 礁湖星云",
+      "en": "Lagoon Nebula",
+      "type": "deepsky",
+      "subtype": "nebula",
+      "raH": 18.06,
+      "dec": -24.38,
+      "sizeDeg": 1.5,
+      "minBortle": 3,
+      "months": [
+        6,
+        9
+      ],
+      "focalFF": [
+        135,
+        300
+      ],
+      "tracker": false,
+      "fg": "人马座方向（南向低空）",
+      "tips": "夏季银河核心区，广角 + 短曝也出彩"
+    },
+    {
+      "id": "m16",
+      "name": "M16 老鹰星云",
+      "en": "Eagle Nebula",
+      "type": "deepsky",
+      "subtype": "nebula",
+      "raH": 18.313,
+      "dec": -13.78,
+      "sizeDeg": 0.5,
+      "minBortle": 3,
+      "months": [
+        6,
+        9
+      ],
+      "focalFF": [
+        300,
+        800
+      ],
+      "tracker": true,
+      "fg": "巨蛇座方向",
+      "tips": "创生之柱需要长焦 + Hα"
+    },
+    {
+      "id": "m17",
+      "name": "M17 天鹅星云",
+      "en": "Omega Nebula",
+      "type": "deepsky",
+      "subtype": "nebula",
+      "raH": 18.346,
+      "dec": -16.17,
+      "sizeDeg": 0.6,
+      "minBortle": 3,
+      "months": [
+        6,
+        9
+      ],
+      "focalFF": [
+        300,
+        800
+      ],
+      "tracker": true,
+      "fg": "人马座方向",
+      "tips": "表面亮度高，城市边缘也能拍"
+    },
+    {
+      "id": "m20",
+      "name": "M20 三叶星云",
+      "en": "Trifid Nebula",
+      "type": "deepsky",
+      "subtype": "nebula",
+      "raH": 18.045,
+      "dec": -23.03,
+      "sizeDeg": 0.5,
+      "minBortle": 3,
+      "months": [
+        6,
+        9
+      ],
+      "focalFF": [
+        300,
+        800
+      ],
+      "tracker": true,
+      "fg": "人马座方向",
+      "tips": "与 M8 同场，一晚上两个目标"
+    },
+    {
+      "id": "ic1805",
+      "name": "IC1805 心脏星云",
+      "en": "Heart Nebula",
+      "type": "deepsky",
+      "subtype": "nebula",
+      "raH": 2.545,
+      "dec": 61.45,
+      "sizeDeg": 2.5,
+      "minBortle": 2,
+      "months": [
+        8,
+        1
+      ],
+      "focalFF": [
+        85,
+        200
+      ],
+      "tracker": true,
+      "fg": "仙后座方向",
+      "tips": "广域 + Hα 最省事，冬季整夜可见"
+    },
+    {
+      "id": "ic1848",
+      "name": "IC1848 灵魂星云",
+      "en": "Soul Nebula",
+      "type": "deepsky",
+      "subtype": "nebula",
+      "raH": 2.87,
+      "dec": 60.43,
+      "sizeDeg": 2,
+      "minBortle": 2,
+      "months": [
+        8,
+        1
+      ],
+      "focalFF": [
+        85,
+        200
+      ],
+      "tracker": true,
+      "fg": "仙后座方向",
+      "tips": "与心脏星云同框，可拼成双联"
+    },
+    {
+      "id": "ngc7023",
+      "name": "NGC7023 鸢尾花星云",
+      "en": "Iris Nebula",
+      "type": "deepsky",
+      "subtype": "nebula",
+      "raH": 21.02,
+      "dec": 68.16,
+      "sizeDeg": 0.2,
+      "minBortle": 2,
+      "months": [
+        6,
+        11
+      ],
+      "focalFF": [
+        400,
+        1000
+      ],
+      "tracker": true,
+      "fg": "仙王座方向",
+      "tips": "反射星云，蓝调最难，必须暗夜"
+    },
+    {
+      "id": "ngc7635",
+      "name": "NGC7635 气泡星云",
+      "en": "Bubble Nebula",
+      "type": "deepsky",
+      "subtype": "nebula",
+      "raH": 23.34,
+      "dec": 61.2,
+      "sizeDeg": 0.1,
+      "minBortle": 2,
+      "months": [
+        7,
+        11
+      ],
+      "focalFF": [
+        600,
+        1500
+      ],
+      "tracker": true,
+      "fg": "仙后座方向",
+      "tips": "小目标，需要长焦 + OIII"
+    },
+    {
+      "id": "ngc281",
+      "name": "NGC281 吃豆人星云",
+      "en": "Pacman Nebula",
+      "type": "deepsky",
+      "subtype": "nebula",
+      "raH": 0.878,
+      "dec": 56.62,
+      "sizeDeg": 0.6,
+      "minBortle": 2,
+      "months": [
+        8,
+        12
+      ],
+      "focalFF": [
+        300,
+        800
+      ],
+      "tracker": true,
+      "fg": "仙后座方向",
+      "tips": "形态讨巧，Hα 下结构最清楚"
+    },
+    {
+      "id": "m35",
+      "name": "M35 双子座疏散星团",
+      "en": "Messier 35",
+      "type": "deepsky",
+      "subtype": "cluster",
+      "raH": 6.15,
+      "dec": 24.33,
+      "sizeDeg": 0.5,
+      "minBortle": 4,
+      "months": [
+        11,
+        3
+      ],
+      "focalFF": [
+        300,
+        600
+      ],
+      "tracker": false,
+      "fg": "双子座方向",
+      "tips": "旁边还有 NGC2158，长焦可同框"
+    },
+    {
+      "id": "m37",
+      "name": "M37 御夫座疏散星团",
+      "en": "Messier 37",
+      "type": "deepsky",
+      "subtype": "cluster",
+      "raH": 5.88,
+      "dec": 32.55,
+      "sizeDeg": 0.4,
+      "minBortle": 4,
+      "months": [
+        10,
+        3
+      ],
+      "focalFF": [
+        300,
+        600
+      ],
+      "tracker": false,
+      "fg": "御夫座方向",
+      "tips": "与 M36/M38 同一片天区，可连拍"
+    },
+    {
+      "id": "m41",
+      "name": "M41 大犬座星团",
+      "en": "Messier 41",
+      "type": "deepsky",
+      "subtype": "cluster",
+      "raH": 6.77,
+      "dec": -20.73,
+      "sizeDeg": 0.6,
+      "minBortle": 4,
+      "months": [
+        12,
+        3
+      ],
+      "focalFF": [
+        200,
+        400
+      ],
+      "tracker": false,
+      "fg": "大犬座方向（南向低空）",
+      "tips": "天狼星旁，广角短曝即可"
+    },
+    {
+      "id": "ngc7789",
+      "name": "NGC7789 卡洛琳玫瑰",
+      "en": "Caroline's Rose",
+      "type": "deepsky",
+      "subtype": "cluster",
+      "raH": 23.95,
+      "dec": 56.72,
+      "sizeDeg": 0.3,
+      "minBortle": 3,
+      "months": [
+        8,
+        12
+      ],
+      "focalFF": [
+        400,
+        800
+      ],
+      "tracker": true,
+      "fg": "仙后座方向",
+      "tips": "密集星团，长焦 + 堆叠出层次"
+    },
+    {
+      "id": "ngc457",
+      "name": "NGC457 猫头鹰星团",
+      "en": "Owl Cluster",
+      "type": "deepsky",
+      "subtype": "cluster",
+      "raH": 1.32,
+      "dec": 58.29,
+      "sizeDeg": 0.2,
+      "minBortle": 3,
+      "months": [
+        8,
+        12
+      ],
+      "focalFF": [
+        400,
+        800
+      ],
+      "tracker": true,
+      "fg": "仙后座方向",
+      "tips": "形态像猫头鹰，适合拍「有趣」题材"
+    },
+    {
+      "id": "melotte111",
+      "name": "Melotte111 后发星团",
+      "en": "Coma Star Cluster",
+      "type": "deepsky",
+      "subtype": "cluster",
+      "raH": 12.37,
+      "dec": 26,
+      "sizeDeg": 4,
+      "minBortle": 4,
+      "months": [
+        2,
+        7
+      ],
+      "focalFF": [
+        85,
+        200
+      ],
+      "tracker": false,
+      "fg": "后发座方向",
+      "tips": "角直径 4°+，必须广角，肉眼可见"
+    },
+    {
+      "id": "ngc7293",
+      "name": "NGC7293 螺旋星云",
+      "en": "Helix Nebula",
+      "type": "deepsky",
+      "subtype": "planetary",
+      "raH": 22.49,
+      "dec": -20.83,
+      "sizeDeg": 0.25,
+      "minBortle": 3,
+      "months": [
+        7,
+        11
+      ],
+      "focalFF": [
+        400,
+        1000
+      ],
+      "tracker": true,
+      "fg": "宝瓶座方向（南向低空）",
+      "tips": "最大的行星状星云之一，OIII 明显"
+    },
+    {
+      "id": "ngc6543",
+      "name": "NGC6543 猫眼星云",
+      "en": "Cat's Eye Nebula",
+      "type": "deepsky",
+      "subtype": "planetary",
+      "raH": 17.976,
+      "dec": 66.63,
+      "sizeDeg": 0.02,
+      "minBortle": 3,
+      "months": [
+        6,
+        11
+      ],
+      "focalFF": [
+        800,
+        2000
+      ],
+      "tracker": true,
+      "fg": "天龙座方向",
+      "tips": "小且亮，高倍下才见内核结构"
+    },
+    {
+      "id": "ngc7009",
+      "name": "NGC7009 土星状星云",
+      "en": "Saturn Nebula",
+      "type": "deepsky",
+      "subtype": "planetary",
+      "raH": 21.07,
+      "dec": -11.36,
+      "sizeDeg": 0.1,
+      "minBortle": 3,
+      "months": [
+        8,
+        11
+      ],
+      "focalFF": [
+        800,
+        2000
+      ],
+      "tracker": true,
+      "fg": "宝瓶座方向",
+      "tips": "形状像土星，长焦 + 高倍"
+    },
+    {
+      "id": "ic0353",
+      "name": "IC0353",
+      "en": "IC0353",
+      "type": "deepsky",
+      "raH": 3.884,
+      "dec": 25.85,
+      "sizeDeg": 3.03,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        260,
+        600
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ic0360",
+      "name": "IC0360",
+      "en": "IC0360",
+      "type": "deepsky",
+      "raH": 4.151,
+      "dec": 26.13,
+      "sizeDeg": 3,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        270,
+        610
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ic0341",
+      "name": "IC0341",
+      "en": "IC0341",
+      "type": "deepsky",
+      "raH": 3.682,
+      "dec": 21.96,
+      "sizeDeg": 2.25,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        360,
+        820
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ic0354",
+      "name": "IC0354",
+      "en": "IC0354",
+      "type": "deepsky",
+      "raH": 3.899,
+      "dec": 23.15,
+      "sizeDeg": 2.15,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        370,
+        850
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ic1831",
+      "name": "IC1831",
+      "en": "IC1831",
+      "type": "deepsky",
+      "raH": 2.732,
+      "dec": 62.41,
+      "sizeDeg": 2,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        400,
+        910
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ic4604",
+      "name": "IC4604",
+      "en": "IC4604",
+      "type": "deepsky",
+      "raH": 16.425,
+      "dec": -23.44,
+      "sizeDeg": 1,
+      "minBortle": 3,
+      "months": [
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        800,
+        1830
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ic4701",
+      "name": "IC4701",
+      "en": "IC4701",
+      "type": "deepsky",
+      "raH": 18.277,
+      "dec": -16.65,
+      "sizeDeg": 1,
+      "minBortle": 3,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "focalFF": [
+        800,
+        1830
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc0752",
+      "name": "NGC 0752",
+      "en": "NGC0752",
+      "type": "deepsky",
+      "raH": 1.96,
+      "dec": 37.83,
+      "sizeDeg": 0.65,
+      "minBortle": 5,
+      "months": [
+        1,
+        2,
+        3,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        1230,
+        2820
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ic0410",
+      "name": "IC0410",
+      "en": "IC0410",
+      "type": "deepsky",
+      "raH": 5.378,
+      "dec": 33.37,
+      "sizeDeg": 0.67,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        1200,
+        2750
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc2174",
+      "name": "NGC 2174",
+      "en": "NGC2174",
+      "type": "deepsky",
+      "raH": 6.157,
+      "dec": 20.66,
+      "sizeDeg": 0.67,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        1200,
+        2750
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc6526",
+      "name": "NGC 6526",
+      "en": "NGC6526",
+      "type": "deepsky",
+      "raH": 18.068,
+      "dec": -24.44,
+      "sizeDeg": 0.67,
+      "minBortle": 3,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "focalFF": [
+        1200,
+        2750
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "m67",
+      "name": "M67",
+      "en": "NGC2682",
+      "type": "deepsky",
+      "raH": 8.856,
+      "dec": 11.81,
+      "sizeDeg": 0.55,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        11,
+        12
+      ],
+      "focalFF": [
+        1460,
+        3330
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ic4605",
+      "name": "IC4605",
+      "en": "IC4605",
+      "type": "deepsky",
+      "raH": 16.503,
+      "dec": -25.12,
+      "sizeDeg": 0.5,
+      "minBortle": 3,
+      "months": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        1600,
+        3670
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "m48",
+      "name": "M48",
+      "en": "NGC2548",
+      "type": "deepsky",
+      "raH": 8.229,
+      "dec": -5.75,
+      "sizeDeg": 0.47,
+      "minBortle": 5,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        11,
+        12
+      ],
+      "focalFF": [
+        1710,
+        3900
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc1435",
+      "name": "NGC 1435",
+      "en": "NGC1435",
+      "type": "deepsky",
+      "raH": 3.769,
+      "dec": 23.76,
+      "sizeDeg": 0.5,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        1600,
+        3670
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc2024",
+      "name": "NGC 2024",
+      "en": "NGC2024",
+      "type": "deepsky",
+      "raH": 5.695,
+      "dec": -1.86,
+      "sizeDeg": 0.5,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        1600,
+        3670
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc6774",
+      "name": "NGC 6774",
+      "en": "NGC6774",
+      "type": "deepsky",
+      "raH": 19.271,
+      "dec": -16.26,
+      "sizeDeg": 0.5,
+      "minBortle": 4,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "focalFF": [
+        1600,
+        3670
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc1647",
+      "name": "NGC 1647",
+      "en": "NGC1647",
+      "type": "deepsky",
+      "raH": 4.765,
+      "dec": 19.1,
+      "sizeDeg": 0.45,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        1780,
+        4070
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ic4665",
+      "name": "IC4665",
+      "en": "IC4665",
+      "type": "deepsky",
+      "raH": 17.774,
+      "dec": 5.65,
+      "sizeDeg": 0.41,
+      "minBortle": 5,
+      "months": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "focalFF": [
+        1960,
+        4470
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ic4756",
+      "name": "IC4756",
+      "en": "IC4756",
+      "type": "deepsky",
+      "raH": 18.648,
+      "dec": 5.46,
+      "sizeDeg": 0.4,
+      "minBortle": 5,
+      "months": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "focalFF": [
+        2010,
+        4580
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "m34",
+      "name": "M34",
+      "en": "NGC1039",
+      "type": "deepsky",
+      "raH": 2.702,
+      "dec": 42.75,
+      "sizeDeg": 0.38,
+      "minBortle": 5,
+      "months": [
+        1,
+        2,
+        3,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        2140,
+        4890
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "m46",
+      "name": "M46",
+      "en": "NGC2437",
+      "type": "deepsky",
+      "raH": 7.696,
+      "dec": -14.81,
+      "sizeDeg": 0.35,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        12
+      ],
+      "focalFF": [
+        2290,
+        5240
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "m47",
+      "name": "M47",
+      "en": "NGC2422",
+      "type": "deepsky",
+      "raH": 7.61,
+      "dec": -14.48,
+      "sizeDeg": 0.33,
+      "minBortle": 5,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        12
+      ],
+      "focalFF": [
+        2430,
+        5560
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "m39",
+      "name": "M39",
+      "en": "NGC7092",
+      "type": "deepsky",
+      "raH": 21.53,
+      "dec": 48.44,
+      "sizeDeg": 0.33,
+      "minBortle": 5,
+      "months": [
+        1,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        2470,
+        5640
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc6991",
+      "name": "NGC 6991",
+      "en": "NGC6991",
+      "type": "deepsky",
+      "raH": 20.914,
+      "dec": 47.46,
+      "sizeDeg": 0.38,
+      "minBortle": 4,
+      "months": [
+        1,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        2090,
+        4780
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2112",
+      "name": "NGC 2112",
+      "en": "NGC2112",
+      "type": "deepsky",
+      "raH": 5.896,
+      "dec": 0.41,
+      "sizeDeg": 0.35,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        2290,
+        5240
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2403",
+      "name": "NGC 2403",
+      "en": "NGC2403",
+      "type": "deepsky",
+      "raH": 7.614,
+      "dec": 65.6,
+      "sizeDeg": 0.33,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        2410,
+        5510
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc1746",
+      "name": "NGC 1746",
+      "en": "NGC1746",
+      "type": "deepsky",
+      "raH": 5.064,
+      "dec": 23.77,
+      "sizeDeg": 0.3,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        2670,
+        6110
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc0247",
+      "name": "NGC 0247",
+      "en": "NGC0247",
+      "type": "deepsky",
+      "raH": 0.786,
+      "dec": -20.76,
+      "sizeDeg": 0.33,
+      "minBortle": 4,
+      "months": [
+        1,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        2450,
+        5590
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ic4601",
+      "name": "IC4601",
+      "en": "IC4601",
+      "type": "deepsky",
+      "raH": 16.338,
+      "dec": -20.09,
+      "sizeDeg": 0.33,
+      "minBortle": 3,
+      "months": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "focalFF": [
+        2410,
+        5500
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ic4603",
+      "name": "IC4603",
+      "en": "IC4603",
+      "type": "deepsky",
+      "raH": 16.423,
+      "dec": -24.47,
+      "sizeDeg": 0.33,
+      "minBortle": 3,
+      "months": [
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        2410,
+        5500
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "m23",
+      "name": "M23",
+      "en": "NGC6494",
+      "type": "deepsky",
+      "raH": 17.951,
+      "dec": -18.99,
+      "sizeDeg": 0.28,
+      "minBortle": 5,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "focalFF": [
+        2860,
+        6550
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc0188",
+      "name": "NGC 0188",
+      "en": "NGC0188",
+      "type": "deepsky",
+      "raH": 0.791,
+      "dec": 85.27,
+      "sizeDeg": 0.3,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        2720,
+        6220
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc0869",
+      "name": "NGC 0869",
+      "en": "NGC0869",
+      "type": "deepsky",
+      "raH": 2.316,
+      "dec": 57.12,
+      "sizeDeg": 0.24,
+      "minBortle": 5,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        3340,
+        7640
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ic1284",
+      "name": "IC1284",
+      "en": "IC1284",
+      "type": "deepsky",
+      "raH": 18.294,
+      "dec": -19.67,
+      "sizeDeg": 0.28,
+      "minBortle": 3,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "focalFF": [
+        2830,
+        6480
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "m25",
+      "name": "M25",
+      "en": "IC4725",
+      "type": "deepsky",
+      "raH": 18.53,
+      "dec": -19.11,
+      "sizeDeg": 0.24,
+      "minBortle": 5,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "focalFF": [
+        3410,
+        7800
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "m93",
+      "name": "M93",
+      "en": "NGC2447",
+      "type": "deepsky",
+      "raH": 7.741,
+      "dec": -23.85,
+      "sizeDeg": 0.25,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        12
+      ],
+      "focalFF": [
+        3210,
+        7330
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "m110",
+      "name": "M110",
+      "en": "NGC0205",
+      "type": "deepsky",
+      "raH": 0.673,
+      "dec": 41.69,
+      "sizeDeg": 0.27,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        2970,
+        6780
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc7243",
+      "name": "NGC 7243",
+      "en": "NGC7243",
+      "type": "deepsky",
+      "raH": 22.252,
+      "dec": 49.9,
+      "sizeDeg": 0.25,
+      "minBortle": 4,
+      "months": [
+        1,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        3210,
+        7330
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "m50",
+      "name": "M50",
+      "en": "NGC2323",
+      "type": "deepsky",
+      "raH": 7.045,
+      "dec": -8.36,
+      "sizeDeg": 0.24,
+      "minBortle": 5,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        11,
+        12
+      ],
+      "focalFF": [
+        3410,
+        7800
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc1662",
+      "name": "NGC 1662",
+      "en": "NGC1662",
+      "type": "deepsky",
+      "raH": 4.808,
+      "dec": 10.93,
+      "sizeDeg": 0.23,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        3490,
+        7970
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc6633",
+      "name": "NGC 6633",
+      "en": "NGC6633",
+      "type": "deepsky",
+      "raH": 18.454,
+      "dec": 6.51,
+      "sizeDeg": 0.2,
+      "minBortle": 5,
+      "months": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "focalFF": [
+        4010,
+        9170
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ic4685",
+      "name": "IC4685",
+      "en": "IC4685",
+      "type": "deepsky",
+      "raH": 18.155,
+      "dec": -23.99,
+      "sizeDeg": 0.25,
+      "minBortle": 3,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "focalFF": [
+        3210,
+        7330
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc6559",
+      "name": "NGC 6559",
+      "en": "NGC6559",
+      "type": "deepsky",
+      "raH": 18.166,
+      "dec": -24.11,
+      "sizeDeg": 0.25,
+      "minBortle": 3,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "focalFF": [
+        3210,
+        7330
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc4631",
+      "name": "NGC 4631",
+      "en": "NGC4631",
+      "type": "deepsky",
+      "raH": 12.702,
+      "dec": 32.54,
+      "sizeDeg": 0.24,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        3330,
+        7610
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc2539",
+      "name": "NGC 2539",
+      "en": "NGC2539",
+      "type": "deepsky",
+      "raH": 8.177,
+      "dec": -12.82,
+      "sizeDeg": 0.21,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        12
+      ],
+      "focalFF": [
+        3910,
+        8940
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc0884",
+      "name": "NGC 0884",
+      "en": "NGC0884",
+      "type": "deepsky",
+      "raH": 2.376,
+      "dec": 57.14,
+      "sizeDeg": 0.18,
+      "minBortle": 5,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4580,
+        10480
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2232",
+      "name": "NGC 2232",
+      "en": "NGC2232",
+      "type": "deepsky",
+      "raH": 6.467,
+      "dec": -4.85,
+      "sizeDeg": 0.17,
+      "minBortle": 5,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2423",
+      "name": "NGC 2423",
+      "en": "NGC2423",
+      "type": "deepsky",
+      "raH": 7.619,
+      "dec": -13.87,
+      "sizeDeg": 0.19,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        11,
+        12
+      ],
+      "focalFF": [
+        4110,
+        9400
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2281",
+      "name": "NGC 2281",
+      "en": "NGC2281",
+      "type": "deepsky",
+      "raH": 6.805,
+      "dec": 41.08,
+      "sizeDeg": 0.18,
+      "minBortle": 5,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4460,
+        10190
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc0185",
+      "name": "NGC 0185",
+      "en": "NGC0185",
+      "type": "deepsky",
+      "raH": 0.649,
+      "dec": 48.34,
+      "sizeDeg": 0.22,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        3720,
+        8500
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc6939",
+      "name": "NGC 6939",
+      "en": "NGC6939",
+      "type": "deepsky",
+      "raH": 20.525,
+      "dec": 60.66,
+      "sizeDeg": 0.2,
+      "minBortle": 4,
+      "months": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4010,
+        9170
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc6940",
+      "name": "NGC 6940",
+      "en": "NGC6940",
+      "type": "deepsky",
+      "raH": 20.574,
+      "dec": 28.28,
+      "sizeDeg": 0.18,
+      "minBortle": 4,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4460,
+        10190
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2903",
+      "name": "NGC 2903",
+      "en": "NGC2903",
+      "type": "deepsky",
+      "raH": 9.536,
+      "dec": 21.5,
+      "sizeDeg": 0.2,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        11,
+        12
+      ],
+      "focalFF": [
+        4030,
+        9210
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m86",
+      "name": "M86",
+      "en": "NGC4406",
+      "type": "deepsky",
+      "raH": 12.437,
+      "dec": 12.95,
+      "sizeDeg": 0.19,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4170,
+        9540
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m82",
+      "name": "M82",
+      "en": "NGC3034",
+      "type": "deepsky",
+      "raH": 9.931,
+      "dec": 69.68,
+      "sizeDeg": 0.18,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4380,
+        10010
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc6946",
+      "name": "NGC 6946",
+      "en": "NGC6946",
+      "type": "deepsky",
+      "raH": 20.581,
+      "dec": 60.15,
+      "sizeDeg": 0.19,
+      "minBortle": 4,
+      "months": [
+        1,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4220,
+        9650
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc1975",
+      "name": "NGC 1975",
+      "en": "NGC1975",
+      "type": "deepsky",
+      "raH": 5.588,
+      "dec": -4.69,
+      "sizeDeg": 0.17,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc3628",
+      "name": "NGC 3628",
+      "en": "NGC3628",
+      "type": "deepsky",
+      "raH": 11.338,
+      "dec": 13.59,
+      "sizeDeg": 0.18,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "focalFF": [
+        4360,
+        9960
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m49",
+      "name": "M49",
+      "en": "NGC4472",
+      "type": "deepsky",
+      "raH": 12.496,
+      "dec": 8,
+      "sizeDeg": 0.17,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4710,
+        10770
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m66",
+      "name": "M66",
+      "en": "NGC3627",
+      "type": "deepsky",
+      "raH": 11.337,
+      "dec": 12.99,
+      "sizeDeg": 0.17,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "focalFF": [
+        4680,
+        10700
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m74",
+      "name": "M74",
+      "en": "NGC0628",
+      "type": "deepsky",
+      "raH": 1.612,
+      "dec": 15.78,
+      "sizeDeg": 0.16,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4725",
+      "name": "NGC 4725",
+      "en": "NGC4725",
+      "type": "deepsky",
+      "raH": 12.841,
+      "dec": 25.5,
+      "sizeDeg": 0.16,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ic0426",
+      "name": "IC0426",
+      "en": "IC0426",
+      "type": "deepsky",
+      "raH": 5.609,
+      "dec": -0.3,
+      "sizeDeg": 0.17,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc0896",
+      "name": "NGC 0896",
+      "en": "NGC0896",
+      "type": "deepsky",
+      "raH": 2.424,
+      "dec": 62.02,
+      "sizeDeg": 0.17,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc2246",
+      "name": "NGC 2246",
+      "en": "NGC2246",
+      "type": "deepsky",
+      "raH": 6.543,
+      "dec": 5.13,
+      "sizeDeg": 0.17,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc7331",
+      "name": "NGC 7331",
+      "en": "NGC7331",
+      "type": "deepsky",
+      "raH": 22.618,
+      "dec": 34.42,
+      "sizeDeg": 0.15,
+      "minBortle": 4,
+      "months": [
+        1,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m32",
+      "name": "M32",
+      "en": "NGC0221",
+      "type": "deepsky",
+      "raH": 0.712,
+      "dec": 40.87,
+      "sizeDeg": 0.13,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc3521",
+      "name": "NGC 3521",
+      "en": "NGC3521",
+      "type": "deepsky",
+      "raH": 11.097,
+      "dec": -0.04,
+      "sizeDeg": 0.14,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m94",
+      "name": "M94",
+      "en": "NGC4736",
+      "type": "deepsky",
+      "raH": 12.848,
+      "dec": 41.12,
+      "sizeDeg": 0.13,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m96",
+      "name": "M96",
+      "en": "NGC3368",
+      "type": "deepsky",
+      "raH": 10.779,
+      "dec": 11.82,
+      "sizeDeg": 0.14,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m65",
+      "name": "M65",
+      "en": "NGC3623",
+      "type": "deepsky",
+      "raH": 11.316,
+      "dec": 13.09,
+      "sizeDeg": 0.13,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4656",
+      "name": "NGC 4656",
+      "en": "NGC4656",
+      "type": "deepsky",
+      "raH": 12.733,
+      "dec": 32.17,
+      "sizeDeg": 0.13,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m87",
+      "name": "M87",
+      "en": "NGC4486",
+      "type": "deepsky",
+      "raH": 12.514,
+      "dec": 12.39,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc1023",
+      "name": "NGC 1023",
+      "en": "NGC1023",
+      "type": "deepsky",
+      "raH": 2.673,
+      "dec": 39.06,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ic4703",
+      "name": "IC4703",
+      "en": "IC4703",
+      "type": "deepsky",
+      "raH": 18.316,
+      "dec": -13.85,
+      "sizeDeg": 0.08,
+      "minBortle": 3,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc3115",
+      "name": "NGC 3115",
+      "en": "NGC3115",
+      "type": "deepsky",
+      "raH": 10.087,
+      "dec": -7.72,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m60",
+      "name": "M60",
+      "en": "NGC4649",
+      "type": "deepsky",
+      "raH": 12.728,
+      "dec": 11.55,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m85",
+      "name": "M85",
+      "en": "NGC4382",
+      "type": "deepsky",
+      "raH": 12.423,
+      "dec": 18.19,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4697",
+      "name": "NGC 4697",
+      "en": "NGC4697",
+      "type": "deepsky",
+      "raH": 12.81,
+      "dec": -5.8,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc1973",
+      "name": "NGC 1973",
+      "en": "NGC1973",
+      "type": "deepsky",
+      "raH": 5.585,
+      "dec": -4.73,
+      "sizeDeg": 0.08,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc1360",
+      "name": "NGC 1360",
+      "en": "NGC1360",
+      "type": "deepsky",
+      "raH": 3.554,
+      "dec": -25.87,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "planetary"
+    },
+    {
+      "id": "m77",
+      "name": "M77",
+      "en": "NGC1068",
+      "type": "deepsky",
+      "raH": 2.711,
+      "dec": -0.01,
+      "sizeDeg": 0.1,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m100",
+      "name": "M100",
+      "en": "NGC4321",
+      "type": "deepsky",
+      "raH": 12.382,
+      "dec": 15.82,
+      "sizeDeg": 0.1,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4365",
+      "name": "NGC 4365",
+      "en": "NGC4365",
+      "type": "deepsky",
+      "raH": 12.408,
+      "dec": 7.32,
+      "sizeDeg": 0.09,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m105",
+      "name": "M105",
+      "en": "NGC3379",
+      "type": "deepsky",
+      "raH": 10.797,
+      "dec": 12.58,
+      "sizeDeg": 0.08,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ic0405",
+      "name": "IC0405",
+      "en": "IC0405",
+      "type": "deepsky",
+      "raH": 5.275,
+      "dec": 34.36,
+      "sizeDeg": 0.83,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        960,
+        2200
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc4236",
+      "name": "NGC 4236",
+      "en": "NGC4236",
+      "type": "deepsky",
+      "raH": 12.278,
+      "dec": 69.46,
+      "sizeDeg": 0.39,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        12
+      ],
+      "focalFF": [
+        2050,
+        4680
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ic0342",
+      "name": "IC0342",
+      "en": "IC0342",
+      "type": "deepsky",
+      "raH": 3.78,
+      "dec": 68.1,
+      "sizeDeg": 0.33,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        2430,
+        5560
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ic1613",
+      "name": "IC1613",
+      "en": "IC1613",
+      "type": "deepsky",
+      "raH": 1.08,
+      "dec": 2.12,
+      "sizeDeg": 0.31,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        2630,
+        6000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc6822",
+      "name": "NGC 6822",
+      "en": "NGC6822",
+      "type": "deepsky",
+      "raH": 19.749,
+      "dec": -14.8,
+      "sizeDeg": 0.29,
+      "minBortle": 4,
+      "months": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "focalFF": [
+        2770,
+        6330
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4244",
+      "name": "NGC 4244",
+      "en": "NGC4244",
+      "type": "deepsky",
+      "raH": 12.292,
+      "dec": 37.81,
+      "sizeDeg": 0.27,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        2970,
+        6780
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc0744",
+      "name": "NGC 0744",
+      "en": "NGC0744",
+      "type": "deepsky",
+      "raH": 1.975,
+      "dec": 55.47,
+      "sizeDeg": 0.19,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4110,
+        9400
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc0891",
+      "name": "NGC 0891",
+      "en": "NGC0891",
+      "type": "deepsky",
+      "raH": 2.376,
+      "dec": 42.35,
+      "sizeDeg": 0.22,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        3690,
+        8440
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc1664",
+      "name": "NGC 1664",
+      "en": "NGC1664",
+      "type": "deepsky",
+      "raH": 4.852,
+      "dec": 43.68,
+      "sizeDeg": 0.19,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4220,
+        9650
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2301",
+      "name": "NGC 2301",
+      "en": "NGC2301",
+      "type": "deepsky",
+      "raH": 6.863,
+      "dec": 0.46,
+      "sizeDeg": 0.17,
+      "minBortle": 5,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        11,
+        12
+      ],
+      "focalFF": [
+        4720,
+        10790
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ic2574",
+      "name": "IC2574",
+      "en": "IC2574",
+      "type": "deepsky",
+      "raH": 10.473,
+      "dec": 68.41,
+      "sizeDeg": 0.22,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        11,
+        12
+      ],
+      "focalFF": [
+        3730,
+        8520
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc6871",
+      "name": "NGC 6871",
+      "en": "NGC6871",
+      "type": "deepsky",
+      "raH": 20.1,
+      "dec": 35.78,
+      "sizeDeg": 0.16,
+      "minBortle": 5,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc1245",
+      "name": "NGC 1245",
+      "en": "NGC1245",
+      "type": "deepsky",
+      "raH": 3.245,
+      "dec": 47.24,
+      "sizeDeg": 0.19,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4220,
+        9650
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2506",
+      "name": "NGC 2506",
+      "en": "NGC2506",
+      "type": "deepsky",
+      "raH": 8,
+      "dec": -10.77,
+      "sizeDeg": 0.18,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        12
+      ],
+      "focalFF": [
+        4460,
+        10190
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc1502",
+      "name": "NGC 1502",
+      "en": "NGC1502",
+      "type": "deepsky",
+      "raH": 4.13,
+      "dec": 62.33,
+      "sizeDeg": 0.17,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4720,
+        10790
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc1528",
+      "name": "NGC 1528",
+      "en": "NGC1528",
+      "type": "deepsky",
+      "raH": 4.255,
+      "dec": 51.21,
+      "sizeDeg": 0.16,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "m38",
+      "name": "M38",
+      "en": "NGC1912",
+      "type": "deepsky",
+      "raH": 5.478,
+      "dec": 35.85,
+      "sizeDeg": 0.16,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "m52",
+      "name": "M52",
+      "en": "NGC7654",
+      "type": "deepsky",
+      "raH": 23.413,
+      "dec": 61.59,
+      "sizeDeg": 0.17,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc0957",
+      "name": "NGC 0957",
+      "en": "NGC0957",
+      "type": "deepsky",
+      "raH": 2.555,
+      "dec": 57.57,
+      "sizeDeg": 0.17,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4720,
+        10790
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2520",
+      "name": "NGC 2520",
+      "en": "NGC2520",
+      "type": "deepsky",
+      "raH": 8.083,
+      "dec": -28.15,
+      "sizeDeg": 0.16,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc5907",
+      "name": "NGC 5907",
+      "en": "NGC5907",
+      "type": "deepsky",
+      "raH": 15.265,
+      "dec": 56.33,
+      "sizeDeg": 0.19,
+      "minBortle": 4,
+      "months": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "focalFF": [
+        4260,
+        9740
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc6709",
+      "name": "NGC 6709",
+      "en": "NGC6709",
+      "type": "deepsky",
+      "raH": 18.855,
+      "dec": 10.32,
+      "sizeDeg": 0.14,
+      "minBortle": 4,
+      "months": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2360",
+      "name": "NGC 2360",
+      "en": "NGC2360",
+      "type": "deepsky",
+      "raH": 7.295,
+      "dec": -15.64,
+      "sizeDeg": 0.15,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc7082",
+      "name": "NGC 7082",
+      "en": "NGC7082",
+      "type": "deepsky",
+      "raH": 21.488,
+      "dec": 47.13,
+      "sizeDeg": 0.15,
+      "minBortle": 4,
+      "months": [
+        1,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc1817",
+      "name": "NGC 1817",
+      "en": "NGC1817",
+      "type": "deepsky",
+      "raH": 5.207,
+      "dec": 16.68,
+      "sizeDeg": 0.16,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc0925",
+      "name": "NGC 0925",
+      "en": "NGC0925",
+      "type": "deepsky",
+      "raH": 2.455,
+      "dec": 33.58,
+      "sizeDeg": 0.18,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4490,
+        10260
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4559",
+      "name": "NGC 4559",
+      "en": "NGC4559",
+      "type": "deepsky",
+      "raH": 12.599,
+      "dec": 27.96,
+      "sizeDeg": 0.18,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4550,
+        10410
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc2335",
+      "name": "NGC 2335",
+      "en": "NGC2335",
+      "type": "deepsky",
+      "raH": 7.114,
+      "dec": -10.03,
+      "sizeDeg": 0.14,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2374",
+      "name": "NGC 2374",
+      "en": "NGC2374",
+      "type": "deepsky",
+      "raH": 7.399,
+      "dec": -13.26,
+      "sizeDeg": 0.15,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc6469",
+      "name": "NGC 6469",
+      "en": "NGC6469",
+      "type": "deepsky",
+      "raH": 17.887,
+      "dec": -22.28,
+      "sizeDeg": 0.15,
+      "minBortle": 4,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc0457",
+      "name": "NGC 0457",
+      "en": "NGC0457",
+      "type": "deepsky",
+      "raH": 1.326,
+      "dec": 58.29,
+      "sizeDeg": 0.13,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc7142",
+      "name": "NGC 7142",
+      "en": "NGC7142",
+      "type": "deepsky",
+      "raH": 21.753,
+      "dec": 65.77,
+      "sizeDeg": 0.16,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc1027",
+      "name": "NGC 1027",
+      "en": "NGC1027",
+      "type": "deepsky",
+      "raH": 2.71,
+      "dec": 61.59,
+      "sizeDeg": 0.13,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2678",
+      "name": "NGC 2678",
+      "en": "NGC2678",
+      "type": "deepsky",
+      "raH": 8.834,
+      "dec": 11.34,
+      "sizeDeg": 0.17,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2169",
+      "name": "NGC 2169",
+      "en": "NGC2169",
+      "type": "deepsky",
+      "raH": 6.14,
+      "dec": 13.96,
+      "sizeDeg": 0.12,
+      "minBortle": 5,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc4526",
+      "name": "NGC 4526",
+      "en": "NGC4526",
+      "type": "deepsky",
+      "raH": 12.568,
+      "dec": 7.7,
+      "sizeDeg": 0.16,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m36",
+      "name": "M36",
+      "en": "NGC1960",
+      "type": "deepsky",
+      "raH": 5.605,
+      "dec": 34.14,
+      "sizeDeg": 0.12,
+      "minBortle": 5,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc1582",
+      "name": "NGC 1582",
+      "en": "NGC1582",
+      "type": "deepsky",
+      "raH": 4.53,
+      "dec": 43.78,
+      "sizeDeg": 0.13,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2324",
+      "name": "NGC 2324",
+      "en": "NGC2324",
+      "type": "deepsky",
+      "raH": 7.069,
+      "dec": 1.04,
+      "sizeDeg": 0.14,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2343",
+      "name": "NGC 2343",
+      "en": "NGC2343",
+      "type": "deepsky",
+      "raH": 7.135,
+      "dec": -10.62,
+      "sizeDeg": 0.13,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2194",
+      "name": "NGC 2194",
+      "en": "NGC2194",
+      "type": "deepsky",
+      "raH": 6.229,
+      "dec": 12.81,
+      "sizeDeg": 0.14,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2683",
+      "name": "NGC 2683",
+      "en": "NGC2683",
+      "type": "deepsky",
+      "raH": 8.878,
+      "dec": 33.42,
+      "sizeDeg": 0.16,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc5084",
+      "name": "NGC 5084",
+      "en": "NGC5084",
+      "type": "deepsky",
+      "raH": 13.338,
+      "dec": -21.83,
+      "sizeDeg": 0.17,
+      "minBortle": 4,
+      "months": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc2358",
+      "name": "NGC 2358",
+      "en": "NGC2358",
+      "type": "deepsky",
+      "raH": 7.282,
+      "dec": -17.12,
+      "sizeDeg": 0.16,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc6604",
+      "name": "NGC 6604",
+      "en": "NGC6604",
+      "type": "deepsky",
+      "raH": 18.301,
+      "dec": -12.24,
+      "sizeDeg": 0.16,
+      "minBortle": 4,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc0147",
+      "name": "NGC 0147",
+      "en": "NGC0147",
+      "type": "deepsky",
+      "raH": 0.553,
+      "dec": 48.51,
+      "sizeDeg": 0.16,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc2215",
+      "name": "NGC 2215",
+      "en": "NGC2215",
+      "type": "deepsky",
+      "raH": 6.347,
+      "dec": -7.28,
+      "sizeDeg": 0.14,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "m90",
+      "name": "M90",
+      "en": "NGC4569",
+      "type": "deepsky",
+      "raH": 12.614,
+      "dec": 13.16,
+      "sizeDeg": 0.15,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc7039",
+      "name": "NGC 7039",
+      "en": "NGC7039",
+      "type": "deepsky",
+      "raH": 21.18,
+      "dec": 45.62,
+      "sizeDeg": 0.13,
+      "minBortle": 4,
+      "months": [
+        1,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc0559",
+      "name": "NGC 0559",
+      "en": "NGC0559",
+      "type": "deepsky",
+      "raH": 1.493,
+      "dec": 63.3,
+      "sizeDeg": 0.15,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2158",
+      "name": "NGC 2158",
+      "en": "NGC2158",
+      "type": "deepsky",
+      "raH": 6.124,
+      "dec": 24.1,
+      "sizeDeg": 0.14,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc6811",
+      "name": "NGC 6811",
+      "en": "NGC6811",
+      "type": "deepsky",
+      "raH": 19.622,
+      "dec": 46.39,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc2571",
+      "name": "NGC 2571",
+      "en": "NGC2571",
+      "type": "deepsky",
+      "raH": 8.316,
+      "dec": -29.75,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc6605",
+      "name": "NGC 6605",
+      "en": "NGC6605",
+      "type": "deepsky",
+      "raH": 18.273,
+      "dec": -15.02,
+      "sizeDeg": 0.11,
+      "minBortle": 5,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc6716",
+      "name": "NGC 6716",
+      "en": "NGC6716",
+      "type": "deepsky",
+      "raH": 18.91,
+      "dec": -19.9,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "m21",
+      "name": "M21",
+      "en": "NGC6531",
+      "type": "deepsky",
+      "raH": 18.07,
+      "dec": -22.49,
+      "sizeDeg": 0.1,
+      "minBortle": 5,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc6568",
+      "name": "NGC 6568",
+      "en": "NGC6568",
+      "type": "deepsky",
+      "raH": 18.212,
+      "dec": -21.63,
+      "sizeDeg": 0.13,
+      "minBortle": 4,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc6819",
+      "name": "NGC 6819",
+      "en": "NGC6819",
+      "type": "deepsky",
+      "raH": 19.688,
+      "dec": 40.19,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "ngc4517",
+      "name": "NGC 4517",
+      "en": "NGC4517",
+      "type": "deepsky",
+      "raH": 12.546,
+      "dec": 0.12,
+      "sizeDeg": 0.15,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc6554",
+      "name": "NGC 6554",
+      "en": "NGC6554",
+      "type": "deepsky",
+      "raH": 18.157,
+      "dec": -18.38,
+      "sizeDeg": 0.14,
+      "minBortle": 4,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "cluster"
+    },
+    {
+      "id": "m88",
+      "name": "M88",
+      "en": "NGC4501",
+      "type": "deepsky",
+      "raH": 12.533,
+      "dec": 14.42,
+      "sizeDeg": 0.14,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4535",
+      "name": "NGC 4535",
+      "en": "NGC4535",
+      "type": "deepsky",
+      "raH": 12.572,
+      "dec": 8.2,
+      "sizeDeg": 0.14,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m109",
+      "name": "M109",
+      "en": "NGC3992",
+      "type": "deepsky",
+      "raH": 11.96,
+      "dec": 53.37,
+      "sizeDeg": 0.13,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4762",
+      "name": "NGC 4762",
+      "en": "NGC4762",
+      "type": "deepsky",
+      "raH": 12.882,
+      "dec": 11.23,
+      "sizeDeg": 0.14,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m89",
+      "name": "M89",
+      "en": "NGC4552",
+      "type": "deepsky",
+      "raH": 12.594,
+      "dec": 12.56,
+      "sizeDeg": 0.14,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4216",
+      "name": "NGC 4216",
+      "en": "NGC4216",
+      "type": "deepsky",
+      "raH": 12.265,
+      "dec": 13.15,
+      "sizeDeg": 0.13,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ic5134",
+      "name": "IC5134",
+      "en": "IC5134",
+      "type": "deepsky",
+      "raH": 21.716,
+      "dec": 66.1,
+      "sizeDeg": 0.13,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "m84",
+      "name": "M84",
+      "en": "NGC4374",
+      "type": "deepsky",
+      "raH": 12.418,
+      "dec": 12.89,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc3184",
+      "name": "NGC 3184",
+      "en": "NGC3184",
+      "type": "deepsky",
+      "raH": 10.305,
+      "dec": 41.42,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc5068",
+      "name": "NGC 5068",
+      "en": "NGC5068",
+      "type": "deepsky",
+      "raH": 13.315,
+      "dec": -21.04,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m95",
+      "name": "M95",
+      "en": "NGC3351",
+      "type": "deepsky",
+      "raH": 10.733,
+      "dec": 11.7,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc2613",
+      "name": "NGC 2613",
+      "en": "NGC2613",
+      "type": "deepsky",
+      "raH": 8.556,
+      "dec": -22.97,
+      "sizeDeg": 0.13,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc1398",
+      "name": "NGC 1398",
+      "en": "NGC1398",
+      "type": "deepsky",
+      "raH": 3.648,
+      "dec": -26.34,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc3923",
+      "name": "NGC 3923",
+      "en": "NGC3923",
+      "type": "deepsky",
+      "raH": 11.85,
+      "dec": -28.81,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4214",
+      "name": "NGC 4214",
+      "en": "NGC4214",
+      "type": "deepsky",
+      "raH": 12.261,
+      "dec": 36.33,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4490",
+      "name": "NGC 4490",
+      "en": "NGC4490",
+      "type": "deepsky",
+      "raH": 12.51,
+      "dec": 41.64,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc3585",
+      "name": "NGC 3585",
+      "en": "NGC3585",
+      "type": "deepsky",
+      "raH": 11.221,
+      "dec": -26.75,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc2841",
+      "name": "NGC 2841",
+      "en": "NGC2841",
+      "type": "deepsky",
+      "raH": 9.367,
+      "dec": 50.98,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4536",
+      "name": "NGC 4536",
+      "en": "NGC4536",
+      "type": "deepsky",
+      "raH": 12.574,
+      "dec": 2.19,
+      "sizeDeg": 0.12,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m61",
+      "name": "M61",
+      "en": "NGC4303",
+      "type": "deepsky",
+      "raH": 12.365,
+      "dec": 4.47,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc1232",
+      "name": "NGC 1232",
+      "en": "NGC1232",
+      "type": "deepsky",
+      "raH": 3.163,
+      "dec": -20.58,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4753",
+      "name": "NGC 4753",
+      "en": "NGC4753",
+      "type": "deepsky",
+      "raH": 12.873,
+      "dec": -1.2,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc3344",
+      "name": "NGC 3344",
+      "en": "NGC3344",
+      "type": "deepsky",
+      "raH": 10.725,
+      "dec": 24.92,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ic0010",
+      "name": "IC0010",
+      "en": "IC0010",
+      "type": "deepsky",
+      "raH": 0.338,
+      "dec": 59.3,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc5866",
+      "name": "NGC 5866",
+      "en": "NGC5866",
+      "type": "deepsky",
+      "raH": 15.108,
+      "dec": 55.76,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4636",
+      "name": "NGC 4636",
+      "en": "NGC4636",
+      "type": "deepsky",
+      "raH": 12.714,
+      "dec": 2.69,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc3198",
+      "name": "NGC 3198",
+      "en": "NGC3198",
+      "type": "deepsky",
+      "raH": 10.332,
+      "dec": 45.55,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4656-ned01",
+      "name": "NGC 4656 NED01",
+      "en": "NGC4656 NED01",
+      "type": "deepsky",
+      "raH": 12.733,
+      "dec": 32.17,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4293",
+      "name": "NGC 4293",
+      "en": "NGC4293",
+      "type": "deepsky",
+      "raH": 12.354,
+      "dec": 18.38,
+      "sizeDeg": 0.1,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc3953",
+      "name": "NGC 3953",
+      "en": "NGC3953",
+      "type": "deepsky",
+      "raH": 11.897,
+      "dec": 52.33,
+      "sizeDeg": 0.1,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4125",
+      "name": "NGC 4125",
+      "en": "NGC4125",
+      "type": "deepsky",
+      "raH": 12.135,
+      "dec": 65.17,
+      "sizeDeg": 0.1,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ic0420",
+      "name": "IC0420",
+      "en": "IC0420",
+      "type": "deepsky",
+      "raH": 5.536,
+      "dec": -4.5,
+      "sizeDeg": 0.1,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ic0423",
+      "name": "IC0423",
+      "en": "IC0423",
+      "type": "deepsky",
+      "raH": 5.556,
+      "dec": -0.61,
+      "sizeDeg": 0.1,
+      "minBortle": 3,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "ngc4527",
+      "name": "NGC 4527",
+      "en": "NGC4527",
+      "type": "deepsky",
+      "raH": 12.569,
+      "dec": 2.65,
+      "sizeDeg": 0.11,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc1407",
+      "name": "NGC 1407",
+      "en": "NGC1407",
+      "type": "deepsky",
+      "raH": 3.67,
+      "dec": -18.58,
+      "sizeDeg": 0.1,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc0908",
+      "name": "NGC 0908",
+      "en": "NGC0908",
+      "type": "deepsky",
+      "raH": 2.385,
+      "dec": -21.23,
+      "sizeDeg": 0.1,
+      "minBortle": 4,
+      "months": [
+        1,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc0045",
+      "name": "NGC 0045",
+      "en": "NGC0045",
+      "type": "deepsky",
+      "raH": 0.234,
+      "dec": -23.18,
+      "sizeDeg": 0.1,
+      "minBortle": 4,
+      "months": [
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc6503",
+      "name": "NGC 6503",
+      "en": "NGC6503",
+      "type": "deepsky",
+      "raH": 17.824,
+      "dec": 70.14,
+      "sizeDeg": 0.1,
+      "minBortle": 4,
+      "months": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc3675",
+      "name": "NGC 3675",
+      "en": "NGC3675",
+      "type": "deepsky",
+      "raH": 11.436,
+      "dec": 43.59,
+      "sizeDeg": 0.1,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc5195",
+      "name": "NGC 5195",
+      "en": "NGC5195",
+      "type": "deepsky",
+      "raH": 13.5,
+      "dec": 47.27,
+      "sizeDeg": 0.09,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc2768",
+      "name": "NGC 2768",
+      "en": "NGC2768",
+      "type": "deepsky",
+      "raH": 9.194,
+      "dec": 60.04,
+      "sizeDeg": 0.09,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4605",
+      "name": "NGC 4605",
+      "en": "NGC4605",
+      "type": "deepsky",
+      "raH": 12.666,
+      "dec": 61.61,
+      "sizeDeg": 0.1,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc2976",
+      "name": "NGC 2976",
+      "en": "NGC2976",
+      "type": "deepsky",
+      "raH": 9.788,
+      "dec": 67.92,
+      "sizeDeg": 0.1,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc5101",
+      "name": "NGC 5101",
+      "en": "NGC5101",
+      "type": "deepsky",
+      "raH": 13.363,
+      "dec": -27.43,
+      "sizeDeg": 0.1,
+      "minBortle": 4,
+      "months": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc5322",
+      "name": "NGC 5322",
+      "en": "NGC5322",
+      "type": "deepsky",
+      "raH": 13.821,
+      "dec": 60.19,
+      "sizeDeg": 0.09,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc3077",
+      "name": "NGC 3077",
+      "en": "NGC3077",
+      "type": "deepsky",
+      "raH": 10.055,
+      "dec": 68.73,
+      "sizeDeg": 0.09,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4038",
+      "name": "NGC 4038",
+      "en": "NGC4038",
+      "type": "deepsky",
+      "raH": 12.031,
+      "dec": -18.87,
+      "sizeDeg": 0.09,
+      "minBortle": 4,
+      "months": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc3384",
+      "name": "NGC 3384",
+      "en": "NGC3384",
+      "type": "deepsky",
+      "raH": 10.805,
+      "dec": 12.63,
+      "sizeDeg": 0.09,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4429",
+      "name": "NGC 4429",
+      "en": "NGC4429",
+      "type": "deepsky",
+      "raH": 12.457,
+      "dec": 11.11,
+      "sizeDeg": 0.09,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "m99",
+      "name": "M99",
+      "en": "NGC4254",
+      "type": "deepsky",
+      "raH": 12.314,
+      "dec": 14.42,
+      "sizeDeg": 0.08,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc1332",
+      "name": "NGC 1332",
+      "en": "NGC1332",
+      "type": "deepsky",
+      "raH": 3.438,
+      "dec": -21.34,
+      "sizeDeg": 0.09,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc5247",
+      "name": "NGC 5247",
+      "en": "NGC5247",
+      "type": "deepsky",
+      "raH": 13.634,
+      "dec": -17.88,
+      "sizeDeg": 0.09,
+      "minBortle": 4,
+      "months": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc1395",
+      "name": "NGC 1395",
+      "en": "NGC1395",
+      "type": "deepsky",
+      "raH": 3.642,
+      "dec": -23.03,
+      "sizeDeg": 0.08,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        10,
+        11,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc3726",
+      "name": "NGC 3726",
+      "en": "NGC3726",
+      "type": "deepsky",
+      "raH": 11.556,
+      "dec": 47.03,
+      "sizeDeg": 0.09,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc4449",
+      "name": "NGC 4449",
+      "en": "NGC4449",
+      "type": "deepsky",
+      "raH": 12.47,
+      "dec": 44.09,
+      "sizeDeg": 0.08,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "开阔北天/南天",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "galaxy"
+    },
+    {
+      "id": "ngc6589",
+      "name": "NGC 6589",
+      "en": "NGC6589",
+      "type": "deepsky",
+      "raH": 18.282,
+      "dec": -19.78,
+      "sizeDeg": 0.07,
+      "minBortle": 3,
+      "months": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "nebula"
+    },
+    {
+      "id": "m97",
+      "name": "M97",
+      "en": "NGC3587",
+      "type": "deepsky",
+      "raH": 11.247,
+      "dec": 55.02,
+      "sizeDeg": 0.06,
+      "minBortle": 4,
+      "months": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        12
+      ],
+      "focalFF": [
+        4810,
+        11000
+      ],
+      "tracker": true,
+      "fg": "树线或山脊",
+      "tips": "按视大小与亮度自动生成，实际以当晚透明度为准",
+      "subtype": "planetary"
+    }
+  ]
 }

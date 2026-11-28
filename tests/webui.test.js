@@ -513,3 +513,13 @@ test('0.4.12：定位抛错不影响启动与查询，且查询不触发定位',
   assert.ok(!/siteLat=/.test(searchUrls[0]), '无缓存时不应带 siteLat')
   assert.ok(!/siteLon=/.test(searchUrls[0]), '无缓存时不应带 siteLon')
 })
+
+test('网页全屏：一屏显示、左下两列 HUD、字号一致', async () => {
+  const { page } = await import('../lib/webui.js')
+  const html = page()
+  assert.ok(html.includes('class="simhud"'), '有 DOM HUD')
+  assert.ok(html.includes('simhud-k') && html.includes('simhud-v'), '两列结构')
+  assert.ok(html.includes('.note.focus .ap-note-panel{height:min(92vh,1000px);overflow:hidden}'), '全屏固定高度不滚动')
+  assert.ok(html.includes('.simhud{') && html.includes('font-size:12px'), 'HUD 字号 12px')
+  assert.ok(html.includes('hideHud: Boolean(focused)'), '全屏隐藏画布内置 HUD')
+})
